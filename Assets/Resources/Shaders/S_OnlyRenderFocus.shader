@@ -16,6 +16,7 @@
 
 		Blend SrcAlpha OneMinusSrcAlpha
 
+
         Pass
         {
 			Tags { "LightMode" = "LightWeightForward" }
@@ -24,7 +25,7 @@
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-			#include "UnityLightingCommon.cginc" // for _LightColor0
+			//#include "UnityLightingCommon.cginc" // for _LightColor0
 
 
             struct v2f
@@ -35,14 +36,13 @@
                 float2 uv : TEXCOORD0;
 
 				float3 worldPos : TEXCOORD1;
-
-				fixed4 diff : COLOR0;
             };
 
            // sampler2D _MainTex;
 			float3 _FocusPosition;
 			float _FocusRadius;
 			float4 _Color;
+
 
             v2f vert (appdata_base v)
             {
@@ -53,16 +53,7 @@
 
 				o.worldPos = mul(UNITY_MATRIX_M,v.vertex).xyz;
 				
-				half3 worldNormal = UnityObjectToWorldNormal(v.normal);
-				
-				half n1 = 1;
-				if (_WorldSpaceLightPos0.w = 1) 
-				{
-					n1 = max(0.3, dot(worldNormal, _WorldSpaceLightPos0.xyz));
-				}
-				
-
-				o.diff = n1 * _LightColor0;
+				//half3 worldNormal = UnityObjectToWorldNormal(v.normal);
 
                 return o;
             }

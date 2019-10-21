@@ -7,10 +7,11 @@ public class FocusRegionUpdater : MonoBehaviour
 {
     public GazeProvider gazeProvider;
     public float focusSize = 0.15f;
+    public bool active = true;
 
     void Update()
     {
-        if (gazeProvider)
+        if (gazeProvider && active)
         {
             Vector3 focusPosition = gazeProvider.HitPosition;
             foreach (Transform child in transform)
@@ -20,6 +21,11 @@ public class FocusRegionUpdater : MonoBehaviour
             }
             
         }
+    }
+
+    public void ToggleMovement()
+    {
+        active = !active;
     }
 }
 
