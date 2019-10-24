@@ -28,7 +28,7 @@ public class MenuHandler : MonoBehaviour
         };
             shaders.Enqueue((sh, paramList));
         }
-        sh = Shader.Find("Shader_Graphs/SG_FocusContextEx");
+        sh = Shader.Find("Shader Graphs/SG_FocusContextEx");
         if (sh)
         {
             var paramList = new List<(string, string)>{
@@ -37,7 +37,7 @@ public class MenuHandler : MonoBehaviour
         };
             shaders.Enqueue((sh, paramList));
         }
-        sh = Shader.Find("Unlit/S_OnlyRenderFocus");
+        sh = Shader.Find("Lit/S_OnlyRenderFocus");
         if (sh)
         {
             var paramList = new List<(string, string)>{
@@ -46,8 +46,9 @@ public class MenuHandler : MonoBehaviour
             shaders.Enqueue((sh, paramList));
         }
 
-
         var current = shaders.Dequeue();
+        Debug.Log(shaders.Peek().Item1.name);
+        
         BuildMenu(current.Item1, current.Item2);
         
         
