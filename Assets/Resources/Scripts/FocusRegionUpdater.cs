@@ -17,7 +17,7 @@ public class FocusRegionUpdater : MonoBehaviour
             foreach (Transform child in transform)
             {
                 child.GetComponent<Renderer>().material.SetVector("_FocusPosition", focusPosition);
-                child.GetComponent<Renderer>().material.SetFloat("_FocusRadius", focusSize);
+                //child.GetComponent<Renderer>().material.SetFloat("_FocusRadius", focusSize);
             }
             
         }
