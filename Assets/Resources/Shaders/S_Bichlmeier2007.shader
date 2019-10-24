@@ -1,4 +1,4 @@
-﻿Shader "UnLit/S_Bichlmeier2007"
+﻿Shader "Unlit/S_Bichlmeier2007"
 {
 	Properties
 	{

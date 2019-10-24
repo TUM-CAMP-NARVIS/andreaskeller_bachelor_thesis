@@ -576,14 +576,14 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: Template3D
+  metroPackageName: BA-Ak
   metroPackageVersion: 1.0.0.0
   metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: DefaultCompany
   metroCertificateIssuer: DefaultCompany
   metroCertificateNotAfter: 0023f81c0ba3d601
-  metroApplicationDescription: Template_3D
+  metroApplicationDescription: Enhancing Depth Vision
   wsaImages: {}
   metroTileShortName: 
   metroTileShowName: 0

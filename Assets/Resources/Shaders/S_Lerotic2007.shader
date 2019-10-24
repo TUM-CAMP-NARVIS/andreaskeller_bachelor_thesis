@@ -1,4 +1,4 @@
-﻿Shader "UnLit/S_Lerotic2007"
+﻿Shader "Unlit/S_Lerotic2007"
 {
 	Properties
 	{
