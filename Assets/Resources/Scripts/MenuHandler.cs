@@ -48,7 +48,7 @@ public class MenuHandler : MonoBehaviour
 
         var current = shaders.Dequeue();
         Debug.Log(shaders.Peek().Item1.name);
-        
+        model.GetComponent<Renderer>().material.shader = current.Item1;
         BuildMenu(current.Item1, current.Item2);
         
         
@@ -62,6 +62,7 @@ public class MenuHandler : MonoBehaviour
         {
             Vector3 angle = Vector3.Normalize(this.transform.position - holoLens.transform.position);
             this.transform.rotation = Quaternion.LookRotation(angle);
+            this.transform.rotation = new Quaternion(this.transform.rotation.x,this.transform.rotation.y,0.0f,this.transform.rotation.w);
         }
     }
 

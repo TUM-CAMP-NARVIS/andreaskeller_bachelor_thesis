@@ -1,4 +1,4 @@
-﻿Shader "Lit/S_OnlyRenderFocus"
+﻿Shader "Lit/S_Bruckner2007"
 {
     Properties
     {
@@ -20,6 +20,23 @@
         Pass
         {
 			Tags { "LightMode" = "LightWeightForward" }
+
+			// Write to Stencil buffer (so that outline pass can read)
+
+			Stencil
+
+			{
+
+				Ref 4
+
+				Comp always
+
+				Pass replace
+
+				ZFail keep
+
+			}
+
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -59,6 +76,7 @@
 				float3 worldViewDir : TEXCOORD7;
 
 				float3 vertexLight : TEXCOORD8;
+
 
 				//float3 worldViewDir : TEXCOORD5;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -147,6 +165,110 @@
             }
             ENDHLSL
         }
+
+
+		/*
+		Pass
+		{
+
+			// Won't draw where it sees ref value 4
+
+			Cull OFF
+			ZWrite OFF
+			ZTest OFF
+			Stencil
+			{
+				Ref 4
+				Comp notequal
+				Fail keep
+				Pass replace
+			}
+
+
+
+			CGPROGRAM
+
+			#pragma vertex vert
+
+			#pragma fragment frag
+
+			#include "UnityCG.cginc"
+
+
+
+
+			struct v2f
+
+			{
+
+				float4 pos : SV_POSITION;
+
+				float4 color : TEXCOORD0;
+
+				float4 oldpos : TEXCOORD1;
+
+				float3 worldPos : TEXCOORD2;
+
+			};
+
+			UNITY_INSTANCING_BUFFER_START(Props)
+			UNITY_DEFINE_INSTANCED_PROP(float3, _FocusPosition)
+			UNITY_DEFINE_INSTANCED_PROP(float, _FocusRadius)
+			UNITY_DEFINE_INSTANCED_PROP(float4, _Color)
+			UNITY_INSTANCING_BUFFER_END(Props)
+
+
+			v2f vert(appdata_base i)
+
+			{
+
+				v2f o;
+
+
+
+				float4 newPos = i.vertex;
+
+
+
+				// normal extrusion technique
+
+				float3 normal = normalize(i.normal);
+
+				newPos += float4(normal, 0.0)*0.001;
+
+				o.oldpos = UnityObjectToClipPos(i.vertex);
+
+				// convert to world space
+
+				o.pos = UnityObjectToClipPos(newPos);
+
+				o.worldPos = mul(UNITY_MATRIX_M, newPos).xyz;
+
+
+				o.color = float4(1, 1, 1, 1);
+
+
+
+				return o;
+
+			}
+
+
+
+			float4 frag(v2f i) : COLOR
+
+			{
+				float4 color = i.color;
+				float dist = distance(_FocusPosition, i.worldPos);
+				//float alpha = i.dist;
+				dist = step(_FocusRadius, dist);
+				color.a = 1 - dist;
+				return color;
+			}
+			ENDCG
+
+		}
+		*/
     }
 	FallBack "Hidden/InternalErrorShader"
 }

@@ -20,6 +20,7 @@
 		ZWrite On
 		ZTest LEqual
 
+		//Blend SrcAlpha OneMinusSrcAlpha
 		Blend SrcAlpha OneMinusSrcAlpha
 
         Pass
@@ -108,13 +109,14 @@
 				
 				col.a = saturate(max(max(_WeightCurvature*curv,_WeightDistanceFalloff*dist),_WeightAngleofIncidence*angInc));
 
-				if (dist > _FocusRadius) {
-					col.a = 1;
+				float borderValue = (step(_FocusRadius, dist) - step(_BorderSize + _FocusRadius, dist));
+				if (dist > _FocusRadius+_BorderSize) {
+					col.a = borderValue;
 				}
 
 				//Colored Border
-
-				col.xyz = (step(_FocusRadius, dist) - step(_BorderSize + _FocusRadius, dist))*_BorderColor.xyz;
+				
+				col.xyz = borderValue * _BorderColor.xyz +(1 - borderValue) * float3(1, 1, 1);
 
 				return UNITY_ACCESS_INSTANCED_PROP(Props, col);
             }
