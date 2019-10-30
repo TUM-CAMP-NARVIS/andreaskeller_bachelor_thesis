@@ -17,7 +17,18 @@ public class MenuHandler : MonoBehaviour
         panel = transform.GetChild(0).gameObject;
         shaders = new Queue<(Shader, List<(string, string)>)>();
         menuPoints = new List<GameObject>();
-        Shader sh = Shader.Find("Unlit/S_Bichlmeier2007");
+        Shader sh = Shader.Find("Shader Graphs/SG_Bichlemeier2007");
+        if (sh)
+        {
+            var paramList = new List<(string, string)>{
+            ("_FocusRadius", "Focus Radius"),
+            ("_WeightCurvature", "Curvature Weight"),
+            ("_WeightAngleofIncidence", "Angle of Incidence Weight"),
+            ("_WeightDistanceFalloff", "Distance Falloff Weight")
+        };
+            shaders.Enqueue((sh, paramList));
+            sh = Shader.Find("Unlit/S_Bichlmeier2007");
+        }
         if (sh)
         {
             var paramList = new List<(string, string)>{
