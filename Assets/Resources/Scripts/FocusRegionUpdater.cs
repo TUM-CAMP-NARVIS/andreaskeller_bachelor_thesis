@@ -8,10 +8,12 @@ public class FocusRegionUpdater : MonoBehaviour
     public GazeProvider gazeProvider;
     public float focusSize = 0.15f;
     public bool active = true;
+    public bool sphereActive = true;
     public GameObject sphere;
 
     void Awake()
     {
+        /*
         if (sphere)
         {
             Vector3[] normals = sphere.GetComponent<MeshFilter>().mesh.normals;
@@ -33,6 +35,7 @@ public class FocusRegionUpdater : MonoBehaviour
 
             sphere.GetComponent<MeshFilter>().mesh.triangles = triangles;
         }
+        */
         
     }
 
@@ -53,11 +56,23 @@ public class FocusRegionUpdater : MonoBehaviour
             }
             if (sphere)
             {
+                if (focusPosition == new Vector3(0,0,0))
+                {
+                    sphere.SetActive(false);
+                }
+                else
+                {
+                    if (sphereActive==true)
+                    {
+                        sphere.SetActive(true);
+                    }
+                }
                 if (model!=null)
                 {
                     var mat = model.GetComponent<Renderer>().material;
-                    //var size = mat.GetFloat("_FocusSize")*2;
-                    //sphere.transform.localScale = new Vector3(size, size, size);
+                    var size = mat.GetFloat("_FocusRadius");
+                    size *= 2;
+                    sphere.transform.localScale = new Vector3(size, size, size);
                 }
 
                 sphere.transform.position = focusPosition;
@@ -65,11 +80,22 @@ public class FocusRegionUpdater : MonoBehaviour
             }
             
         }
+        else
+        {
+            bool gaze = gazeProvider ? true : false;
+            Debug.Log("Gaze:" + gaze + "\nActive:" + active);
+        }
     }
 
     public void ToggleMovement()
     {
         active = !active;
+    }
+
+    public void EnableSphere(bool enable)
+    {
+        sphereActive = enable;
+        sphere.SetActive(enable);
     }
 }
 

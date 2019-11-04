@@ -3,25 +3,27 @@
     Properties
     {
         _Color ("Color", Color) = (0.6,0.8235,1,1)
+
+		[IntRange] _StencilRef("Stencil Reference Value", Range(0,255)) = 5
     }
     SubShader
     {
-        Tags { "Queue"="Geometry+1" "RenderType" = "Transparent"}
+        Tags { "Queue"="Transparent-1" "RenderType" = "Opaque"}
         LOD 100
 
-		ZWrite On
-		ZTest LEqual
+		Stencil{
+			Ref[_StencilRef]
+			Comp Equal
+			Fail Keep
+			Pass Replace
+			ZFail Keep
+		}
+
+		ZWrite Off
+		Cull Front
+		//ZTest LEqual
 
 		Blend SrcAlpha OneMinusSrcAlpha
-
-		
-		Stencil
-		{
-			Ref 4
-			Comp equal
-			Pass keep
-			
-		}
 		
         Pass
         {
@@ -74,8 +76,6 @@
             };
 
 			UNITY_INSTANCING_BUFFER_START(Props)
-				UNITY_DEFINE_INSTANCED_PROP(float3, _FocusPosition)
-				UNITY_DEFINE_INSTANCED_PROP(float, _FocusRadius)
 				UNITY_DEFINE_INSTANCED_PROP(float4, _Color)
 			UNITY_INSTANCING_BUFFER_END(Props)
 
@@ -147,8 +147,8 @@
 					Emission,
 					Alpha);
 
-
-				return UNITY_ACCESS_INSTANCED_PROP(Props, color);
+				color = half4(1, 0.5, 0.5, 1);
+				return color;
             }
             ENDHLSL
         }
