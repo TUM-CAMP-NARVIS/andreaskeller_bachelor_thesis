@@ -11,13 +11,7 @@
         Tags { "Queue"="Transparent-1" "RenderType" = "Opaque"}
         LOD 100
 
-		Stencil{
-			Ref[_StencilRef]
-			Comp Equal
-			Fail Keep
-			Pass Replace
-			ZFail Keep
-		}
+		
 
 		ZWrite Off
 		Cull Front
@@ -29,6 +23,13 @@
         {
 			Tags { "LightMode" = "LightWeightForward" }
 
+			Stencil{
+				Ref[_StencilRef]
+				Comp Equal
+				Fail Keep
+				Pass Replace
+				ZFail Keep
+			}
 
             HLSLPROGRAM
             #pragma vertex vert
