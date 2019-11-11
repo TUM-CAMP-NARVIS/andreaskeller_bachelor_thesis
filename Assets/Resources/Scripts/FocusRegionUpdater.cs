@@ -9,11 +9,13 @@ public class FocusRegionUpdater : MonoBehaviour
     public float focusSize = 0.15f;
     public bool active = true;
     public bool sphereActive = true;
+    public bool skinActive = true;
     public GameObject sphere;
+    private GameObject skin;
 
     void Awake()
     {
-        /*
+        skin = transform.GetChild(7).gameObject;
         if (sphere)
         {
             Vector3[] normals = sphere.GetComponent<MeshFilter>().mesh.normals;
@@ -35,55 +37,58 @@ public class FocusRegionUpdater : MonoBehaviour
 
             sphere.GetComponent<MeshFilter>().mesh.triangles = triangles;
         }
-        */
+        
         
     }
 
     void Update()
     {
-        GameObject model = null;
-        if (gazeProvider && active)
+        if (skinActive)
         {
-            Vector3 focusPosition = gazeProvider.HitPosition;
-            foreach (Transform child in transform)
+            GameObject model = null;
+            if (gazeProvider && active)
             {
-                child.GetComponent<Renderer>().material.SetVector("_FocusPosition", focusPosition);
-                if (child.name.Equals( "skin"))
+                Vector3 focusPosition = gazeProvider.HitPosition;
+                foreach (Transform child in transform)
                 {
-                    model = child.gameObject;
-                }
-                //child.GetComponent<Renderer>().material.SetFloat("_FocusRadius", focusSize);
-            }
-            if (sphere)
-            {
-                if (focusPosition == new Vector3(0,0,0))
-                {
-                    sphere.SetActive(false);
-                }
-                else
-                {
-                    if (sphereActive==true)
+                    child.GetComponent<Renderer>().material.SetVector("_FocusPosition", focusPosition);
+                    if (child.name.Equals("skin"))
                     {
-                        sphere.SetActive(true);
+                        model = child.gameObject;
                     }
+                    //child.GetComponent<Renderer>().material.SetFloat("_FocusRadius", focusSize);
                 }
-                if (model!=null)
+                if (sphere)
                 {
-                    var mat = model.GetComponent<Renderer>().material;
-                    var size = mat.GetFloat("_FocusRadius");
-                    size *= 2;
-                    sphere.transform.localScale = new Vector3(size, size, size);
+                    if (focusPosition == new Vector3(0, 0, 0))
+                    {
+                        sphere.SetActive(false);
+                    }
+                    else
+                    {
+                        if (sphereActive == true)
+                        {
+                            sphere.SetActive(true);
+                        }
+                    }
+                    if (model != null)
+                    {
+                        var mat = model.GetComponent<Renderer>().material;
+                        var size = mat.GetFloat("_FocusRadius");
+                        size *= 2;
+                        sphere.transform.localScale = new Vector3(size, size, size);
+                    }
+
+                    sphere.transform.position = focusPosition;
+
                 }
 
-                sphere.transform.position = focusPosition;
-                
             }
-            
-        }
-        else
-        {
-            bool gaze = gazeProvider ? true : false;
-            Debug.Log("Gaze:" + gaze + "\nActive:" + active);
+            else
+            {
+                bool gaze = gazeProvider ? true : false;
+                Debug.Log("Gaze:" + gaze + "\nActive:" + active);
+            }
         }
     }
 
@@ -97,5 +102,13 @@ public class FocusRegionUpdater : MonoBehaviour
         sphereActive = enable;
         sphere.SetActive(enable);
     }
+
+    public void EnableSkin(bool enable)
+    {
+        skinActive = enable;
+        skin.SetActive(enable);
+    }
+
+    
 }
 

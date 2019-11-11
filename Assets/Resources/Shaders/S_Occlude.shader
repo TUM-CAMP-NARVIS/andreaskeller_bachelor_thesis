@@ -1,22 +1,16 @@
-﻿Shader "Unlit/S_Bichlmeier2007"
+﻿Shader "Unlit/S_Occlude"
 {
 	Properties
 	{
-		_WeightCurvature("Curvature Weight", Float) = 1.0
-		_WeightAngleofIncidence("Angle of Incidence Weight", Float) = 1.0
-		_WeightDistanceFalloff("Distance Falloff Weight", Float) = 1.0
 		_FocusPosition("FocusPosition", Vector) = (-0.2,0.1,0.2,0)
 		_FocusRadius("Focus Radius", Float) = 0.3
-		_BorderSize("Thickness of colored border", Float) = 0.02
-		_BorderColor("Color of border", Color) = (1,0,0,1)
-		_CurvatureMap("Curvature Map", 2D) = "black"
 		
     }
     SubShader
     {
-        Tags { "Queue"="Transparent" "RenderType" = "Transparent"}
+        Tags { "Queue"="Geometry-1" "RenderType" = "Opaque"}
         LOD 100
-
+		ColorMask 0
 		ZWrite On
 		ZTest LEqual
 
@@ -46,13 +40,11 @@
             struct v2f
             {
 				//Necessary for every shader
-				float4 vertex : SV_POSITION;
-
-                float2 uv : TEXCOORD0;
+				float4 vertex : SV_POSITION;            
 
 				float3 worldPos : TEXCOORD1;
-				float3 worldNrm : TEXCOORD2;
-				float3 viewVec : TEXCOORD3;
+
+				float depth : DEPTH;
 				//float3 worldViewDir : TEXCOORD5;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
@@ -61,12 +53,6 @@
 			UNITY_INSTANCING_BUFFER_START(Props)
 				UNITY_DEFINE_INSTANCED_PROP(float3, _FocusPosition)
 				UNITY_DEFINE_INSTANCED_PROP(float, _FocusRadius)
-				UNITY_DEFINE_INSTANCED_PROP(float, _WeightCurvature)
-				UNITY_DEFINE_INSTANCED_PROP(float, _WeightAngleofIncidence)
-				UNITY_DEFINE_INSTANCED_PROP(float, _WeightDistanceFalloff)
-				UNITY_DEFINE_INSTANCED_PROP(float, _BorderSize)
-				UNITY_DEFINE_INSTANCED_PROP(fixed4, _BorderColor)
-				UNITY_DEFINE_INSTANCED_PROP(sampler2D, _CurvatureMap)
 			UNITY_INSTANCING_BUFFER_END(Props)
 			
 
@@ -82,13 +68,8 @@
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 
 				o.vertex = UnityObjectToClipPos(v.vertex);
-				o.uv = v.texcoord;
 
 				o.worldPos = mul(UNITY_MATRIX_M,v.vertex).xyz;
-				
-				o.worldNrm = UnityObjectToWorldNormal(v.normal);
-
-				o.viewVec = normalize(_WorldSpaceCameraPos.xyz - o.worldPos);
 
                 return o;
             }
@@ -97,31 +78,21 @@
             {
 				UNITY_SETUP_INSTANCE_ID(i);
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-                // sample the curvature
-				fixed4 curvMap = tex2D(_CurvatureMap, i.uv);
 
 				float dist = distance(_FocusPosition, i.worldPos);
-				float distFalloff = saturate(dist / _FocusRadius);
-				float angInc = saturate(1-dot(i.worldNrm, i.viewVec));
-				float curv = saturate(abs((0.5 - curvMap.x) * 2));
-				fixed4 col = fixed4(0, 0, 0, 1);
-				//dist = step(_WeightDistanceFalloff, dist);
-				
-				col.a = saturate(max(max(_WeightCurvature*curv,_WeightDistanceFalloff*distFalloff),_WeightAngleofIncidence*angInc));
-				col.xyz = 0;
-
-				float borderValue = (step(_FocusRadius, dist) - step(_BorderSize + _FocusRadius, dist));
-				col.xyz = borderValue * _BorderColor.xyz + (1 - borderValue) * float3(0, 0, 0);
-				if (dist > _FocusRadius+_BorderSize) {
-					col.a = 1;
-					col.xyz = 0;
+				if (dist > _FocusRadius+0.001f) {
+					i.depth = 0;
+				}
+				else
+				{
+					i.depth = 0.99f;
 				}
 
 				//Colored Border
 				
 				
 
-				return UNITY_ACCESS_INSTANCED_PROP(Props, col);
+				return 0;
             }
             ENDCG
         }

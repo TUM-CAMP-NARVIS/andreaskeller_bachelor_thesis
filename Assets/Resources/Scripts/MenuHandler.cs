@@ -25,7 +25,7 @@ public class MenuHandler : MonoBehaviour
     void Update()
     {
         //Rotate towards camera
-        if (holoLens)
+        if (holoLens&&false)
         {
             Vector3 angle = Vector3.Normalize(this.transform.position - holoLens.transform.position);
             this.transform.rotation = Quaternion.LookRotation(angle);

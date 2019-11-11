@@ -28,7 +28,7 @@
             "typeInfo": {
                 "fullName": "UnityEditor.ShaderGraph.ColorShaderProperty"
             },
-            "JSONnodeData": "{\n    \"m_Name\": \"DepthColor\",\n    \"m_GeneratePropertyBlock\": true,\n    \"m_Guid\": {\n        \"m_GuidSerialized\": \"fc385146-96e9-4c02-a075-77d75c985049\"\n    },\n    \"m_DefaultReferenceName\": \"Color_5374BFEA\",\n    \"m_OverrideReferenceName\": \"_DepthColor\",\n    \"m_Precision\": 0,\n    \"m_Value\": {\n        \"r\": 0.5471698045730591,\n        \"g\": 0.01980140432715416,\n        \"b\": 0.0,\n        \"a\": 0.0\n    },\n    \"m_ColorMode\": 0,\n    \"m_Hidden\": false\n}"
+            "JSONnodeData": "{\n    \"m_Name\": \"DepthColor\",\n    \"m_GeneratePropertyBlock\": true,\n    \"m_Guid\": {\n        \"m_GuidSerialized\": \"fc385146-96e9-4c02-a075-77d75c985049\"\n    },\n    \"m_DefaultReferenceName\": \"Color_5374BFEA\",\n    \"m_OverrideReferenceName\": \"_DepthColor\",\n    \"m_Precision\": 0,\n    \"m_Value\": {\n        \"r\": 0.0,\n        \"g\": 0.0,\n        \"b\": 0.0,\n        \"a\": 0.0\n    },\n    \"m_ColorMode\": 0,\n    \"m_Hidden\": false\n}"
         }
     ],
     "m_SerializableNodes": [
