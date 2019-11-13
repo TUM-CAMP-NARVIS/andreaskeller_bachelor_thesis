@@ -1438,6 +1438,7 @@ MonoBehaviour:
   focusUpdateScript: {fileID: 1793089057}
   phantom: {fileID: 1793089056}
   rootNode: {fileID: 1089599639}
+  focusObject: {fileID: 0}
 --- !u!114 &1476646524
 MonoBehaviour:
   m_ObjectHideFlags: 0

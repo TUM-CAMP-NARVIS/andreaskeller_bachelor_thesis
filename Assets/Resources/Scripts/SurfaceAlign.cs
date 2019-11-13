@@ -75,15 +75,15 @@ public class SurfaceAlign : MonoBehaviour
     {
         
 
-        /*if (gazeProvider.GazeTarget != skin)
+        if (gazeProvider.GazeTarget != skin)
         {
-            this.transform.GetChild(0).gameObject.SetActive(false);
+            this.transform.GetChild(2).gameObject.SetActive(false);
             
         }
-        else*/
+        else
         {
-            this.transform.GetChild(0).gameObject.SetActive(false);
-            this.transform.position = gazeProvider.HitPosition+gazeProvider.HitNormal*0.1f;
+            this.transform.GetChild(2).gameObject.SetActive(true);
+            this.transform.position = gazeProvider.HitPosition+gazeProvider.HitNormal*0.05f;
             this.transform.up = gazeProvider.HitNormal;
         }
 
