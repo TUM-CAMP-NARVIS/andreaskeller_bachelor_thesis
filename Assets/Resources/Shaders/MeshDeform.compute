@@ -4,6 +4,19 @@
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
 RWTexture2D<float4> Result;
+float4x4 _RotMatCtrlPt;
+
+StructuredBuffer<float3> _Vertices;
+StructuredBuffer<float3> _Normals;
+
+
+
+struct MeshObject
+{
+    float4x4 localToWorldMatix;
+    int indices_offset;
+    int indices_count;
+};
 
 struct Ray
 {

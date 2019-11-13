@@ -106,7 +106,7 @@ public class FocusRegionUpdater : MonoBehaviour
     public void EnableSkin(bool enable)
     {
         skinActive = enable;
-        skin.SetActive(enable);
+        skin.GetComponent<MeshRenderer>().enabled = enable;
     }
 
     
