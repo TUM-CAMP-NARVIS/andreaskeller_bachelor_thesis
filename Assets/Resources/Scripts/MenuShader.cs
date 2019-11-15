@@ -16,7 +16,8 @@ public class MenuShader : MonoBehaviour
         panel = transform.GetChild(0).gameObject;
         shaders = new Queue<(Shader, List<(string, string)>)>();
         menuPoints = new List<GameObject>();
-        Shader sh = Shader.Find("Shader Graphs/SG_HaloFocus");
+        Shader sh;
+        sh = Shader.Find("Shader Graphs/SG_HaloFocus");
         if (sh)
         {
             var paramList = new List<(string, string)>{
@@ -24,7 +25,7 @@ public class MenuShader : MonoBehaviour
             ("_DepthScale", "Depth Scale Multiplier"),
         };
             shaders.Enqueue((sh, paramList));
-            
+
         }
         sh = Shader.Find("Unlit/S_Bichlmeier2007");
         if (sh)

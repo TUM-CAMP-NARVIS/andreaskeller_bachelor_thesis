@@ -7,7 +7,7 @@
 		_WeightDistanceFalloff("Distance Falloff Weight", Float) = 1.0
 		_FocusPosition("FocusPosition", Vector) = (-0.2,0.1,0.2,0)
 		_FocusRadius("Focus Radius", Float) = 0.3
-		_BorderSize("Thickness of colored border", Float) = 0.02
+		_BorderSize("Thickness of colored border", Float) = 0.001
 		_BorderColor("Color of border", Color) = (1,0,0,1)
 		_CurvatureMap("Curvature Map", 2D) = "black"
 		

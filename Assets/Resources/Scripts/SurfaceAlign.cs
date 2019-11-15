@@ -31,13 +31,24 @@ public class SurfaceAlign : MonoBehaviour
     private Vector3 position = new Vector3(10,10,10);
     private Vector3 lookDirection = new Vector3(0, 1, 0);
 
-    private int[] influenceID;
+    private (int, float)[,] influenceID;
 
     //Window mesh data
     private Vector3[] windowVertices;
     private Vector3[] windowNormals;
 
     private bool calculated = false;
+
+
+    //For influence calculation
+    SortedList<float, int> influenceIDs = new SortedList<float, int>();
+    public int amountControlPointsInfluencing = 1;
+    private int amountControlPointInfluencing = -1;
+    public float maxDistanceInfluence = 0.2f;
+    private float maxInfluenceDistance = -0.2f;
+
+    private Vector3 windowMeshScale;
+
 
     struct ControlPoint
     {
@@ -62,6 +73,8 @@ public class SurfaceAlign : MonoBehaviour
         */
         lvlscaler = 1 + 2 * (ctrPoints - 1);
 
+        windowMeshScale = windowMesh.transform.localScale;
+        
 
 
         Mesh mesh = windowMesh.GetComponent<MeshFilter>().mesh;
@@ -73,16 +86,31 @@ public class SurfaceAlign : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-
-        if (gazeProvider.GazeTarget != skin)
+        if (windowMesh.transform.localScale != windowMeshScale)
         {
-            this.transform.GetChild(2).gameObject.SetActive(false);
+            calculated = false;
+            windowMeshScale = windowMesh.transform.localScale;
+        }
+            
+        //Recalculate influence only if the user defined variables change
+        if ((amountControlPointInfluencing != amountControlPointsInfluencing)||maxDistanceInfluence != maxInfluenceDistance)
+        {
+            amountControlPointInfluencing = amountControlPointsInfluencing;
+            maxInfluenceDistance = maxDistanceInfluence;
+            calculated = false;
+        }
+        //Make sure min 1 controlpoint always influences the verts
+        if (amountControlPointInfluencing < 1)
+            amountControlPointInfluencing = 1;
+
+        if (false)//gazeProvider.GazeTarget != skin)
+        {
+            windowMesh.gameObject.SetActive(false);
             
         }
         else
         {
-            this.transform.GetChild(2).gameObject.SetActive(true);
+           windowMesh.gameObject.SetActive(true);
             this.transform.position = gazeProvider.HitPosition+gazeProvider.HitNormal*0.05f;
             this.transform.up = gazeProvider.HitNormal;
         }
@@ -94,9 +122,17 @@ public class SurfaceAlign : MonoBehaviour
 
             _controlPoints.Clear();
 
-            rayCastPoint(ctrPoints, new Vector3(0, 0, 0), new Vector3(0,1,0), false, false, false, 0, direction.None, true);
+            rayCastPoint(ctrPoints, new Vector3(0, 0, 0), new Vector3(0,1,0), 0, false, false, false, 0, direction.None, true);
 
-            //drawPrimitives();
+            //Can't have more controlpoints influence a vertex than there are
+            if (_controlPoints.Count < amountControlPointInfluencing)
+                amountControlPointInfluencing = _controlPoints.Count;
+
+            if (Application.isEditor)
+            {
+                drawPrimitives();
+            }
+            
             calculateInfluence();
             moveWindow();
         }
@@ -109,7 +145,7 @@ public class SurfaceAlign : MonoBehaviour
     }
     enum direction {Up, Right, Down,Left, None};
 
-    void rayCastPoint(int iters, Vector3 pos, Vector3 nrm, bool corner = false, bool up=true, bool right=true, int id = 0, direction d = direction.None, bool origin = false)
+    void rayCastPoint(int iters, Vector3 pos, Vector3 nrm, float dist = 0, bool corner = false, bool up=true, bool right=true, int id = 0, direction d = direction.None, bool origin = false)
     {
         //Only create as many controlpoints as wanted
         if (iters == 0)
@@ -132,6 +168,7 @@ public class SurfaceAlign : MonoBehaviour
 
         ctrlP.position = wP;
         ctrlP.normal = wN;
+        float distance = dist;
 
 
         //trace a ray from trace origin towards the model
@@ -148,6 +185,24 @@ public class SurfaceAlign : MonoBehaviour
 
             //translation from original point to point on model
             Vector3 translation = hit.point - wP;
+
+            distance = Vector3.Magnitude(translation);
+            if (!origin)
+            {
+                float differenceDist = Mathf.Abs(distance - dist);
+                if (differenceDist > 2 * interCubeDist)
+                {
+                    if (distance - dist > 0)
+                        translation = Vector3.Normalize(translation) * (dist + 2 * interCubeDist);
+                    else
+                        translation = Vector3.Normalize(translation) * (dist - 2 * interCubeDist);
+
+                    distance = Vector3.Magnitude(translation);
+                }
+            }
+            
+            
+
             //rotation - this breaks everything, TODO
             Quaternion q = new Quaternion();
             q.SetFromToRotation(ctrlP.normal, nrm);
@@ -208,7 +263,7 @@ public class SurfaceAlign : MonoBehaviour
                         }
                     }
 
-                    rayCastPoint(iters, newPoint, nrm, newCorner, newUp, newRight, 0, newD);
+                    rayCastPoint(iters, newPoint, nrm, distance, newCorner, newUp, newRight, 0, newD);
                 }
             }
 
@@ -220,16 +275,16 @@ public class SurfaceAlign : MonoBehaviour
             float compUp = up ? interCubeDist : -interCubeDist;
 
             Vector3 newPoint = new Vector3(pos.x + compRight,0, pos.z + compUp);
-            rayCastPoint(iters, newPoint, nrm, true, up, right);
+            rayCastPoint(iters, newPoint, nrm, distance, true, up, right);
 
             direction newD = right ? direction.Right : direction.Left;
             
             newPoint = new Vector3(pos.x + compRight, 0, pos.z);
-            rayCastPoint(iters, newPoint, nrm, false, up, right, 0, newD);
+            rayCastPoint(iters, newPoint, nrm, distance, false, up, right, 0, newD);
 
             newD = up ? direction.Up : direction.Down;
             newPoint = new Vector3(pos.x, 0, pos.z+compUp);
-            rayCastPoint(iters, newPoint, nrm, false, up, right, 0, newD);
+            rayCastPoint(iters, newPoint, nrm, distance, false, up, right, 0, newD);
         }
         else
         {
@@ -249,7 +304,7 @@ public class SurfaceAlign : MonoBehaviour
                     newPoint.z -= interCubeDist;
                     break;
             }
-            rayCastPoint(iters, newPoint, nrm, false, up, right, 0, d);
+            rayCastPoint(iters, newPoint, nrm, distance, false, up, right, 0, d);
         }
     }
 
@@ -351,6 +406,8 @@ public class SurfaceAlign : MonoBehaviour
             return;
         Mesh mesh = windowMesh.GetComponent<MeshFilter>().mesh;
         Vector3[] verts = windowVertices;
+
+        /* Old Method
         //Method for selecting influence tbd, right now just take the next controlpoint
         influenceID = new int[mesh.vertexCount];
         //string debug = "";
@@ -373,6 +430,52 @@ public class SurfaceAlign : MonoBehaviour
             influenceID[i] = closest;
             //debug += "Vertex " + i + ": " + closest;
         }
+        */
+
+        //New method, influence of userdefined amount of closest controlpoints
+
+        //if controlpoint is further away from vert than this distance, set its influence to 0
+        float maxDist = maxInfluenceDistance;
+        
+        influenceID = new (int, float)[verts.Length, amountControlPointInfluencing];
+        for (int i = 0; i<verts.Length; i++)
+        {
+            Vector3 vert = verts[i];
+            Vector3 worldPos = windowMesh.transform.TransformPoint(vert);
+            influenceIDs.Clear();
+            for (int j = 0; j<_controlPoints.Count; j++)
+            {
+                ControlPoint c = _controlPoints[j];
+                float dist = Vector3.Distance(worldPos, c.position);
+                while (influenceIDs.ContainsKey(dist))
+                {
+                    dist += 0.0001f;
+                }
+                influenceIDs.Add(dist, j);
+
+            }
+            float totalInfl = 1.0f;
+
+            for (int j = (amountControlPointInfluencing-1); j>0; j--)
+            {
+                float dist = influenceIDs.Keys[j];
+                int id = influenceIDs.Values[j];
+                float influence = 0;
+                if (dist < maxDist)
+                {
+                    influence = (totalInfl/((float) (j+1))) * (1 - dist / maxDist);
+                }
+                totalInfl -= influence;
+                Debug.Log("Influence vertex " + i + " ControlPoint " + id + " = " + influence + "j="+j);
+                influenceID[i, j] = (id, influence);
+                
+            }
+            //Closest controlpoint always has at least 1/amountControlPointInfluencing influence, and a maximum of 1
+            int idFirst = influenceIDs.Values[0];
+            //Debug.Log("Influence vertex " + i + " ControlPoint " + idFirst + " = " + totalInfl);
+            influenceID[i, 0] = (idFirst, totalInfl);
+        }
+
         calculated = true;
         //Debug.Log(debug);
         
@@ -380,17 +483,40 @@ public class SurfaceAlign : MonoBehaviour
 
     void moveWindow()
     {
+
         Mesh mesh = windowMesh.GetComponent<MeshFilter>().mesh;
         Vector3[] newVertexPos = new Vector3[mesh.vertexCount];
         Vector3[] newVertexNrm = new Vector3[mesh.vertexCount];
+
         for (int i = 0; i<newVertexPos.Length; i++)
         {
-            Vector3 vert = transform.TransformPoint(windowVertices[i]);
-            Vector3 vert2 = _controlPoints[(influenceID[i])].matrix.MultiplyPoint(vert);
-            newVertexPos[i] = transform.InverseTransformPoint(vert2);
+            Vector3 vert = windowMesh.transform.TransformPoint(windowVertices[i]);
             Vector3 nrm = windowNormals[i];
-            newVertexNrm[i] = _controlPoints[(influenceID[i])].matrix_nrm.MultiplyVector(nrm);
+            Vector3[] vertsNew = new Vector3[amountControlPointInfluencing];
+            Vector3[] nrmsNew = new Vector3[amountControlPointInfluencing];
+            for (int j = 0; j<amountControlPointInfluencing; j++)
+            {
+                
+                vertsNew[j] = _controlPoints[(influenceID[i,j].Item1)].matrix.MultiplyPoint(vert);
+                vertsNew[j] *= influenceID[i, j].Item2;
+
+                nrmsNew[j] = _controlPoints[(influenceID[i, j].Item1)].matrix_nrm.MultiplyVector(nrm);
+                nrmsNew[j] *= influenceID[i, j].Item2;
+
+            }
+            Vector3 vertNew = new Vector3();
+            Vector3 nrmNew = new Vector3();
+            for (int j = 0; j<amountControlPointInfluencing; j++)
+            {
+                Vector3 v = vertsNew[j];
+                Vector3 n = nrmsNew[j];
+                vertNew += v;
+                nrmNew += n;
+            }
+            newVertexPos[i] = windowMesh.transform.InverseTransformPoint(vertNew);
+            newVertexNrm[i] = Vector3.Normalize(nrmNew);
         }
+
         Vector2[] newUV = mesh.uv;
         int[] newTriangles = mesh.triangles;
 
