@@ -7,16 +7,31 @@ using UnityEngine.XR.WSA;
 public class ObjectPlacer : MonoBehaviour
 {
     public GazeProvider gazeProvider;
-    public SpatialMappingCollider spatialMappingCollider;
+    private SpatialMappingCollider spatialMappingCollider;
+    private SpatialMappingRenderer spatialMappingRenderer;
     private List<Vector3> corners = new List<Vector3>();
     private bool placed = false;
+    private GameObject[] cubes;
     // Start is called before the first frame update
     void Start()
     {
+        cubes = new GameObject[4];
+        for (int i = 0; i < 4; i++)
+        {
+            GameObject primitive = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            primitive.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+            primitive.GetComponent<Collider>().enabled = false;
+            primitive.SetActive(false);
+            cubes[i]=primitive;
+            //primitive.transform.up = _ctrlPointNrms[i];
+
+        }
         if (!Application.isEditor)
         {
             transform.GetChild(0).gameObject.SetActive(false);
         }
+        spatialMappingCollider = FindObjectOfType<SpatialMappingCollider>();
+        spatialMappingRenderer = FindObjectOfType<SpatialMappingRenderer>();
         
     }
 
@@ -25,6 +40,20 @@ public class ObjectPlacer : MonoBehaviour
     {
         
     }
+
+    public void undoPlacing()
+    {
+        transform.GetChild(0).gameObject.SetActive(false);
+        //spatialMappingCollider.enableCollisions = true;
+        spatialMappingRenderer.renderState = SpatialMappingRenderer.RenderState.Visualization;
+        placed = false;
+        foreach(GameObject c in cubes)
+        {
+            c.SetActive(false);
+        }
+        corners.Clear();
+    }
+
     public void moveToPointer()
     {
         /*
@@ -38,6 +67,9 @@ public class ObjectPlacer : MonoBehaviour
         */
         if (placed)
             return;
+
+        cubes[corners.Count].transform.position = gazeProvider.HitPosition;
+        cubes[corners.Count].SetActive(true);
 
         if (corners.Count<3)
         {
@@ -63,7 +95,8 @@ public class ObjectPlacer : MonoBehaviour
 
             transform.GetChild(0).gameObject.SetActive(true);
             placed = true;
-
+            spatialMappingRenderer.renderState = SpatialMappingRenderer.RenderState.None;
+            //spatialMappingCollider.enableCollisions = false;
         }
         
 

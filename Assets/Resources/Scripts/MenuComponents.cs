@@ -11,7 +11,7 @@ public class MenuComponents : MonoBehaviour
     public GameObject phantom;
     public GameObject rootNode;
     private SurfaceAlign surfaceAlign;
-    private GameObject windowObject;
+    private GameObject focusObjectScaler;
     private List<GameObject> menuPoints;
 
     // Start is called before the first frame update
@@ -20,7 +20,7 @@ public class MenuComponents : MonoBehaviour
         panel = transform.GetChild(0).gameObject;
         menuPoints = new List<GameObject>();
         surfaceAlign = FindObjectOfType<SurfaceAlign>();
-        windowObject = surfaceAlign.windowMesh;
+        focusObjectScaler = surfaceAlign.transform.parent.gameObject;
 
 
         BuildMenu();
@@ -211,7 +211,7 @@ public class MenuComponents : MonoBehaviour
             param1.transform.SetParent(panel.transform, false);
             param1.transform.localPosition = new Vector3(0, 20 - (100), 0);
             desc.GetComponent<Text>().text = "Inside Box Scale";
-            var defValue = windowObject.transform.localScale;
+            var defValue = focusObjectScaler.transform.localScale;
             value.GetComponent<Text>().text = defValue.x.ToString();
             value.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 20);
 
@@ -220,17 +220,17 @@ public class MenuComponents : MonoBehaviour
             reset.transform.localPosition = new Vector3(reset.transform.localPosition.x + 10, reset.transform.localPosition.y, reset.transform.localPosition.z);
 
             plus.GetComponent<Button>().onClick.AddListener(delegate {
-                var scale = windowObject.transform.localScale;
-                windowObject.transform.localScale = new Vector3(scale.x+0.1f, scale.y + 0.1f, scale.z+0.1f);
-                value.GetComponent<Text>().text = windowObject.transform.localScale.x.ToString();
+                var scale = focusObjectScaler.transform.localScale;
+                focusObjectScaler.transform.localScale = new Vector3(scale.x+0.1f, scale.y + 0.1f, scale.z+0.1f);
+                value.GetComponent<Text>().text = focusObjectScaler.transform.localScale.x.ToString();
             });
             minus.GetComponent<Button>().onClick.AddListener(delegate {
-                var scale = windowObject.transform.localScale;
-                windowObject.transform.localScale = new Vector3(scale.x - 0.1f, scale.y - 0.1f, scale.z - 0.1f);
-                value.GetComponent<Text>().text = windowObject.transform.localScale.x.ToString();
+                var scale = focusObjectScaler.transform.localScale;
+                focusObjectScaler.transform.localScale = new Vector3(scale.x - 0.1f, scale.y - 0.1f, scale.z - 0.1f);
+                value.GetComponent<Text>().text = focusObjectScaler.transform.localScale.x.ToString();
             });
             reset.GetComponent<Button>().onClick.AddListener(delegate {
-                windowObject.transform.localScale = defValue;
+                focusObjectScaler.transform.localScale = defValue;
             });
         }
 

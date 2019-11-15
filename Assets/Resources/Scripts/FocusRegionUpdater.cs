@@ -5,13 +5,18 @@ using Microsoft.MixedReality.Toolkit.Input;
 
 public class FocusRegionUpdater : MonoBehaviour
 {
-    public GazeProvider gazeProvider;
+    private FocusManager focusManager;
     public float focusSize = 0.15f;
     public bool active = true;
     public bool sphereActive = true;
     public bool skinActive = true;
     public GameObject sphere;
     private GameObject skin;
+
+    void Start()
+    {
+        focusManager = FindObjectOfType<FocusManager>();
+    }
 
     void Awake()
     {
@@ -46,9 +51,9 @@ public class FocusRegionUpdater : MonoBehaviour
         if (skinActive)
         {
             GameObject model = null;
-            if (gazeProvider && active)
+            if (focusManager && active)
             {
-                Vector3 focusPosition = gazeProvider.HitPosition;
+                Vector3 focusPosition = focusManager.focusPosition;
                 foreach (Transform child in transform)
                 {
                     child.GetComponent<Renderer>().material.SetVector("_FocusPosition", focusPosition);
@@ -86,7 +91,7 @@ public class FocusRegionUpdater : MonoBehaviour
             }
             else
             {
-                bool gaze = gazeProvider ? true : false;
+                bool gaze = focusManager ? true : false;
                 Debug.Log("Gaze:" + gaze + "\nActive:" + active);
             }
         }
