@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Microsoft.MixedReality.Toolkit.Input;
+using Microsoft.MixedReality.Toolkit.SpatialAwareness;
 using UnityEngine.XR.WSA;
 
 public class ObjectPlacer : MonoBehaviour
@@ -44,7 +45,7 @@ public class ObjectPlacer : MonoBehaviour
     public void undoPlacing()
     {
         transform.GetChild(0).gameObject.SetActive(false);
-        //spatialMappingCollider.enableCollisions = true;
+        spatialMappingCollider.layer = 0;
         spatialMappingRenderer.renderState = SpatialMappingRenderer.RenderState.Visualization;
         placed = false;
         foreach(GameObject c in cubes)
@@ -88,15 +89,15 @@ public class ObjectPlacer : MonoBehaviour
             middle.y = middle.y / 4.0f;
             middle.z = middle.z / 4.0f;
             transform.position = middle;
-            transform.forward = 
+            
             transform.forward = Vector3.Normalize(corners[1] - corners[2]);
-            transform.right = Vector3.Normalize(corners[0] - corners[1]);
+            //transform.right = Vector3.Normalize(corners[0] - corners[1]);
             transform.up = Vector3.Normalize(Vector3.Cross(corners[1]-corners[0],corners[2]-corners[0]))*-1;
 
             transform.GetChild(0).gameObject.SetActive(true);
             placed = true;
             spatialMappingRenderer.renderState = SpatialMappingRenderer.RenderState.None;
-            //spatialMappingCollider.enableCollisions = false;
+            spatialMappingCollider.layer = 2;
         }
         
 

@@ -8,34 +8,29 @@ public class FocusManager : MonoBehaviour
     public GameObject seeThroughObject;
     public float lazyMouseDistance = 0.005f;
 
-    private GazeProvider gazeProvider;
-    private Vector3 _focusPosition;
-    private Vector3 _focusNormal;
+    
 
     public bool isFocused { get; private set; } = false;
 
-    public Vector3 focusPosition
-    {
-        get
-        {
-            return _focusPosition;
-        }
-    }
+    public bool isStatic { get { return !active; } }
 
-    public Vector3 focusNormal
-    {
-        get
-        {
-            return _focusNormal;
-        }
-    }
+    public Vector3 focusPosition { get; private set; } = new Vector3();
+
+    public Vector3 focusNormal { get; private set; } = new Vector3(0, 1, 0);
+
+    private bool active = true;
+    private GazeProvider gazeProvider;
 
     // Start is called before the first frame update
     void Start()
     {
         gazeProvider = FindObjectOfType<GazeProvider>();
-        _focusPosition = new Vector3();
-        _focusNormal = new Vector3(0, 1, 0);
+
+        if (gazeProvider == null)
+        {
+            Debug.LogError("No GazeProvider in scene!");
+        }
+
         if (!seeThroughObject)   
         {
             Debug.LogError("No phatom specified");
@@ -52,25 +47,28 @@ public class FocusManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!active)
+            return;
+
         //LazyMouse Behaviour
-        float distanceToGaze = Vector3.Distance(_focusPosition, gazeProvider.HitPosition);
+        float distanceToGaze = Vector3.Distance(focusPosition, gazeProvider.HitPosition);
 
         if (!isFocused)
         {
             if (gazeProvider.GazeTarget == seeThroughObject)
             {
-                _focusPosition = gazeProvider.HitPosition;
-                _focusNormal = gazeProvider.HitNormal;
+                focusPosition = gazeProvider.HitPosition;
+                focusNormal = gazeProvider.HitNormal;
                 isFocused = true;
             }
         }
         else if (distanceToGaze > lazyMouseDistance)
         {
-            Vector3 moveDirection = Vector3.Normalize(gazeProvider.HitPosition - _focusPosition);
+            Vector3 moveDirection = Vector3.Normalize(gazeProvider.HitPosition - focusPosition);
             float moveDistance = distanceToGaze - lazyMouseDistance;
 
             Vector3 rayOrigin = gazeProvider.GazeOrigin;
-            Vector3 rayTarget = _focusPosition + (moveDistance * moveDirection);
+            Vector3 rayTarget = focusPosition + (moveDistance * moveDirection);
             Vector3 rayDirection = Vector3.Normalize(rayTarget - rayOrigin);
 
             RaycastHit hit;
@@ -78,8 +76,8 @@ public class FocusManager : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                _focusPosition = hit.point;
-                _focusNormal = hit.normal;
+                focusPosition = hit.point;
+                focusNormal = hit.normal;
 
                 //Not focusing on the object anymore if we dont hit it
                 if (hit.collider.gameObject != seeThroughObject)
@@ -92,5 +90,10 @@ public class FocusManager : MonoBehaviour
                 isFocused = false;
             }
         }
+    }
+
+    public void ToggleActive()
+    {
+        active = !active;
     }
 }

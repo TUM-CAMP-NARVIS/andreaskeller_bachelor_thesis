@@ -13,6 +13,7 @@ public class MenuComponents : MonoBehaviour
     private SurfaceAlign surfaceAlign;
     private GameObject focusObjectScaler;
     private List<GameObject> menuPoints;
+    private ObjectPlacer objectPlacer;
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +22,7 @@ public class MenuComponents : MonoBehaviour
         menuPoints = new List<GameObject>();
         surfaceAlign = FindObjectOfType<SurfaceAlign>();
         focusObjectScaler = surfaceAlign.transform.parent.gameObject;
-
+        objectPlacer = FindObjectOfType<ObjectPlacer>();
 
         BuildMenu();
         
@@ -37,12 +38,15 @@ public class MenuComponents : MonoBehaviour
     {
         Debug.Log("Building Menu");
 
+        int position = 80;
         //Title
         GameObject title = Instantiate(Resources.Load("Prefabs/Title")) as GameObject;
         menuPoints.Add(title);
         title.transform.SetParent(panel.transform, false);
-        title.transform.localPosition = new Vector3(0, 40, 0);
+        title.transform.localPosition = new Vector3(0, position, 0);
         title.transform.GetChild(0).GetComponent<Text>().text = "Visualization Options";
+        position -= 20;
+        
 
         //Parameters
         for (int i = 0; i<1; i++)
@@ -51,29 +55,28 @@ public class MenuComponents : MonoBehaviour
             GameObject param1 = Instantiate(Resources.Load("Prefabs/Functionality")) as GameObject;
             menuPoints.Add(param1);
             param1.transform.SetParent(panel.transform, false);
-            param1.transform.localPosition = new Vector3(0, 20 - (20 * i), 0);
-            param1.transform.GetChild(0).GetComponent<Text>().text = "Inside Sphere";
+            param1.transform.localPosition = new Vector3(0, position, 0);
+            param1.transform.GetChild(0).GetComponent<Text>().text = "Window Object";
             param1.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(delegate {
-                if (focusUpdateScript.sphereActive)
+                if (surfaceAlign.windowVisible)
                 {
-                    focusUpdateScript.EnableSphere(false);
+                    surfaceAlign.windowVisible = false;
                     param1.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "Disabled";
                 } else
                 {
-                    focusUpdateScript.EnableSphere(true);
+                    surfaceAlign.windowVisible = true;
                     param1.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "Enabled";
                 }
                 
             });
-            
+            position -= 20;
         }
         if (true)
         {
-            Debug.Log("Function #" + 1);
             GameObject param1 = Instantiate(Resources.Load("Prefabs/Functionality")) as GameObject;
             menuPoints.Add(param1);
             param1.transform.SetParent(panel.transform, false);
-            param1.transform.localPosition = new Vector3(0, 20 - (20 * 2), 0);
+            param1.transform.localPosition = new Vector3(0,position, 0);
             param1.transform.GetChild(0).GetComponent<Text>().text = "Render Skin";
             param1.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(delegate {
                 if (focusUpdateScript.skinActive)
@@ -88,6 +91,21 @@ public class MenuComponents : MonoBehaviour
                 }
 
             });
+            position -= 20;
+        }
+
+        if (true)
+        {
+            GameObject param1 = Instantiate(Resources.Load("Prefabs/Functionality")) as GameObject;
+            menuPoints.Add(param1);
+            param1.transform.SetParent(panel.transform, false);
+            param1.transform.localPosition = new Vector3(0, position, 0);
+            param1.transform.GetChild(0).GetComponent<Text>().text = "Phantom Placing";
+            param1.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "Reset";
+            param1.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(delegate {
+                objectPlacer.undoPlacing();
+            });
+            position -= 20;
         }
 
         if (phantom)
@@ -100,7 +118,7 @@ public class MenuComponents : MonoBehaviour
             var minus = param1.transform.GetChild(3);
             var reset = param1.transform.GetChild(4);
             param1.transform.SetParent(panel.transform, false);
-            param1.transform.localPosition = new Vector3(0, 20 - (20), 0);
+            param1.transform.localPosition = new Vector3(0,position, 0);
             desc.GetComponent<Text>().text = "Phantom Scale";
             var defValue = phantom.transform.localScale;
             value.GetComponent<Text>().text = defValue.x.ToString();
@@ -125,6 +143,7 @@ public class MenuComponents : MonoBehaviour
                 phantom.transform.localScale = defValue;
                 param1.transform.GetChild(1).GetComponent<Text>().text = scale.x.ToString();
             });
+            position -= 20;
         }
 
         if (phantom)
@@ -137,10 +156,10 @@ public class MenuComponents : MonoBehaviour
             var minus = param1.transform.GetChild(3);
             var reset = param1.transform.GetChild(4);
             param1.transform.SetParent(panel.transform, false);
-            param1.transform.localPosition = new Vector3(0, 20 - (60), 0);
-            desc.GetComponent<Text>().text = "rootNode Rotation XZ";
-            var defValue = rootNode.transform.rotation;
-            value.GetComponent<Text>().text = defValue.x.ToString();
+            param1.transform.localPosition = new Vector3(0, position, 0);
+            desc.GetComponent<Text>().text = "rootNode Rotation";
+            var currentRotation = 0.0f;
+            value.GetComponent<Text>().text = "0";
             value.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 20);
 
             plus.transform.localPosition = new Vector3(plus.transform.localPosition.x + 10, plus.transform.localPosition.y, plus.transform.localPosition.z);
@@ -148,20 +167,21 @@ public class MenuComponents : MonoBehaviour
             reset.transform.localPosition = new Vector3(reset.transform.localPosition.x + 10, reset.transform.localPosition.y, reset.transform.localPosition.z);
 
             plus.GetComponent<Button>().onClick.AddListener(delegate {
-                var pos = rootNode.transform.rotation;
-                rootNode.transform.Rotate(45, 0, 0);
-                value.GetComponent<Text>().text = pos.x.ToString();
+                rootNode.transform.Rotate(0, +45, 0);
+                currentRotation += 45.0f;
+                value.GetComponent<Text>().text = currentRotation.ToString();
             });
             minus.GetComponent<Button>().onClick.AddListener(delegate {
-                var pos = rootNode.transform.rotation;
-                rootNode.transform.Rotate(0,45,0);
-                value.GetComponent<Text>().text = pos.x.ToString();
+                rootNode.transform.Rotate(0, -45, 0);
+                currentRotation -= 45.0f;
+                value.GetComponent<Text>().text = currentRotation.ToString();
             });
             reset.GetComponent<Button>().onClick.AddListener(delegate {
-                var pos = rootNode.transform.rotation;
-                rootNode.transform.Rotate(0, 0, 45);
-                param1.transform.GetChild(1).GetComponent<Text>().text = pos.x.ToString();
+                rootNode.transform.Rotate(0, (-1.0f)*currentRotation, 0);
+                currentRotation = 0.0f;
+                value.GetComponent<Text>().text = currentRotation.ToString();
             });
+            position -= 20;
         }
 
         if (phantom)
@@ -174,10 +194,45 @@ public class MenuComponents : MonoBehaviour
             var minus = param1.transform.GetChild(3);
             var reset = param1.transform.GetChild(4);
             param1.transform.SetParent(panel.transform, false);
-            param1.transform.localPosition = new Vector3(0, 20 - (80), 0);
+            param1.transform.localPosition = new Vector3(0, position, 0);
+            desc.GetComponent<Text>().text = "rootNode Pos x";
+            var defValue = rootNode.transform.position.y;
+            value.GetComponent<Text>().text = defValue.ToString();
+            value.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 20);
+
+            plus.transform.localPosition = new Vector3(plus.transform.localPosition.x + 10, plus.transform.localPosition.y, plus.transform.localPosition.z);
+            minus.transform.localPosition = new Vector3(minus.transform.localPosition.x - 10, minus.transform.localPosition.y, minus.transform.localPosition.z);
+            reset.transform.localPosition = new Vector3(reset.transform.localPosition.x + 10, reset.transform.localPosition.y, reset.transform.localPosition.z);
+
+            plus.GetComponent<Button>().onClick.AddListener(delegate {
+                var pos = rootNode.transform.position;
+                rootNode.transform.position = new Vector3(pos.x + 0.01f, pos.y, pos.z);
+                value.GetComponent<Text>().text = rootNode.transform.position.x.ToString();
+            });
+            minus.GetComponent<Button>().onClick.AddListener(delegate {
+                var pos = rootNode.transform.position;
+                rootNode.transform.position = new Vector3(pos.x - 0.01f, pos.y , pos.z);
+                value.GetComponent<Text>().text = rootNode.transform.position.x.ToString();
+            });
+            reset.GetComponent<Button>().onClick.AddListener(delegate {
+                rootNode.transform.position = new Vector3(defValue, rootNode.transform.position.y, rootNode.transform.position.z);
+            });
+            position -= 20;
+        }
+        if (phantom)
+        {
+            GameObject param1 = Instantiate(Resources.Load("Prefabs/Parameter")) as GameObject;
+            menuPoints.Add(param1);
+            var desc = param1.transform.GetChild(0);
+            var value = param1.transform.GetChild(1);
+            var plus = param1.transform.GetChild(2);
+            var minus = param1.transform.GetChild(3);
+            var reset = param1.transform.GetChild(4);
+            param1.transform.SetParent(panel.transform, false);
+            param1.transform.localPosition = new Vector3(0, position, 0);
             desc.GetComponent<Text>().text = "rootNode Pos y";
-            var defValue = rootNode.transform.rotation;
-            value.GetComponent<Text>().text = defValue.x.ToString();
+            var defValue = rootNode.transform.position.y;
+            value.GetComponent<Text>().text = defValue.ToString();
             value.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 20);
 
             plus.transform.localPosition = new Vector3(plus.transform.localPosition.x + 10, plus.transform.localPosition.y, plus.transform.localPosition.z);
@@ -186,17 +241,53 @@ public class MenuComponents : MonoBehaviour
 
             plus.GetComponent<Button>().onClick.AddListener(delegate {
                 var pos = rootNode.transform.position;
-                rootNode.transform.position = new Vector3(pos.x, pos.y+0.1f, pos.z);
-                value.GetComponent<Text>().text = pos.y.ToString();
+                rootNode.transform.position = new Vector3(pos.x, pos.y + 0.01f, pos.z);
+                value.GetComponent<Text>().text = rootNode.transform.position.y.ToString();
             });
             minus.GetComponent<Button>().onClick.AddListener(delegate {
                 var pos = rootNode.transform.position;
-                rootNode.transform.position = new Vector3(pos.x, pos.y - 0.1f, pos.z);
-                value.GetComponent<Text>().text = pos.y.ToString();
+                rootNode.transform.position = new Vector3(pos.x, pos.y - 0.01f, pos.z);
+                value.GetComponent<Text>().text = rootNode.transform.position.y.ToString();
             });
             reset.GetComponent<Button>().onClick.AddListener(delegate {
-               
+                rootNode.transform.position = new Vector3(rootNode.transform.position.x, defValue, rootNode.transform.position.z);
             });
+            position -= 20;
+        }
+        if (phantom)
+        {
+            GameObject param1 = Instantiate(Resources.Load("Prefabs/Parameter")) as GameObject;
+            menuPoints.Add(param1);
+            var desc = param1.transform.GetChild(0);
+            var value = param1.transform.GetChild(1);
+            var plus = param1.transform.GetChild(2);
+            var minus = param1.transform.GetChild(3);
+            var reset = param1.transform.GetChild(4);
+            param1.transform.SetParent(panel.transform, false);
+            param1.transform.localPosition = new Vector3(0, position, 0);
+            desc.GetComponent<Text>().text = "rootNode Pos z";
+            var defValue = rootNode.transform.position.z;
+            value.GetComponent<Text>().text = defValue.ToString();
+            value.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 20);
+
+            plus.transform.localPosition = new Vector3(plus.transform.localPosition.x + 10, plus.transform.localPosition.y, plus.transform.localPosition.z);
+            minus.transform.localPosition = new Vector3(minus.transform.localPosition.x - 10, minus.transform.localPosition.y, minus.transform.localPosition.z);
+            reset.transform.localPosition = new Vector3(reset.transform.localPosition.x + 10, reset.transform.localPosition.y, reset.transform.localPosition.z);
+
+            plus.GetComponent<Button>().onClick.AddListener(delegate {
+                var pos = rootNode.transform.position;
+                rootNode.transform.position = new Vector3(pos.x, pos.y, pos.z + 0.01f);
+                value.GetComponent<Text>().text = rootNode.transform.position.z.ToString();
+            });
+            minus.GetComponent<Button>().onClick.AddListener(delegate {
+                var pos = rootNode.transform.position;
+                rootNode.transform.position = new Vector3(pos.x, pos.y, pos.z - 0.01f);
+                value.GetComponent<Text>().text = rootNode.transform.position.z.ToString();
+            });
+            reset.GetComponent<Button>().onClick.AddListener(delegate {
+                rootNode.transform.position = new Vector3(rootNode.transform.position.x, rootNode.transform.position.y, defValue);
+            });
+            position -= 20;
         }
 
         if (phantom)
@@ -209,10 +300,10 @@ public class MenuComponents : MonoBehaviour
             var minus = param1.transform.GetChild(3);
             var reset = param1.transform.GetChild(4);
             param1.transform.SetParent(panel.transform, false);
-            param1.transform.localPosition = new Vector3(0, 20 - (100), 0);
+            param1.transform.localPosition = new Vector3(0,position, 0);
             desc.GetComponent<Text>().text = "Inside Box Scale";
-            var defValue = focusObjectScaler.transform.localScale;
-            value.GetComponent<Text>().text = defValue.x.ToString();
+            var defValue = surfaceAlign.windowMesh.transform.localScale;
+            value.GetComponent<Text>().text = (defValue.x/2.0f).ToString();
             value.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 20);
 
             plus.transform.localPosition = new Vector3(plus.transform.localPosition.x + 10, plus.transform.localPosition.y, plus.transform.localPosition.z);
@@ -220,92 +311,18 @@ public class MenuComponents : MonoBehaviour
             reset.transform.localPosition = new Vector3(reset.transform.localPosition.x + 10, reset.transform.localPosition.y, reset.transform.localPosition.z);
 
             plus.GetComponent<Button>().onClick.AddListener(delegate {
-                var scale = focusObjectScaler.transform.localScale;
-                focusObjectScaler.transform.localScale = new Vector3(scale.x+0.1f, scale.y + 0.1f, scale.z+0.1f);
-                value.GetComponent<Text>().text = focusObjectScaler.transform.localScale.x.ToString();
+                var scale = surfaceAlign.windowMesh.transform.localScale;
+                surfaceAlign.windowMesh.transform.localScale = new Vector3(scale.x+0.2f, scale.y + 0.2f, scale.z+0.2f);
+                value.GetComponent<Text>().text = (surfaceAlign.windowMesh.transform.localScale.x /2.0f).ToString();
             });
             minus.GetComponent<Button>().onClick.AddListener(delegate {
-                var scale = focusObjectScaler.transform.localScale;
-                focusObjectScaler.transform.localScale = new Vector3(scale.x - 0.1f, scale.y - 0.1f, scale.z - 0.1f);
-                value.GetComponent<Text>().text = focusObjectScaler.transform.localScale.x.ToString();
+                var scale = surfaceAlign.windowMesh.transform.localScale;
+                surfaceAlign.windowMesh.transform.localScale = new Vector3(scale.x - 0.2f, scale.y - 0.2f, scale.z - 0.2f);
+                value.GetComponent<Text>().text = (surfaceAlign.windowMesh.transform.localScale.x/2.0f).ToString();
             });
             reset.GetComponent<Button>().onClick.AddListener(delegate {
-                focusObjectScaler.transform.localScale = defValue;
+                surfaceAlign.windowMesh.transform.localScale = defValue;
             });
         }
-
-
-        /*s
-            param1 = Instantiate(Resources.Load("Prefabs/Parameter")) as GameObject;
-            menuPoints.Add(param1);
-            desc = param1.transform.GetChild(0);
-            value = param1.transform.GetChild(1);
-            plus = param1.transform.GetChild(2);
-            minus = param1.transform.GetChild(3);
-            reset = param1.transform.GetChild(4);
-            param1.transform.SetParent(panel.transform, false);
-            param1.transform.localPosition = new Vector3(0, 20 - (60), 0);
-            desc.GetComponent<Text>().text = "Phantom Position Y";
-            defValue = phantom.transform.localPosition;
-            value.GetComponent<Text>().text = defValue.x.ToString();
-            value.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 20);
-
-            plus.transform.localPosition = new Vector3(plus.transform.localPosition.x + 10, plus.transform.localPosition.y, plus.transform.localPosition.z);
-            minus.transform.localPosition = new Vector3(minus.transform.localPosition.x - 10, minus.transform.localPosition.y, minus.transform.localPosition.z);
-            reset.transform.localPosition = new Vector3(reset.transform.localPosition.x + 10, reset.transform.localPosition.y, reset.transform.localPosition.z);
-
-            plus.GetComponent<Button>().onClick.AddListener(delegate {
-                var pos = phantom.transform.localPosition;
-                phantom.transform.localPosition = new Vector3(pos.x, pos.y + 0.1f, pos.z);
-                value.GetComponent<Text>().text = pos.x.ToString();
-            });
-            minus.GetComponent<Button>().onClick.AddListener(delegate {
-                var pos = phantom.transform.localPosition;
-                phantom.transform.localPosition = new Vector3(pos.x, pos.y - 0.1f, pos.z);
-                value.GetComponent<Text>().text = pos.x.ToString();
-            });
-            reset.GetComponent<Button>().onClick.AddListener(delegate {
-                var pos = phantom.transform.localPosition;
-                phantom.transform.localPosition = new Vector3(pos.x, defValue.y, pos.z);
-                param1.transform.GetChild(1).GetComponent<Text>().text = pos.y.ToString();
-            });
-
-
-            param1 = Instantiate(Resources.Load("Prefabs/Parameter")) as GameObject;
-            menuPoints.Add(param1);
-            desc = param1.transform.GetChild(0);
-            value = param1.transform.GetChild(1);
-            plus = param1.transform.GetChild(2);
-            minus = param1.transform.GetChild(3);
-            reset = param1.transform.GetChild(4);
-            param1.transform.SetParent(panel.transform, false);
-            param1.transform.localPosition = new Vector3(0, 20 - (80), 0);
-            desc.GetComponent<Text>().text = "Phantom Position Z";
-            defValue = phantom.transform.localPosition;
-            value.GetComponent<Text>().text = defValue.x.ToString();
-            value.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 20);
-
-            plus.transform.localPosition = new Vector3(plus.transform.localPosition.x + 10, plus.transform.localPosition.y, plus.transform.localPosition.z);
-            minus.transform.localPosition = new Vector3(minus.transform.localPosition.x - 10, minus.transform.localPosition.y, minus.transform.localPosition.z);
-            reset.transform.localPosition = new Vector3(reset.transform.localPosition.x + 10, reset.transform.localPosition.y, reset.transform.localPosition.z);
-
-            plus.GetComponent<Button>().onClick.AddListener(delegate {
-                var pos = phantom.transform.localPosition;
-                phantom.transform.localPosition = new Vector3(pos.x , pos.y, pos.z + 0.1f);
-                value.GetComponent<Text>().text = pos.x.ToString();
-            });
-            minus.GetComponent<Button>().onClick.AddListener(delegate {
-                var pos = phantom.transform.localPosition;
-                phantom.transform.localPosition = new Vector3(pos.x, pos.y, pos.z - 0.1f);
-                value.GetComponent<Text>().text = pos.x.ToString();
-            });
-            reset.GetComponent<Button>().onClick.AddListener(delegate {
-                var pos = phantom.transform.localPosition;
-                phantom.transform.localPosition = new Vector3(pos.x,pos.y,defValue.z);
-                param1.transform.GetChild(1).GetComponent<Text>().text = pos.z.ToString();
-            });
-            
-        }
-        */
     }
 }

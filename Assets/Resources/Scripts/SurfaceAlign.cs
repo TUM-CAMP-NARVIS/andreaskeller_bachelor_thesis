@@ -6,12 +6,21 @@ using Microsoft.MixedReality.Toolkit.Input;
 public class SurfaceAlign : MonoBehaviour
 {
 
-    private FocusManager focusManager;
+    //Public Properties
     public GameObject skin;
     public GameObject windowMesh;
 
     public int ctrPoints = 3;
     public int size = 10;
+
+    public bool windowVisible = true;
+
+    //For influence calculation
+    public int amountControlPointsInfluencing = 1;
+    public float maxDistanceInfluence = 0.2f;
+
+    //Private Properties
+    private FocusManager focusManager;
 
     private int lvlscaler;
 
@@ -30,18 +39,10 @@ public class SurfaceAlign : MonoBehaviour
 
     //For influence calculation
     SortedList<float, int> influenceIDs = new SortedList<float, int>();
-    public int amountControlPointsInfluencing = 1;
+    
     private int amountControlPointInfluencing = -1;
-    public float maxDistanceInfluence = 0.2f;
     private float maxInfluenceDistance = -0.2f;
-
     private Vector3 windowMeshScale;
-
-
-    //LazyMouse Behaviour
-    private Vector3 viewPosition;
-    public float lazyDistance = 0.005f;
-
 
     struct ControlPoint
     {
@@ -57,8 +58,6 @@ public class SurfaceAlign : MonoBehaviour
         lvlscaler = 1 + 2 * (ctrPoints - 1);
 
         windowMeshScale = windowMesh.transform.localScale;
-
-        viewPosition = new Vector3();
 
 
         Mesh mesh = windowMesh.GetComponent<MeshFilter>().mesh;
@@ -83,11 +82,18 @@ public class SurfaceAlign : MonoBehaviour
         }
 
         //Align the window if user is focusing on the phantom
-        if (focusManager.isFocused)
+        if (focusManager.isFocused && windowVisible)
         {
             windowMesh.SetActive(true);
+
+            if (focusManager.isStatic)
+                return;
+
             this.transform.position = focusManager.focusPosition + focusManager.focusNormal * 0.05f;
             this.transform.up = focusManager.focusNormal;
+
+            windowMesh.transform.position = this.transform.position;
+            windowMesh.transform.up = this.transform.up;
 
             _controlPoints.Clear();
 

@@ -20,7 +20,7 @@ public class FocusRegionUpdater : MonoBehaviour
 
     void Awake()
     {
-        skin = transform.GetChild(7).gameObject;
+        skin = transform.GetChild(0).gameObject;
         if (sphere)
         {
             Vector3[] normals = sphere.GetComponent<MeshFilter>().mesh.normals;

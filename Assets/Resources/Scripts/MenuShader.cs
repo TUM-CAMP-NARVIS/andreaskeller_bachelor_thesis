@@ -17,16 +17,7 @@ public class MenuShader : MonoBehaviour
         shaders = new Queue<(Shader, List<(string, string)>)>();
         menuPoints = new List<GameObject>();
         Shader sh;
-        sh = Shader.Find("Shader Graphs/SG_HaloFocus");
-        if (sh)
-        {
-            var paramList = new List<(string, string)>{
-            ("_FocusRadius", "Focus Radius"),
-            ("_DepthScale", "Depth Scale Multiplier"),
-        };
-            shaders.Enqueue((sh, paramList));
-
-        }
+        
         sh = Shader.Find("Unlit/S_Bichlmeier2007");
         if (sh)
         {
@@ -37,6 +28,16 @@ public class MenuShader : MonoBehaviour
             ("_WeightDistanceFalloff", "Distance Falloff Weight")
         };
             shaders.Enqueue((sh, paramList));
+        }
+        sh = Shader.Find("Shader Graphs/SG_HaloFocus");
+        if (sh)
+        {
+            var paramList = new List<(string, string)>{
+            ("_FocusRadius", "Focus Radius"),
+            ("_DepthScale", "Depth Scale Multiplier"),
+        };
+            shaders.Enqueue((sh, paramList));
+
         }
         sh = Shader.Find("Shader Graphs/SG_FocusContextEx");
         if (sh)
