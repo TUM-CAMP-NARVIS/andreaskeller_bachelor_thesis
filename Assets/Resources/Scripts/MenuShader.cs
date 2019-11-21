@@ -48,6 +48,24 @@ public class MenuShader : MonoBehaviour
         };
             shaders.Enqueue((sh, paramList));
         }
+        sh = Shader.Find("Shader Graphs/SG_FocusContext");
+        if (sh)
+        {
+            var paramList = new List<(string, string)>{
+            ("_FocusRadius", "Focus Radius"),
+            ("_FresnelPower", "Fresnel Power")
+        };
+            shaders.Enqueue((sh, paramList));
+        }
+        sh = Shader.Find("Shader Graphs/SG_FocusContextExAR");
+        if (sh)
+        {
+            var paramList = new List<(string, string)>{
+            ("_FocusRadius", "Focus Radius"),
+            ("_FresnelPower", "Fresnel Power")
+        };
+            shaders.Enqueue((sh, paramList));
+        }
         sh = Shader.Find("Lit/S_OnlyRenderFocus");
         if (sh)
         {

@@ -6,7 +6,6 @@ using Microsoft.MixedReality.Toolkit.Input;
 public class FocusRegionUpdater : MonoBehaviour
 {
     private FocusManager focusManager;
-    public float focusSize = 0.15f;
     public bool active = true;
     public bool sphereActive = true;
     public bool skinActive = true;
