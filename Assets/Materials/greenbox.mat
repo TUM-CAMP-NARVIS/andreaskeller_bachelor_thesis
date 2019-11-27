@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: greenbox
-  m_Shader: {fileID: 4800000, guid: 0eedf8b6473de304bbfacc30ee27cb6a, type: 3}
+  m_Shader: {fileID: 4800000, guid: 7c24ae487f7de834092867d0bdf9b735, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
