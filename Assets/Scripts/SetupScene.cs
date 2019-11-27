@@ -52,6 +52,12 @@ public class SetupScene : MonoBehaviour
             Debug.Log("AnchorExists!!!!");
             worldAnchorManager.AttachAnchor(phantom);
             sceneStatus = SceneStatus.Finished;
+            GameObject instrText = GameObject.FindGameObjectWithTag("StepDescription");
+            if (instrText)
+                instrText.SetActive(false);
+            phantom.SetActive(true);
+            phantom.GetComponent<PhantomManager>().ToggleManipulation();
+
         }
         else
         {
@@ -76,9 +82,7 @@ public class SetupScene : MonoBehaviour
 
     public void FinishManual()
     {
-        phantom.GetComponent<BoundingBox>().enabled = false;
-        phantom.GetComponent<BoxCollider>().enabled = false;
-        phantom.GetComponent<ManipulationHandler>().enabled = false;
+        phantom.GetComponent<PhantomManager>().ToggleManipulation();
         finishButton.SetActive(false);
         phantom.transform.Find("skin").GetComponent<Renderer>().sharedMaterial = (Material)Resources.Load("Materials/Skin", typeof(Material)); ;
         sceneStatus = SceneStatus.Finished;
