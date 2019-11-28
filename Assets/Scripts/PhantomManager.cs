@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//using XRTK.SDK.UX;
+//using XRTK.SDK.Input;
+using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
 
 public class PhantomManager : MonoBehaviour
@@ -24,8 +27,24 @@ public class PhantomManager : MonoBehaviour
         if (GetComponent<BoundingBox>().enabled == true)
             enable = false;
 
-        GetComponent<BoundingBox>().enabled = enable;
-        GetComponent<BoxCollider>().enabled = enable;
-        GetComponent<ManipulationHandler>().enabled = enable;
+        SetManipulation(enable);
+    }
+
+    public void SetManipulation(bool active)
+    {
+        GetComponent<BoundingBox>().enabled = active;
+        GetComponent<BoxCollider>().enabled = active;
+        GetComponent<ManipulationHandler>().enabled = active;
+        GetComponent<PointerHandler>().enabled = !active;
+
+        if (active)
+        {
+            transform.Find("skin").GetComponent<Renderer>().sharedMaterial = (Material)Resources.Load("Materials/brightskin", typeof(Material));
+
+        }
+        else
+        {
+            transform.Find("skin").GetComponent<Renderer>().sharedMaterial = (Material)Resources.Load("Materials/Skin", typeof(Material));
+        }
     }
 }

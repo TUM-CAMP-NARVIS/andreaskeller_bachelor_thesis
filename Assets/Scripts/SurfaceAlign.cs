@@ -383,7 +383,7 @@ public class SurfaceAlign : MonoBehaviour
                     influence = (totalInfl/((float) (j+1))) * (1 - dist / maxDist);
                 }
                 totalInfl -= influence;
-                Debug.Log("Influence vertex " + i + " ControlPoint " + id + " = " + influence + "j="+j);
+                //Debug.Log("Influence vertex " + i + " ControlPoint " + id + " = " + influence + "j="+j);
                 influenceID[i, j] = (id, influence);
                 
             }
