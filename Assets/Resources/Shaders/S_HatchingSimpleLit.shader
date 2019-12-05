@@ -60,6 +60,14 @@ Shader "Custom/S_HatchingSimpleLit"
 			
 			LOD 300
 
+			Stencil{
+					Ref[_StencilRef]
+					Comp Equal
+					Fail Keep
+					Pass Replace
+					ZFail Keep
+				}
+
 			Pass
 			{
 				Name "ForwardLit"

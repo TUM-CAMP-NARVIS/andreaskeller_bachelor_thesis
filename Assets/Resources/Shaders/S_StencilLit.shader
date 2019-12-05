@@ -58,14 +58,14 @@ Shader "Custom/S_StencilLit"
 					Name "ForwardLit"
 					Tags { "LightMode" = "LightweightForward" }
 
-				/*
+				
 				Stencil{
 					Ref[_StencilRef]
 					Comp Equal
 					Fail Keep
 					Pass Replace
 					ZFail Keep
-				}*/
+				}
 
 				// Use same blending / depth states as Standard shader
 				Blend[_SrcBlend][_DstBlend]
@@ -226,5 +226,5 @@ Shader "Custom/S_StencilLit"
 			}
 			}
 				Fallback "Hidden/InternalErrorShader"
-				CustomEditor "UnityEditor.Rendering.LWRP.ShaderGUI.SimpleLitShader"
+				//CustomEditor "UnityEditor.Rendering.LWRP.ShaderGUI.SimpleLitShader"
 }

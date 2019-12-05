@@ -29,14 +29,14 @@
         {
 			Tags { "LightMode" = "LightWeightForward" }
 
-			/*
+			
 			Stencil{
 				Ref[_StencilRef]
 				Comp Equal
 				Fail Keep
 				Pass Replace
 				ZFail Keep
-			}*/
+			}
 
             CGPROGRAM
             #pragma vertex vert

@@ -1,18 +1,18 @@
-﻿Shader "Unlit/S_StencilOnly"
+﻿Shader "Unlit/S_StencilWindow"
 {
     Properties
     {
-		[IntRange] _StencilValue("Stencil Reference Value", Range(0,255)) = 14
+		[IntRange] _StencilValue("Stencil Reference Value", Range(0,255)) = 12
     }
     SubShader
     {
-        Tags { "Queue" = "Geometry-10" "RenderType"="Opaque" }
+        Tags { "Queue" = "Geometry-1" "RenderType"="Opaque" }
         LOD 100
 		
 
 		Stencil{
 			Ref[_StencilValue]
-			Comp Always
+			Comp Less
 			Pass Replace
 		}
 

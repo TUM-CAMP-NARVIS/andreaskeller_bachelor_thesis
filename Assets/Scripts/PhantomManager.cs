@@ -18,30 +18,15 @@ public class PhantomManager : MonoBehaviour
 
     void Start()
     {
-        
+        if (insides.transform.GetChild(0).GetComponent<Renderer>().material.GetFloat("_InvertHatching") < 0.9)
+            materialUsed = 0;
+        else
+            materialUsed = 1;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (headlight && headlight.activeSelf)
-        {
-            Vector4 p = new Vector4(-1*headlight.transform.forward.x, -1 * headlight.transform.forward.y, -1 * headlight.transform.forward.z, 1);
-            foreach (Transform child in insides.transform)
-            {
-                child.GetComponent<Renderer>().material.SetVector("_AdditionalLightDir", p);
-                child.GetComponent<Renderer>().material.SetVector("_AdditionalLightPos", headlight.transform.position);
-            }
-        }
-        else
-        {
-            Vector4 p = new Vector4(1, 1, 1, 0);
-            foreach (Transform child in insides.transform)
-            {
-                child.GetComponent<Renderer>().material.SetVector("_AdditionalLightDir", p);
-                child.GetComponent<Renderer>().material.SetVector("_AdditionalLightPos", headlight.transform.position);
-            }
-        }
     }
 
     public void ToggleManipulation()
@@ -102,5 +87,10 @@ public class PhantomManager : MonoBehaviour
         {
             child.GetComponent<Renderer>().material.SetFloat("_UseTriPlanar",1-child.GetComponent<Renderer>().material.GetFloat("_UseTriPlanar"));
         }
+    }
+
+    public void ToggleSkin()
+    {
+        transform.Find("skin").GetComponent<MeshRenderer>().enabled = !transform.Find("skin").GetComponent<MeshRenderer>().enabled;
     }
 }
