@@ -8,13 +8,18 @@ public class SurfaceAlign : MonoBehaviour
 
     private GameObject skin;
     private List<GameObject> windowMeshes = new List<GameObject>();
-    private GameObject windowMesh;
+    public GameObject windowMesh;
+
+    public GameObject headlight;
+    private bool headlightB = true;
 
     private int ctrPointsInt = -4;
     public int ctrPoints = 3;
     public int size = 10;
 
     public bool windowVisible = true;
+
+    private bool visualizeControlPoints = false;
 
     //For influence calculation
     public int amountControlPointsInfluencing = 1;
@@ -34,6 +39,8 @@ public class SurfaceAlign : MonoBehaviour
     //Window mesh data
     private Vector3[] windowVertices;
     private Vector3[] windowNormals;
+
+    //private List<((int, float[]), Vector3[], Vector3[])> windowAttr;
 
     private bool calculated = false;
 
@@ -97,8 +104,9 @@ public class SurfaceAlign : MonoBehaviour
             this.transform.position = focusManager.focusPosition + focusManager.focusNormal * 0.05f;
             this.transform.up = focusManager.focusNormal;
 
-            windowMesh.transform.position = this.transform.position;
-            windowMesh.transform.up = this.transform.up;
+            windowMesh.transform.parent.position = this.transform.position;
+            
+            windowMesh.transform.parent.up = this.transform.up;
 
             _controlPoints.Clear();
 
@@ -111,7 +119,7 @@ public class SurfaceAlign : MonoBehaviour
                 amountControlPointInfluencing = _controlPoints.Count;
 
 
-            if (Application.isEditor)
+            if (visualizeControlPoints)
             {
                 drawPrimitives();
             }
@@ -119,24 +127,31 @@ public class SurfaceAlign : MonoBehaviour
             calculateInfluence();
             moveWindow();
         }
-        else
-        {
-            windowMesh.SetActive(false);
-        }
     }
 
     void SetupWindow()
     {
+        if (windowMesh)
+        {
+            Mesh mesh1 = windowMesh.GetComponent<MeshFilter>().mesh;
+            windowVertices = mesh1.vertices;
+            windowNormals = mesh1.normals;
+
+            windowMesh.SetActive(false);
+        }
+
         if (windowMeshes.Count < 1)
             return;
         windowMesh = windowMeshes[0];
 
         windowMeshScale = windowMesh.transform.localScale;
-
+        
 
         Mesh mesh = windowMesh.GetComponent<MeshFilter>().mesh;
         windowVertices = mesh.vertices;
         windowNormals = mesh.normals;
+
+        windowMesh.SetActive(false);
     }
 
     public bool RegisterWindow(GameObject w)
@@ -443,5 +458,24 @@ public class SurfaceAlign : MonoBehaviour
         mesh.triangles = newTriangles;
     }    
 
+    public void ToggleWindowVisible()
+    {
+        windowVisible = !windowVisible;
+        windowMesh.SetActive(windowVisible);
+    }
+
+    public void ToggleControlPoints()
+    {
+        visualizeControlPoints = !visualizeControlPoints;
+        foreach (GameObject g in primitives)
+            g.SetActive(visualizeControlPoints);
+    }
+
+    public void ToggleHeadLight()
+    {
+        headlightB = !headlightB;
+        headlight.SetActive(headlightB);
+
+    }
 
 }

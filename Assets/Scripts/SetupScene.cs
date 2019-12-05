@@ -56,7 +56,10 @@ public class SetupScene : MonoBehaviour
             if (instrText)
                 instrText.SetActive(false);
             phantom.SetActive(true);
-            phantom.GetComponent<PhantomManager>().SetManipulation(true);
+            phantom.GetComponent<PhantomManager>().SetManipulation(false);
+            GetComponent<SpatialMappingCollider>().layer = 2;
+
+
 
         }
         else
@@ -72,7 +75,8 @@ public class SetupScene : MonoBehaviour
         phantomAnchor.transform.up = nrm;
         phantom.SetActive(true);
         GetComponent<SpatialMappingRenderer>().renderState = SpatialMappingRenderer.RenderState.None;
-        
+        phantom.GetComponent<PhantomManager>().SetManipulation(true);
+        GetComponent<SpatialMappingCollider>().layer = 2;
         if (instrText)
             instrText.GetComponent<TextMeshProUGUI>().text = "Adjust Position and Rotation";
         sceneStatus = SceneStatus.ManualAdjustment;
@@ -95,12 +99,12 @@ public class SetupScene : MonoBehaviour
         if (sceneStatus == SceneStatus.Finished)
         {
             worldAnchorManager.RemoveAnchor(phantom);
-            phantom.GetComponent<PhantomManager>().ToggleManipulation();
+            phantom.GetComponent<PhantomManager>().SetManipulation(true);
             sceneStatus = SceneStatus.ManualAdjustment;
         }
         else if (sceneStatus == SceneStatus.ManualAdjustment)
         {
-            phantom.GetComponent<PhantomManager>().ToggleManipulation();
+            phantom.GetComponent<PhantomManager>().SetManipulation(false);
             worldAnchorManager.AttachAnchor(phantom);
             sceneStatus = SceneStatus.Finished;
             instrText.SetActive(false);
@@ -109,9 +113,10 @@ public class SetupScene : MonoBehaviour
 
     public void RedoInitialPlacement()
     {
-        worldAnchorManager.RemoveAllAnchors();
+        worldAnchorManager.RemoveAnchor(phantom);
         phantom.SetActive(false);
         GetComponent<SpatialMappingRenderer>().renderState = SpatialMappingRenderer.RenderState.Visualization;
+        GetComponent<SpatialMappingCollider>().layer = 31;
         sceneStatus = SceneStatus.WaitForAnchor;
         instrText.SetActive(true);
         instrText.GetComponent<TextMeshProUGUI>().text = "Select Phantom Location";

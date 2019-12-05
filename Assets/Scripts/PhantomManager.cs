@@ -10,6 +10,12 @@ using Microsoft.MixedReality.Toolkit.UI;
 public class PhantomManager : MonoBehaviour
 {
     // Start is called before the first frame update
+
+    public GameObject insides;
+    public GameObject headlight;
+    private int materialUsed = 0;
+    
+
     void Start()
     {
         
@@ -18,7 +24,24 @@ public class PhantomManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (headlight && headlight.activeSelf)
+        {
+            Vector4 p = new Vector4(-1*headlight.transform.forward.x, -1 * headlight.transform.forward.y, -1 * headlight.transform.forward.z, 1);
+            foreach (Transform child in insides.transform)
+            {
+                child.GetComponent<Renderer>().material.SetVector("_AdditionalLightDir", p);
+                child.GetComponent<Renderer>().material.SetVector("_AdditionalLightPos", headlight.transform.position);
+            }
+        }
+        else
+        {
+            Vector4 p = new Vector4(1, 1, 1, 0);
+            foreach (Transform child in insides.transform)
+            {
+                child.GetComponent<Renderer>().material.SetVector("_AdditionalLightDir", p);
+                child.GetComponent<Renderer>().material.SetVector("_AdditionalLightPos", headlight.transform.position);
+            }
+        }
     }
 
     public void ToggleManipulation()
@@ -45,6 +68,39 @@ public class PhantomManager : MonoBehaviour
         else
         {
             transform.Find("skin").GetComponent<Renderer>().sharedMaterial = (Material)Resources.Load("Materials/Skin", typeof(Material));
+        }
+    }
+
+    public void ToggleHatching()
+    {
+        float invert = 0;
+        if (materialUsed == 0)
+        {
+            invert = 1;
+            materialUsed = 1;
+        }
+        else
+            materialUsed = 0;
+        
+
+        foreach (Transform child in insides.transform)
+        {
+            child.GetComponent<Renderer>().material.SetFloat("_InvertHatching", invert);
+        }
+    }
+
+    public void ToggleHeadlight()
+    {
+        if (headlight)
+            headlight.SetActive(!headlight.activeSelf);
+    }
+
+    public void ToggleTriPlanar()
+    {
+
+        foreach (Transform child in insides.transform)
+        {
+            child.GetComponent<Renderer>().material.SetFloat("_UseTriPlanar",1-child.GetComponent<Renderer>().material.GetFloat("_UseTriPlanar"));
         }
     }
 }

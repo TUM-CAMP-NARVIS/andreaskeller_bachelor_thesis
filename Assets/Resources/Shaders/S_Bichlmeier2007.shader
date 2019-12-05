@@ -2,6 +2,7 @@
 {
 	Properties
 	{
+		[IntRange] _StencilRef("Stencil Reference Value", Range(0,255)) = 10
 		_WeightCurvature("Curvature Weight", Float) = 1.0
 		_WeightAngleofIncidence("Angle of Incidence Weight", Float) = 1.0
 		_WeightDistanceFalloff("Distance Falloff Weight", Float) = 1.0
@@ -10,6 +11,7 @@
 		_BorderSize("Thickness of colored border", Float) = 0.001
 		_BorderColor("Color of border", Color) = (1,0,0,1)
 		_CurvatureMap("Curvature Map", 2D) = "black"
+		
 		
     }
     SubShader
@@ -26,6 +28,16 @@
         Pass
         {
 			Tags { "LightMode" = "LightWeightForward" }
+
+			/*
+			Stencil{
+				Ref[_StencilRef]
+				Comp Equal
+				Fail Keep
+				Pass Replace
+				ZFail Keep
+			}*/
+
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -112,6 +124,8 @@
 
 				float borderValue = (step(_FocusRadius, dist) - step(_BorderSize + _FocusRadius, dist));
 				col.xyz = borderValue * _BorderColor.xyz + (1 - borderValue) * float3(0, 0, 0);
+				if (dist > _FocusRadius)
+					col.a = 1;
 				if (dist > _FocusRadius+_BorderSize) {
 					col.a = 1;
 					col.xyz = 0;

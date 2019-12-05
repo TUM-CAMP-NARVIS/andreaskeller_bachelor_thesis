@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using XRTK.SDK.Input;
+using Microsoft.MixedReality.Toolkit.Input;
 
 public class FocusManager : MonoBehaviour
 {
