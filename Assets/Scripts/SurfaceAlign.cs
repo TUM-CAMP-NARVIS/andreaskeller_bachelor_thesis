@@ -6,9 +6,9 @@ using Microsoft.MixedReality.Toolkit.Input;
 public class SurfaceAlign : MonoBehaviour
 {
 
+    
+
     private GameObject skin;
-    private List<GameObject> windowMeshes = new List<GameObject>();
-    public GameObject windowMesh;
 
     public GameObject headlight;
     private bool headlightB = true;
@@ -17,9 +17,9 @@ public class SurfaceAlign : MonoBehaviour
     public int ctrPoints = 3;
     public int size = 10;
 
-    public bool windowVisible = true;
-
     private bool visualizeControlPoints = false;
+
+    public bool done { get; private set; } = false;
 
     //For influence calculation
     public int amountControlPointsInfluencing = 1;
@@ -32,27 +32,18 @@ public class SurfaceAlign : MonoBehaviour
 
     private List<ControlPoint> _controlPoints = new List<ControlPoint>();
 
+    public List<ControlPoint> controlPoints
+    {
+        get
+        {
+            return _controlPoints;
+        }
+        
+    }
+
     private List<GameObject> primitives = new List<GameObject>();
 
-    private (int, float)[,] influenceID;
-
-    //Window mesh data
-    private Vector3[] windowVertices;
-    private Vector3[] windowNormals;
-
-    //private List<((int, float[]), Vector3[], Vector3[])> windowAttr;
-
-    private bool calculated = false;
-
-
-    //For influence calculation
-    SortedList<float, int> influenceIDs = new SortedList<float, int>();
-    
-    private int amountControlPointInfluencing = -1;
-    private float maxInfluenceDistance = -0.2f;
-    private Vector3 windowMeshScale;
-
-    struct ControlPoint
+    public struct ControlPoint
     {
         public Vector3 position;
         public Vector3 normal;
@@ -60,63 +51,45 @@ public class SurfaceAlign : MonoBehaviour
         public Matrix4x4 matrix_nrm;
     }
 
+
     // Start is called before the first frame update
     void Start()
     {
         focusManager = FindObjectOfType<FocusManager>();
         skin = focusManager.GetSkin();
-        SetupWindow();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!windowMesh)
-        {
-            SetupWindow();
-            return;
-        }
-            
         if (!skin)
         {
             skin = focusManager.GetSkin();
             return;
         }
+
         //Check if any values were edited
-        if (windowMesh.transform.localScale != windowMeshScale || amountControlPointInfluencing != amountControlPointsInfluencing || maxDistanceInfluence != maxInfluenceDistance || ctrPoints != ctrPointsInt)
+        if (ctrPoints != ctrPointsInt)
         {
-            calculated = false;
-            windowMeshScale = windowMesh.transform.localScale;
-            amountControlPointInfluencing = amountControlPointsInfluencing;
-            maxInfluenceDistance = maxDistanceInfluence;
             ctrPointsInt = ctrPoints;
-            lvlscaler = 1 + 2 * (ctrPointsInt - 1);
+            lvlscaler = 1 + 2 *  (ctrPointsInt - 1);
+
+            
         }
 
         //Align the window if user is focusing on the phantom
-        if (focusManager.isFocused && windowVisible)
+        if (focusManager.isFocused)
         {
-            windowMesh.SetActive(true);
-
             if (focusManager.isStatic)
                 return;
 
             this.transform.position = focusManager.focusPosition + focusManager.focusNormal * 0.05f;
-            this.transform.up = focusManager.focusNormal;
-
-            windowMesh.transform.parent.position = this.transform.position;
+            this.transform.rotation = Quaternion.LookRotation(new Vector3(0, 1, 0),focusManager.focusNormal);
             
-            windowMesh.transform.parent.up = this.transform.up;
 
             _controlPoints.Clear();
 
             rayCastOrigin(ctrPointsInt);
-
-            //Make sure the amount of control points that influence each vertex are in bounds
-            if (amountControlPointInfluencing < 1)
-                amountControlPointInfluencing = 1;
-            if (_controlPoints.Count < amountControlPointInfluencing)
-                amountControlPointInfluencing = _controlPoints.Count;
 
 
             if (visualizeControlPoints)
@@ -124,44 +97,8 @@ public class SurfaceAlign : MonoBehaviour
                 drawPrimitives();
             }
 
-            calculateInfluence();
-            moveWindow();
+            done = true;
         }
-    }
-
-    void SetupWindow()
-    {
-        if (windowMesh)
-        {
-            Mesh mesh1 = windowMesh.GetComponent<MeshFilter>().mesh;
-            windowVertices = mesh1.vertices;
-            windowNormals = mesh1.normals;
-
-            windowMesh.SetActive(false);
-        }
-
-        if (windowMeshes.Count < 1)
-            return;
-        windowMesh = windowMeshes[0];
-
-        windowMeshScale = windowMesh.transform.localScale;
-        
-
-        Mesh mesh = windowMesh.GetComponent<MeshFilter>().mesh;
-        windowVertices = mesh.vertices;
-        windowNormals = mesh.normals;
-
-        windowMesh.SetActive(false);
-    }
-
-    public bool RegisterWindow(GameObject w)
-    {
-        if (w.GetComponent<MeshFilter>() != null)
-        {
-            windowMeshes.Add(w);
-            return true;
-        }
-        return false;
     }
 
     enum Direction { Origin, Up, Right, Down,Left, None, UpRight, UpLeft, DownRight, DownLeft};
@@ -174,7 +111,6 @@ public class SurfaceAlign : MonoBehaviour
     {
         rayCast(iters, pos, nrm, dist, d, prevPos );
     }
-
     void rayCast(int iters, Vector3 pos, Vector3 nrm, float dist, Direction d, Vector3 prevPos)
     {
         //Only create as many controlpoints as wanted
@@ -392,7 +328,6 @@ public class SurfaceAlign : MonoBehaviour
                 primitive.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
                 primitive.GetComponent<Collider>().enabled = false;
                 primitives.Add(primitive);
-                //primitive.transform.up = _ctrlPointNrms[i];
 
             }
         }
@@ -406,113 +341,6 @@ public class SurfaceAlign : MonoBehaviour
         }
 
         
-    }
-
-    void calculateInfluence()
-    {
-        if (calculated)
-            return;
-        Mesh mesh = windowMesh.GetComponent<MeshFilter>().mesh;
-        Vector3[] verts = windowVertices;
-
-        //New method, influence of userdefined amount of closest controlpoints
-
-        //if controlpoint is further away from vert than this distance, set its influence to 0
-        float maxDist = maxInfluenceDistance;
-        
-        influenceID = new (int, float)[verts.Length, amountControlPointInfluencing];
-        for (int i = 0; i<verts.Length; i++)
-        {
-            Vector3 vert = verts[i];
-            Vector3 worldPos = windowMesh.transform.TransformPoint(vert);
-            influenceIDs.Clear();
-            for (int j = 0; j<_controlPoints.Count; j++)
-            {
-                ControlPoint c = _controlPoints[j];
-                float dist = Vector3.Distance(worldPos, c.position);
-                while (influenceIDs.ContainsKey(dist))
-                {
-                    dist += 0.0001f;
-                }
-                influenceIDs.Add(dist, j);
-
-            }
-            float totalInfl = 1.0f;
-
-            for (int j = (amountControlPointInfluencing-1); j>0; j--)
-            {
-                float dist = influenceIDs.Keys[j];
-                int id = influenceIDs.Values[j];
-                float influence = 0;
-                if (dist < maxDist)
-                {
-                    influence = (totalInfl/((float) (j+1))) * (1 - dist / maxDist);
-                }
-                totalInfl -= influence;
-                //Debug.Log("Influence vertex " + i + " ControlPoint " + id + " = " + influence + "j="+j);
-                influenceID[i, j] = (id, influence);
-                
-            }
-            int idFirst = influenceIDs.Values[0];
-            influenceID[i, 0] = (idFirst, totalInfl);
-        }
-
-        calculated = true;
-        
-    }
-
-    //Move the window mesh according to the control points
-    void moveWindow()
-    {
-
-        Mesh mesh = windowMesh.GetComponent<MeshFilter>().mesh;
-        Vector3[] newVertexPos = new Vector3[mesh.vertexCount];
-        Vector3[] newVertexNrm = new Vector3[mesh.vertexCount];
-
-        for (int i = 0; i<newVertexPos.Length; i++)
-        {
-            Vector3 vert = windowMesh.transform.TransformPoint(windowVertices[i]);
-            Vector3 nrm = windowNormals[i];
-            Vector3[] vertsNew = new Vector3[amountControlPointInfluencing];
-            Vector3[] nrmsNew = new Vector3[amountControlPointInfluencing];
-            for (int j = 0; j<amountControlPointInfluencing; j++)
-            {
-                
-                vertsNew[j] = _controlPoints[(influenceID[i,j].Item1)].matrix.MultiplyPoint(vert);
-                vertsNew[j] *= influenceID[i, j].Item2;
-
-                nrmsNew[j] = _controlPoints[(influenceID[i, j].Item1)].matrix_nrm.MultiplyVector(nrm);
-                nrmsNew[j] *= influenceID[i, j].Item2;
-
-            }
-            Vector3 vertNew = new Vector3();
-            Vector3 nrmNew = new Vector3();
-            for (int j = 0; j<amountControlPointInfluencing; j++)
-            {
-                Vector3 v = vertsNew[j];
-                Vector3 n = nrmsNew[j];
-                vertNew += v;
-                nrmNew += n;
-            }
-            newVertexPos[i] = windowMesh.transform.InverseTransformPoint(vertNew);
-            newVertexNrm[i] = Vector3.Normalize(nrmNew);
-        }
-
-        Vector2[] newUV = mesh.uv;
-        int[] newTriangles = mesh.triangles;
-
-        mesh.Clear();
-
-        mesh.vertices = newVertexPos;
-        mesh.normals = newVertexNrm;
-        mesh.uv = newUV;
-        mesh.triangles = newTriangles;
-    }    
-
-    public void ToggleWindowVisible()
-    {
-        windowVisible = !windowVisible;
-        windowMesh.SetActive(windowVisible);
     }
 
     public void ToggleControlPoints()

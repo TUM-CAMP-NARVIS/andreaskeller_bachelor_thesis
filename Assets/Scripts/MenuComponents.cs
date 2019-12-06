@@ -48,29 +48,6 @@ public class MenuComponents : MonoBehaviour
         position -= 20;
         
 
-        //Parameters
-        for (int i = 0; i<1; i++)
-        {
-            Debug.Log("Function #" + i);
-            GameObject param1 = Instantiate(Resources.Load("Prefabs/Functionality")) as GameObject;
-            menuPoints.Add(param1);
-            param1.transform.SetParent(panel.transform, false);
-            param1.transform.localPosition = new Vector3(0, position, 0);
-            param1.transform.GetChild(0).GetComponent<Text>().text = "Window Object";
-            param1.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(delegate {
-                if (surfaceAlign.windowVisible)
-                {
-                    surfaceAlign.windowVisible = false;
-                    param1.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "Disabled";
-                } else
-                {
-                    surfaceAlign.windowVisible = true;
-                    param1.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "Enabled";
-                }
-                
-            });
-            position -= 20;
-        }
         /*
         if (true)
         {

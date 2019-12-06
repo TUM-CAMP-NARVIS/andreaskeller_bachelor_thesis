@@ -72,7 +72,7 @@ public class SetupScene : MonoBehaviour
     void SetAnchor(Vector3 position, Vector3 nrm)
     {
         phantomAnchor.transform.position = position;
-        phantomAnchor.transform.up = nrm;
+        phantomAnchor.transform.rotation = Quaternion.LookRotation(new Vector3(0, 1, 0), nrm);
         phantom.SetActive(true);
         GetComponent<SpatialMappingRenderer>().renderState = SpatialMappingRenderer.RenderState.None;
         phantom.GetComponent<PhantomManager>().SetManipulation(true);

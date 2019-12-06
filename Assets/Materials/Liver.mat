@@ -201,7 +201,7 @@ Material:
     - _StencilReference: 0
     - _Surface: 0
     - _TriplanarMappingBlendSharpness: 4
-    - _UVScale: 30
+    - _UVScale: 50
     - _UVScaler: 6
     - _UVSec: 0
     - _UseTriPlanar: 0
