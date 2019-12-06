@@ -12,6 +12,7 @@ public class PhantomManager : MonoBehaviour
     // Start is called before the first frame update
 
     public GameObject insides;
+    public GameObject insides_Chroma;
     public GameObject headlight;
     private int materialUsed = 0;
     
@@ -27,6 +28,13 @@ public class PhantomManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Vector3 focusPosition = FindObjectOfType<FocusManager>().focusPosition;
+        Vector3 focusNormal = FindObjectOfType<FocusManager>().focusNormal;
+        foreach (Transform child in insides_Chroma.transform)
+        {
+            child.GetComponent<Renderer>().material.SetVector("_FocusPosition", focusPosition);
+            child.GetComponent<Renderer>().material.SetVector("_FocusNormal", focusNormal);
+        }
     }
 
     public void ToggleManipulation()
