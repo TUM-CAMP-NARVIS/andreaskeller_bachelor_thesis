@@ -204,26 +204,7 @@ Shader "Custom/S_StencilLit"
 
 				ENDHLSL
 			}
-			Pass
-			{
-				Name "Lightweight2D"
-				Tags{ "LightMode" = "Lightweight2D" }
-				Tags{ "RenderType" = "Transparent" "Queue" = "Transparent" }
-
-				HLSLPROGRAM
-				// Required to compile gles 2.0 with standard srp library
-				#pragma prefer_hlslcc gles
-				#pragma exclude_renderers d3d11_9x
-
-				#pragma vertex vert
-				#pragma fragment frag
-				#pragma shader_feature _ALPHATEST_ON
-				#pragma shader_feature _ALPHAPREMULTIPLY_ON
-
-				#include "Packages/com.unity.render-pipelines.lightweight/Shaders/SimpleLitInput.hlsl"
-				#include "Packages/com.unity.render-pipelines.lightweight/Shaders/Utils/Lightweight2D.hlsl"
-				ENDHLSL
-			}
+		
 			}
 				Fallback "Hidden/InternalErrorShader"
 				//CustomEditor "UnityEditor.Rendering.LWRP.ShaderGUI.SimpleLitShader"
