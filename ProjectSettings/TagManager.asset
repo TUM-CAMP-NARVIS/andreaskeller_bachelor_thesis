@@ -4,8 +4,11 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Phantom
+  - HelpObject
+  - FxTemporaire
+  - zomBunny
   - StepDescription
+  - Phantom
   layers:
   - Default
   - TransparentFX
@@ -15,7 +18,6 @@ TagManager:
   - UI
   - 
   - 
-  - PostProcessing
   - 
   - 
   - 
@@ -38,7 +40,8 @@ TagManager:
   - 
   - 
   - 
-  - Spatial Awareness
+  - 
+  - 
   m_SortingLayers:
   - name: Default
     uniqueID: 0

@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Microsoft.MixedReality.Toolkit.Input;
 
 public class FocusManager : MonoBehaviour
 {
+    
     private GameObject seeThroughObject;
     public float lazyMouseDistance = 0.005f;
 
@@ -19,14 +19,14 @@ public class FocusManager : MonoBehaviour
     public Vector3 focusNormal { get; private set; } = new Vector3(0, 1, 0);
 
     private bool active = true;
-    private GazeProvider gazeProvider;
+    //private GazeProvider gazeProvider;
 
     // Start is called before the first frame update
     void Start()
     {
-        gazeProvider = FindObjectOfType<GazeProvider>();
+        //gazeProvider = FindObjectOfType<GazeProvider>();
 
-        if (gazeProvider == null)
+        //if (gazeProvider == null)
         {
             Debug.LogError("No GazeProvider in scene!");
         }            
@@ -41,23 +41,23 @@ public class FocusManager : MonoBehaviour
             return;
 
         //LazyMouse Behaviour
-        float distanceToGaze = Vector3.Distance(focusPosition, gazeProvider.HitPosition);
+        float distanceToGaze = Vector3.Distance(focusPosition, new Vector3());// gazeProvider.HitPosition);
 
         if (!isFocused)
         {
-            if (gazeProvider.GazeTarget == seeThroughObject)
+            //if (gazeProvider.GazeTarget == seeThroughObject)
             {
-                focusPosition = gazeProvider.HitPosition;
-                focusNormal = gazeProvider.HitNormal;
+                focusPosition = new Vector3();// gazeProvider.HitPosition;
+                focusNormal = new Vector3();// gazeProvider.HitNormal;
                 isFocused = true;
             }
         }
         else if (distanceToGaze > lazyMouseDistance)
         {
-            Vector3 moveDirection = Vector3.Normalize(gazeProvider.HitPosition - focusPosition);
+            Vector3 moveDirection = Vector3.Normalize(new Vector3() - focusPosition);
             float moveDistance = distanceToGaze - lazyMouseDistance;
 
-            Vector3 rayOrigin = gazeProvider.GazeOrigin;
+            Vector3 rayOrigin = new Vector3();//gazeProvider.GazeOrigin;
             Vector3 rayTarget = focusPosition + (moveDistance * moveDirection);
             Vector3 rayDirection = Vector3.Normalize(rayTarget - rayOrigin);
 

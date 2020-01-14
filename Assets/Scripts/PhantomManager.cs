@@ -4,8 +4,8 @@ using UnityEngine;
 
 //using XRTK.SDK.UX;
 //using XRTK.SDK.Input;
-using Microsoft.MixedReality.Toolkit.Input;
-using Microsoft.MixedReality.Toolkit.UI;
+//using Microsoft.MixedReality.Toolkit.Input;
+//using Microsoft.MixedReality.Toolkit.UI;
 
 public class PhantomManager : MonoBehaviour
 {
@@ -40,18 +40,18 @@ public class PhantomManager : MonoBehaviour
     public void ToggleManipulation()
     {
         bool enable = true;
-        if (GetComponent<BoundingBox>().enabled == true)
-            enable = false;
+        //if (GetComponent<BoundingBox>().enabled == true)
+         //   enable = false;
 
         SetManipulation(enable);
     }
 
     public void SetManipulation(bool active)
     {
-        GetComponent<BoundingBox>().enabled = active;
+        //GetComponent<BoundingBox>().enabled = active;
         GetComponent<BoxCollider>().enabled = active;
-        GetComponent<ManipulationHandler>().enabled = active;
-        GetComponent<PointerHandler>().enabled = !active;
+        //GetComponent<ManipulationHandler>().enabled = active;
+        //GetComponent<PointerHandler>().enabled = !active;
 
         if (active)
         {

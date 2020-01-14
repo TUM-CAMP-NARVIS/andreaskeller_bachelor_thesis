@@ -68,6 +68,14 @@ Material:
         m_Texture: {fileID: 2800000, guid: 5a8f4193717d48a448995bff2aa37a9c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _HatchingBig:
+        m_Texture: {fileID: 2800000, guid: 5a8f4193717d48a448995bff2aa37a9c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HatchingSmall:
+        m_Texture: {fileID: 2800000, guid: 1d4f1657eb33ee74b8664ff0f01f3842, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _HvyTex:
         m_Texture: {fileID: 2800000, guid: fefada75abfd596449070e16628690a1, type: 3}
         m_Scale: {x: 1, y: 1}

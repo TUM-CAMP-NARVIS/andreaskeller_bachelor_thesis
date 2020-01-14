@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Microsoft.MixedReality.Toolkit.Input;
+//using Microsoft.MixedReality.Toolkit.Input;
 using UnityEngine.XR.WSA;
 
 public class SetPosition : MonoBehaviour
@@ -24,11 +24,11 @@ public class SetPosition : MonoBehaviour
     {
         if (placed)
             return;
-        GazeProvider gazeProvider = FindObjectOfType<GazeProvider>();
-        if (gazeProvider)
+        //GazeProvider gazeProvider = FindObjectOfType<GazeProvider>();
+        if (false)//gazeProvider)
         {
-            transform.position = gazeProvider.HitPosition;
-            transform.up = gazeProvider.HitNormal;
+            //transform.position = gazeProvider.HitPosition;
+            //transform.up = gazeProvider.HitNormal;
             placed = true;
             transform.GetChild(0).gameObject.SetActive(placed);
             this.gameObject.AddComponent<WorldAnchor>();

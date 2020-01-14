@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Microsoft.MixedReality.Toolkit.Input;
-using Microsoft.MixedReality.Toolkit.SpatialAwareness;
+//using Microsoft.MixedReality.Toolkit.Input;
+//using Microsoft.MixedReality.Toolkit.SpatialAwareness;
 using UnityEngine.XR.WSA;
 
 public class ObjectPlacer : MonoBehaviour
 {
-    private GazeProvider gazeProvider;
+    //private GazeProvider gazeProvider;
     private SpatialMappingCollider spatialMappingCollider;
     private SpatialMappingRenderer spatialMappingRenderer;
     private List<Vector3> corners = new List<Vector3>();
@@ -33,7 +33,7 @@ public class ObjectPlacer : MonoBehaviour
         }
         spatialMappingCollider = FindObjectOfType<SpatialMappingCollider>();
         spatialMappingRenderer = FindObjectOfType<SpatialMappingRenderer>();
-        gazeProvider = FindObjectOfType<GazeProvider>();
+        //gazeProvider = FindObjectOfType<GazeProvider>();
     }
 
     // Update is called once per frame
@@ -69,16 +69,16 @@ public class ObjectPlacer : MonoBehaviour
         if (placed)
             return;
 
-        cubes[corners.Count].transform.position = gazeProvider.HitPosition;
+        cubes[corners.Count].transform.position = new Vector3();// gazeProvider.HitPosition;
         cubes[corners.Count].SetActive(true);
 
         if (corners.Count<3)
         {
-            corners.Add(gazeProvider.HitPosition);
+            corners.Add(new Vector3());// gazeProvider.HitPosition);
         }
         else
         {
-            corners.Add(gazeProvider.HitPosition);
+            corners.Add(new Vector3());// gazeProvider.HitPosition);
             //transform.up = gazeProvider.HitNormal;
             Vector3 middle = new Vector3();
             foreach (Vector3 v in corners)
