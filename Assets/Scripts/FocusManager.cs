@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class FocusManager : MonoBehaviour
 {
-    
-    private GameObject seeThroughObject;
+    public GameObject seeThroughObject;
     public float lazyMouseDistance = 0.005f;
+    public GameObject cam;
 
     
 
@@ -19,58 +19,83 @@ public class FocusManager : MonoBehaviour
     public Vector3 focusNormal { get; private set; } = new Vector3(0, 1, 0);
 
     private bool active = true;
-    //private GazeProvider gazeProvider;
 
     // Start is called before the first frame update
     void Start()
     {
-        //gazeProvider = FindObjectOfType<GazeProvider>();
-
-        //if (gazeProvider == null)
-        {
-            Debug.LogError("No GazeProvider in scene!");
-        }            
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!cam)
+            return;
         if (!seeThroughObject)
             return;
         if (!active)
             return;
 
+
+        Debug.Log("Updating Focus Position");
+        Vector3 hitPosition;
+        Vector3 hitNormal;
+        Vector3 cameraPos;
+        GameObject hitObject;
+
+        RaycastHit hit;
+        Ray ray = new Ray(cam.transform.position, cam.transform.forward);
+
+        cameraPos = cam.transform.position;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            Transform objectHit = hit.transform;
+            hitObject = objectHit.gameObject;
+            hitPosition = hit.point;
+            hitNormal = hit.normal;
+            Debug.Log("Hit Object");
+        }
+        else
+        {
+            isFocused = false;
+            Debug.Log("Didnt hit anything");
+            return;
+        }
+            
+
+        
+
         //LazyMouse Behaviour
-        float distanceToGaze = Vector3.Distance(focusPosition, new Vector3());// gazeProvider.HitPosition);
+        float distanceToGaze = Vector3.Distance(focusPosition, hitPosition);
 
         if (!isFocused)
         {
-            //if (gazeProvider.GazeTarget == seeThroughObject)
+            if (hitObject == seeThroughObject)
             {
-                focusPosition = new Vector3();// gazeProvider.HitPosition;
-                focusNormal = new Vector3();// gazeProvider.HitNormal;
+                focusPosition = hitPosition;
+                focusNormal = hitNormal;
                 isFocused = true;
             }
         }
         else if (distanceToGaze > lazyMouseDistance)
         {
-            Vector3 moveDirection = Vector3.Normalize(new Vector3() - focusPosition);
+            Vector3 moveDirection = Vector3.Normalize(hitPosition - focusPosition);
             float moveDistance = distanceToGaze - lazyMouseDistance;
 
-            Vector3 rayOrigin = new Vector3();//gazeProvider.GazeOrigin;
+            Vector3 rayOrigin = cameraPos;
             Vector3 rayTarget = focusPosition + (moveDistance * moveDirection);
             Vector3 rayDirection = Vector3.Normalize(rayTarget - rayOrigin);
 
-            RaycastHit hit;
-            var ray = new Ray(rayOrigin, rayDirection);
+            RaycastHit hit2;
+            var ray2 = new Ray(rayOrigin, rayDirection);
 
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray2, out hit2))
             {
-                focusPosition = hit.point;
-                focusNormal = hit.normal;
+                focusPosition = hit2.point;
+                focusNormal = hit2.normal;
 
                 //Not focusing on the object anymore if we dont hit it
-                if (hit.collider.gameObject != seeThroughObject)
+                if (hit2.collider.gameObject != seeThroughObject)
                     isFocused = false;
                 else
                     isFocused = true;

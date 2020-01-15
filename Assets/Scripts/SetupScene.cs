@@ -56,7 +56,7 @@ public class SetupScene : MonoBehaviour
             if (instrText)
                 instrText.SetActive(false);
             phantom.SetActive(true);
-            phantom.GetComponent<PhantomManager>().SetManipulation(false);
+            //phantom.GetComponent<PhantomManager>().SetManipulation(false);
             GetComponent<SpatialMappingCollider>().layer = 2;
 
 
@@ -75,7 +75,7 @@ public class SetupScene : MonoBehaviour
         phantomAnchor.transform.rotation = Quaternion.LookRotation(new Vector3(0, 1, 0), nrm);
         phantom.SetActive(true);
         GetComponent<SpatialMappingRenderer>().renderState = SpatialMappingRenderer.RenderState.None;
-        phantom.GetComponent<PhantomManager>().SetManipulation(true);
+        //phantom.GetComponent<PhantomManager>().SetManipulation(true);
         GetComponent<SpatialMappingCollider>().layer = 2;
         if (instrText)
             instrText.GetComponent<TextMeshProUGUI>().text = "Adjust Position and Rotation";
