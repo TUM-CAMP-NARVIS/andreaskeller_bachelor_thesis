@@ -558,7 +558,7 @@ PlayerSettings:
     1: 
   platformArchitecture: {}
   scriptingBackend:
-    Standalone: 1
+    Standalone: 0
     Windows Store Apps: 1
   il2cppCompilerConfiguration: {}
   managedStrippingLevel: {}
@@ -573,11 +573,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: ba-andreaskeller-crossplatform
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: DefaultCompany
+  metroCertificateIssuer: DefaultCompany
+  metroCertificateNotAfter: 00a28ac9beead601
   metroApplicationDescription: BA
   wsaImages: {}
   metroTileShortName: 

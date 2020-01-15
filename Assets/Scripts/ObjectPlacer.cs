@@ -8,8 +8,8 @@ using UnityEngine.XR.WSA;
 public class ObjectPlacer : MonoBehaviour
 {
     //private GazeProvider gazeProvider;
-    private SpatialMappingCollider spatialMappingCollider;
-    private SpatialMappingRenderer spatialMappingRenderer;
+    //private SpatialMappingCollider spatialMappingCollider;
+    //private SpatialMappingRenderer spatialMappingRenderer;
     private List<Vector3> corners = new List<Vector3>();
     private bool placed = false;
     private GameObject[] cubes;
@@ -31,8 +31,8 @@ public class ObjectPlacer : MonoBehaviour
         {
             transform.GetChild(0).gameObject.SetActive(false);
         }
-        spatialMappingCollider = FindObjectOfType<SpatialMappingCollider>();
-        spatialMappingRenderer = FindObjectOfType<SpatialMappingRenderer>();
+        //spatialMappingCollider = FindObjectOfType<SpatialMappingCollider>();
+        //spatialMappingRenderer = FindObjectOfType<SpatialMappingRenderer>();
         //gazeProvider = FindObjectOfType<GazeProvider>();
     }
 
@@ -45,8 +45,8 @@ public class ObjectPlacer : MonoBehaviour
     public void undoPlacing()
     {
         transform.GetChild(0).gameObject.SetActive(false);
-        spatialMappingCollider.layer = 0;
-        spatialMappingRenderer.renderState = SpatialMappingRenderer.RenderState.Visualization;
+        //spatialMappingCollider.layer = 0;
+        //spatialMappingRenderer.renderState = SpatialMappingRenderer.RenderState.Visualization;
         placed = false;
         foreach(GameObject c in cubes)
         {
@@ -96,8 +96,8 @@ public class ObjectPlacer : MonoBehaviour
 
             transform.GetChild(0).gameObject.SetActive(true);
             placed = true;
-            spatialMappingRenderer.renderState = SpatialMappingRenderer.RenderState.None;
-            spatialMappingCollider.layer = 2;
+            //spatialMappingRenderer.renderState = SpatialMappingRenderer.RenderState.None;
+            //spatialMappingCollider.layer = 2;
         }
         
 

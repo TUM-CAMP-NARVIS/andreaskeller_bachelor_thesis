@@ -83,6 +83,7 @@ public class SurfaceAlign : MonoBehaviour
                 return;
 
             this.transform.position = focusManager.focusPosition + focusManager.focusNormal * 0.05f;
+            //TODO this sucks
             this.transform.rotation = Quaternion.LookRotation(new Vector3(0, 1, 0),focusManager.focusNormal);
             
 

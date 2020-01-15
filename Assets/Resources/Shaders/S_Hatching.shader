@@ -43,9 +43,11 @@
 				float4 vertex : SV_POSITION;
 				float2 uvSmall : TEXCOORD1;
 				float2 uvBig : TEXCOORD2;
+				
 
 #ifdef _TRIPLANAR
 				float3 coords : TEXCOORD3;
+				float3 objNormal : TEXCOORD4;
 #endif
 
 				UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -82,6 +84,7 @@
 
 #ifdef _TRIPLANAR
 				o.coords = v.vertex.xyz * _UVScale;
+				o.objNormal = v.normal;
 #endif
 				return o;
 			}
@@ -104,8 +107,8 @@
 				fixed4 bcy = tex2D(_HatchingBig, i.coords.xz);
 				fixed4 bcz = tex2D(_HatchingBig, i.coords.xy);
 
-				hatchSmall = cx * blend.x + cy * blend.y + cz * blend.z;
-				hatchBig = bcx * blend.x + bcy * blend.y + bcz * blend.z;
+				float4 hatchSmall = cx * blend.x + cy * blend.y + cz * blend.z;
+				float4 hatchBig = bcx * blend.x + bcy * blend.y + bcz * blend.z;
 #else
 				float4 hatchSmall = tex2D(_HatchingSmall, i.uvSmall);
 				float4 hatchBig = tex2D(_HatchingBig, i.uvBig);

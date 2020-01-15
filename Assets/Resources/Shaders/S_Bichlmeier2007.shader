@@ -27,12 +27,12 @@
 
         Pass
         {
-			Tags { "LightMode" = "LightWeightForward" }
+			Tags { "LightMode" = "ForwardBase" }
 
 			
 			Stencil{
 				Ref[_StencilRef]
-				Comp Equal
+				Comp Always
 				Fail Keep
 				Pass Replace
 				ZFail Keep

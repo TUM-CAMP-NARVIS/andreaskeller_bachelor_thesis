@@ -57,14 +57,14 @@ public class SetupScene : MonoBehaviour
                 instrText.SetActive(false);
             phantom.SetActive(true);
             //phantom.GetComponent<PhantomManager>().SetManipulation(false);
-            GetComponent<SpatialMappingCollider>().layer = 2;
+            //GetComponent<SpatialMappingCollider>().layer = 2;
 
 
 
         }
         else
         {
-            GetComponent<SpatialMappingRenderer>().renderState = SpatialMappingRenderer.RenderState.Visualization;
+            //GetComponent<SpatialMappingRenderer>().renderState = SpatialMappingRenderer.RenderState.Visualization;
             sceneStatus = SceneStatus.WaitForAnchor;
         }
     }
@@ -74,9 +74,9 @@ public class SetupScene : MonoBehaviour
         phantomAnchor.transform.position = position;
         phantomAnchor.transform.rotation = Quaternion.LookRotation(new Vector3(0, 1, 0), nrm);
         phantom.SetActive(true);
-        GetComponent<SpatialMappingRenderer>().renderState = SpatialMappingRenderer.RenderState.None;
+        //GetComponent<SpatialMappingRenderer>().renderState = SpatialMappingRenderer.RenderState.None;
         //phantom.GetComponent<PhantomManager>().SetManipulation(true);
-        GetComponent<SpatialMappingCollider>().layer = 2;
+        //GetComponent<SpatialMappingCollider>().layer = 2;
         if (instrText)
             instrText.GetComponent<TextMeshProUGUI>().text = "Adjust Position and Rotation";
         sceneStatus = SceneStatus.ManualAdjustment;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WindowMesh : MonoBehaviour
 {
-    public int amountControlPointsInfluencing = 1;
+    public int amountControlPointsInfluencing = 3;
     public float maxDistanceInfluence = 0.2f;
 
     private SurfaceAlign surfaceAlign;
@@ -32,7 +32,6 @@ public class WindowMesh : MonoBehaviour
             if (!setup)
             {
                 calculateInfluence();
-                setup = true;
             }
 
 
@@ -98,6 +97,7 @@ public class WindowMesh : MonoBehaviour
         }
         influenceIDs = infIDs;
 
+        setup = true;
     }
 
     void move()

@@ -16,7 +16,7 @@ public class FocusManager : MonoBehaviour
 
     public Vector3 focusPosition { get; private set; } = new Vector3();
 
-    public Vector3 focusNormal { get; private set; } = new Vector3(0, 1, 0);
+    public Vector3 focusNormal { get; private set; } = new Vector3();
 
     private bool active = true;
 
@@ -36,11 +36,13 @@ public class FocusManager : MonoBehaviour
             return;
 
 
+        //Do one Raycast per frame and save position and normal
         Debug.Log("Updating Focus Position");
         Vector3 hitPosition;
         Vector3 hitNormal;
         Vector3 cameraPos;
         GameObject hitObject;
+
 
         RaycastHit hit;
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
@@ -54,56 +56,61 @@ public class FocusManager : MonoBehaviour
             hitPosition = hit.point;
             hitNormal = hit.normal;
             Debug.Log("Hit Object");
+
+            //LazyMouse Behaviour
+            float distanceToGaze = Vector3.Distance(focusPosition, hitPosition);
+
+            //return if we are looking at an unrelated collider
+            if (hitObject != seeThroughObject)
+            {
+                isFocused = false;
+                return;
+            }
+
+            //if status is not focused but we are actually looking at the object
+            if (!isFocused)
+            {
+                focusPosition = hitPosition;
+                focusNormal = hitNormal;
+                isFocused = true;
+            }
+            else if (distanceToGaze > lazyMouseDistance)
+            {
+                Vector3 moveDirection = Vector3.Normalize(hitPosition - focusPosition);
+                float moveDistance = distanceToGaze - lazyMouseDistance;
+
+                Vector3 rayOrigin = cameraPos;
+                Vector3 rayTarget = focusPosition + (moveDistance * moveDirection);
+                Vector3 rayDirection = Vector3.Normalize(rayTarget - rayOrigin);
+
+                ray = new Ray(rayOrigin, rayDirection);
+
+                if (Physics.Raycast(ray, out hit))
+                {
+
+                    //Not focusing on the object anymore if we dont hit it
+                    if (hit.collider.gameObject != seeThroughObject)
+                    {
+                        isFocused = false;
+                        return;
+                    }
+
+                    focusPosition = hit.point;
+                    focusNormal = hit.normal;
+
+                }
+                else
+                {
+                    isFocused = false;
+                }
+            }
+
         }
         else
         {
             isFocused = false;
             Debug.Log("Didnt hit anything");
             return;
-        }
-            
-
-        
-
-        //LazyMouse Behaviour
-        float distanceToGaze = Vector3.Distance(focusPosition, hitPosition);
-
-        if (!isFocused)
-        {
-            if (hitObject == seeThroughObject)
-            {
-                focusPosition = hitPosition;
-                focusNormal = hitNormal;
-                isFocused = true;
-            }
-        }
-        else if (distanceToGaze > lazyMouseDistance)
-        {
-            Vector3 moveDirection = Vector3.Normalize(hitPosition - focusPosition);
-            float moveDistance = distanceToGaze - lazyMouseDistance;
-
-            Vector3 rayOrigin = cameraPos;
-            Vector3 rayTarget = focusPosition + (moveDistance * moveDirection);
-            Vector3 rayDirection = Vector3.Normalize(rayTarget - rayOrigin);
-
-            RaycastHit hit2;
-            var ray2 = new Ray(rayOrigin, rayDirection);
-
-            if (Physics.Raycast(ray2, out hit2))
-            {
-                focusPosition = hit2.point;
-                focusNormal = hit2.normal;
-
-                //Not focusing on the object anymore if we dont hit it
-                if (hit2.collider.gameObject != seeThroughObject)
-                    isFocused = false;
-                else
-                    isFocused = true;
-            }
-            else
-            {
-                isFocused = false;
-            }
         }
     }
 

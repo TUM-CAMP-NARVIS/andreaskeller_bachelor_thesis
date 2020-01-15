@@ -31,11 +31,11 @@ public class SetPosition : MonoBehaviour
             //transform.up = gazeProvider.HitNormal;
             placed = true;
             transform.GetChild(0).gameObject.SetActive(placed);
-            this.gameObject.AddComponent<WorldAnchor>();
-            SpatialMappingCollider sp = FindObjectOfType<SpatialMappingCollider>();
-            sp.layer = 31;
-            SpatialMappingRenderer sr = FindObjectOfType<SpatialMappingRenderer>();
-            sr.renderState = SpatialMappingRenderer.RenderState.None;
+            //this.gameObject.AddComponent<WorldAnchor>();
+            //SpatialMappingCollider sp = FindObjectOfType<SpatialMappingCollider>();
+            //sp.layer = 31;
+            //SpatialMappingRenderer sr = FindObjectOfType<SpatialMappingRenderer>();
+            //sr.renderState = SpatialMappingRenderer.RenderState.None;
         }
     }
 }

@@ -77,7 +77,7 @@ Shader "Custom/S_ChromaDepth"
 				o.diff.rgb += ShadeSH9(half4(worldNormal,1));
 
 				float3 direction = normalize((_FocusNormal * -1).xyz);
-				float3 vecToFocus = mul(unity_ObjectToWorld, v.vertex) - _FocusPosition.xyz;
+				float3 vecToFocus = mul(unity_ObjectToWorld, v.vertex).xyz - _FocusPosition.xyz;
 				float3 component = dot(vecToFocus, direction) * direction;
 				o.distance = length(component);
 
