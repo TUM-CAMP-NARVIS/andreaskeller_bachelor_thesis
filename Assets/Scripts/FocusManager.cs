@@ -35,19 +35,20 @@ public class FocusManager : MonoBehaviour
         if (!active)
             return;
 
+        var cameraPos = cam.transform.position;
+        var cameraForward = cam.transform.forward;
 
         //Do one Raycast per frame and save position and normal
         Debug.Log("Updating Focus Position");
         Vector3 hitPosition;
         Vector3 hitNormal;
-        Vector3 cameraPos;
         GameObject hitObject;
 
 
         RaycastHit hit;
-        Ray ray = new Ray(cam.transform.position, cam.transform.forward);
+        Ray ray = new Ray(cameraPos, cameraForward);
 
-        cameraPos = cam.transform.position;
+        
 
         if (Physics.Raycast(ray, out hit))
         {
@@ -55,7 +56,7 @@ public class FocusManager : MonoBehaviour
             hitObject = objectHit.gameObject;
             hitPosition = hit.point;
             hitNormal = hit.normal;
-            Debug.Log("Hit Object");
+            Debug.Log("Hit Object: "+hitObject.name);
 
             //LazyMouse Behaviour
             float distanceToGaze = Vector3.Distance(focusPosition, hitPosition);
@@ -79,11 +80,11 @@ public class FocusManager : MonoBehaviour
                 Vector3 moveDirection = Vector3.Normalize(hitPosition - focusPosition);
                 float moveDistance = distanceToGaze - lazyMouseDistance;
 
-                Vector3 rayOrigin = cameraPos;
+                Vector3 rayOrigin = cameraPos + (moveDistance * moveDirection);
                 Vector3 rayTarget = focusPosition + (moveDistance * moveDirection);
                 Vector3 rayDirection = Vector3.Normalize(rayTarget - rayOrigin);
 
-                ray = new Ray(rayOrigin, rayDirection);
+                ray = new Ray(rayOrigin, cameraForward);
 
                 if (Physics.Raycast(ray, out hit))
                 {

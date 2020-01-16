@@ -32,7 +32,7 @@
 			
 			Stencil{
 				Ref[_StencilRef]
-				Comp Always
+				Comp Equal
 				Fail Keep
 				Pass Replace
 				ZFail Keep

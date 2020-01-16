@@ -4,41 +4,25 @@ using UnityEngine;
 
 public class SurfaceAlign : MonoBehaviour
 {
-
-    
-
-    private GameObject skin;
-
-    public GameObject headlight;
-    private bool headlightB = true;
-
-    private int ctrPointsInt = -4;
+    //Public Options
     public int ctrPoints = 3;
     public int size = 10;
+    public bool visualizeControlPoints = false;
 
-    private bool visualizeControlPoints = false;
+
+    
+   
 
     public bool done { get; private set; } = false;
 
-    //For influence calculation
-    public int amountControlPointsInfluencing = 1;
-    public float maxDistanceInfluence = 0.2f;
-
     //Private Properties
     private FocusManager focusManager;
-
+    private GameObject skin;
+    private int ctrPointsInt = -4;
     private int lvlscaler;
 
-    private List<ControlPoint> _controlPoints = new List<ControlPoint>();
 
-    public List<ControlPoint> controlPoints
-    {
-        get
-        {
-            return _controlPoints;
-        }
-        
-    }
+    public List<ControlPoint> controlPoints { get; private set; } = new List<ControlPoint>();
 
     private List<GameObject> primitives = new List<GameObject>();
 
@@ -84,10 +68,10 @@ public class SurfaceAlign : MonoBehaviour
 
             this.transform.position = focusManager.focusPosition + focusManager.focusNormal * 0.05f;
             //TODO this sucks
-            this.transform.rotation = Quaternion.LookRotation(new Vector3(0, 1, 0),focusManager.focusNormal);
-            
+            //this.transform.rotation = Quaternion.LookRotation(focusManager.focusNormal);
+            transform.up = focusManager.focusNormal;
 
-            _controlPoints.Clear();
+            controlPoints.Clear();
 
             rayCastOrigin(ctrPointsInt);
 
@@ -195,7 +179,7 @@ public class SurfaceAlign : MonoBehaviour
                 ctrlP.matrix = Matrix4x4.identity;
                 ctrlP.matrix_nrm = Matrix4x4.identity;
             }
-            _controlPoints.Add(ctrlP);
+            controlPoints.Add(ctrlP);
         }
         else
         {
@@ -261,7 +245,7 @@ public class SurfaceAlign : MonoBehaviour
             ctrlP.matrix_nrm = Matrix4x4.identity;
             hitpos = close;
 
-            _controlPoints.Add(ctrlP);
+            controlPoints.Add(ctrlP);
         }
 
         
@@ -320,9 +304,9 @@ public class SurfaceAlign : MonoBehaviour
     //Visualize ControlPoints with a Primitive shape
     void drawPrimitives()
     {
-        if (primitives.Count !=_controlPoints.Count)
+        if (primitives.Count != controlPoints.Count)
         {
-            for (int i = 0; i < _controlPoints.Count; i++)
+            for (int i = 0; i < controlPoints.Count; i++)
             {
                 GameObject primitive = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 primitive.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
@@ -333,10 +317,10 @@ public class SurfaceAlign : MonoBehaviour
         }
         else
         {
-            for (int i = 0; i < _controlPoints.Count; i++)
+            for (int i = 0; i < controlPoints.Count; i++)
             {
-                primitives[i].transform.position = _controlPoints[i].matrix.MultiplyPoint(_controlPoints[i].position);
-                primitives[i].transform.up = _controlPoints[i].normal;
+                primitives[i].transform.position = controlPoints[i].matrix.MultiplyPoint(controlPoints[i].position);
+                primitives[i].transform.up = controlPoints[i].normal;
             }
         }
 
@@ -349,12 +333,4 @@ public class SurfaceAlign : MonoBehaviour
         foreach (GameObject g in primitives)
             g.SetActive(visualizeControlPoints);
     }
-
-    public void ToggleHeadLight()
-    {
-        headlightB = !headlightB;
-        headlight.SetActive(headlightB);
-
-    }
-
 }

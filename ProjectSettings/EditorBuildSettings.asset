@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/2-Setup.unity
     guid: 8bae8138285b69040a833c00d318c8d3
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/zedmini.unity
     guid: c0439831b29aeac40a3b06f7811d33ce
   - enabled: 0
