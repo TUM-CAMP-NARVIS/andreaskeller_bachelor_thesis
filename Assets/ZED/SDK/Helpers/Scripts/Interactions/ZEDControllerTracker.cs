@@ -8,6 +8,8 @@ using Valve.VR;
 using UnityEditor;
 #endif
 
+using Mirror;
+
 /// <summary>
 /// Causes the GameObject it's attached to to position itself where a tracked VR object is, such as 
 /// a Touch controller or Vive Tracker, but compensates for the ZED's latency. This way, virtual
@@ -16,7 +18,7 @@ using UnityEditor;
 /// applying that position data to this transform after the delay in the latencyCompensation field. 
 /// Used in the ZED GreenScreen, Drone Shooter, Movie Screen, Planetarium and VR Plane Detection example scenes. 
 /// </summary>
-public class ZEDControllerTracker : MonoBehaviour
+public class ZEDControllerTracker : NetworkBehaviour
 {
     /// <summary>
     /// Type of VR SDK loaded. 'Oculus', 'OpenVR' or empty.

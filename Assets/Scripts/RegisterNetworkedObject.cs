@@ -15,17 +15,6 @@ public class RegisterNetworkedObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!registered)
-        {
-            NetworkManager netman = FindObjectOfType<NetworkManager>();
-            if (!netman)
-            {
-                return;
-            }
-            if (netman.RegisterNetworkedObject(this.gameObject))
-                registered = true;
-            
-        }
         
     }
 }
