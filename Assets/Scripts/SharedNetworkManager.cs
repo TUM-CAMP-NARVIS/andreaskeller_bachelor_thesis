@@ -6,24 +6,18 @@ using Mirror;
 
 public class SharedNetworkManager : MonoBehaviour
 {
-    public bool isAtStartup = true;
 
+    private void Start()
+    {
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+        SetupServer();
+        SetupLocalClient();
+#else
+        SetupClient();
+#endif
+    }
     void Update()
     {
-        if (isAtStartup)
-        {
-            if (Input.GetKeyDown(KeyCode.S))
-                SetupServer();
-
-            if (Input.GetKeyDown(KeyCode.C))
-                SetupClient();
-
-            if (Input.GetKeyDown(KeyCode.B))
-            {
-                SetupServer();
-                SetupLocalClient();
-            }
-        }
 
     }
 
@@ -31,7 +25,7 @@ public class SharedNetworkManager : MonoBehaviour
     public void SetupServer()
     {
         NetworkServer.Listen(7777);
-        isAtStartup = false;
+        NetworkServer.RegisterHandler<ConnectMessage>(OnConnected);
         SpawnViveTracker();
     }
 
@@ -39,15 +33,13 @@ public class SharedNetworkManager : MonoBehaviour
     public void SetupClient()
     {
         NetworkClient.RegisterHandler<ConnectMessage>(OnConnected);
-        NetworkClient.Connect("localhost");
-        isAtStartup = false;
+        NetworkClient.Connect("192.168.1.116:7777");
     }
 
     // Create a local client and connect to the local server  
     public void SetupLocalClient()
     {
         NetworkClient.RegisterHandler<ConnectMessage>(OnConnected);
-        isAtStartup = false;
     }
 
     // client function
