@@ -25,15 +25,14 @@ public class SharedNetworkManager : MonoBehaviour
     public void SetupServer()
     {
         NetworkServer.Listen(7777);
-        NetworkServer.RegisterHandler<ConnectMessage>(OnConnected);
-        SpawnViveTracker();
+        //SpawnViveTracker();
     }
 
     // Create a client and connect to the server port  
     public void SetupClient()
     {
         NetworkClient.RegisterHandler<ConnectMessage>(OnConnected);
-        NetworkClient.Connect("192.168.1.116:7777");
+        NetworkClient.Connect("localhost");
     }
 
     // Create a local client and connect to the local server  
@@ -46,6 +45,11 @@ public class SharedNetworkManager : MonoBehaviour
     public void OnConnected(NetworkConnection conn, ConnectMessage netMsg)
     {
         Debug.Log("Connected to server");
+    }
+    //server function
+    public void OnConnectedServer(NetworkConnection conn, ConnectMessage netMsg)
+    {
+        Debug.Log("Client Connected");
     }
 
     public void SpawnViveTracker()

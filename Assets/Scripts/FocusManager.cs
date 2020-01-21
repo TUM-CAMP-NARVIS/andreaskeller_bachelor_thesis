@@ -39,7 +39,7 @@ public class FocusManager : MonoBehaviour
         var cameraForward = cam.transform.forward;
 
         //Do one Raycast per frame and save position and normal
-        Debug.Log("Updating Focus Position");
+        //Debug.Log("Updating Focus Position");
         Vector3 hitPosition;
         Vector3 hitNormal;
         GameObject hitObject;
@@ -56,7 +56,7 @@ public class FocusManager : MonoBehaviour
             hitObject = objectHit.gameObject;
             hitPosition = hit.point;
             hitNormal = hit.normal;
-            Debug.Log("Hit Object: "+hitObject.name);
+            //Debug.Log("Hit Object: "+hitObject.name);
 
             //LazyMouse Behaviour
             float distanceToGaze = Vector3.Distance(focusPosition, hitPosition);
@@ -110,7 +110,7 @@ public class FocusManager : MonoBehaviour
         else
         {
             isFocused = false;
-            Debug.Log("Didnt hit anything");
+            //Debug.Log("Didnt hit anything");
             return;
         }
     }
