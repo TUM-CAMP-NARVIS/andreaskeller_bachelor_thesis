@@ -67,8 +67,8 @@ public class SurfaceAlign : MonoBehaviour
                 return;
 
             this.transform.position = focusManager.focusPosition + focusManager.focusNormal * 0.05f;
-            //TODO this sucks
-            //this.transform.rotation = Quaternion.LookRotation(focusManager.focusNormal);
+
+            //This doesnt keep the focuspoints axis-aligned, adding that might be useful?
             transform.up = focusManager.focusNormal;
 
             controlPoints.Clear();
@@ -84,6 +84,8 @@ public class SurfaceAlign : MonoBehaviour
             done = true;
         }
     }
+
+    #region raycasting
 
     enum Direction { Origin, Up, Right, Down,Left, None, UpRight, UpLeft, DownRight, DownLeft};
 
@@ -300,6 +302,8 @@ public class SurfaceAlign : MonoBehaviour
                 break;
         }
     }
+
+    #endregion
 
     //Visualize ControlPoints with a Primitive shape
     void drawPrimitives()

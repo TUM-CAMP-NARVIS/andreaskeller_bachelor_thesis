@@ -114,7 +114,7 @@
 				float4 hatchBig = tex2D(_HatchingBig, i.uvBig);
 #endif
 				float step = 1.0f / 6.0f;
-				float4 col = (0, 0, 0, 1);
+				float4 col = float4(0, 0, 0, 1);
 #ifdef _INVERTHATCHING
 				if (shading <= step) {
 					col = lerp(hatchSmall.r, hatchSmall.g, 6.0f * shading);

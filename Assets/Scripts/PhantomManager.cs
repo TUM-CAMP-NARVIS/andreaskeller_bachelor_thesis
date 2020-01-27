@@ -8,7 +8,6 @@ public class PhantomManager : MonoBehaviour
 
     public GameObject insides;
     public GameObject insides_Chroma;
-    public GameObject headlight;
     private int materialUsed = 0;
     public bool hatchingInverted = false;
     private bool hatchingInv = false;
@@ -106,12 +105,6 @@ public class PhantomManager : MonoBehaviour
                 child.GetComponent<Renderer>().material.DisableKeyword("_TRIPLANAR");
             }
         }
-    }
-
-    public void ToggleHeadlight()
-    {
-        if (headlight)
-            headlight.SetActive(!headlight.activeSelf);
     }
 
     public void ToggleSkin()

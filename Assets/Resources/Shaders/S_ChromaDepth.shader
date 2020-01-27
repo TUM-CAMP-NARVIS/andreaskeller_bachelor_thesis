@@ -12,7 +12,6 @@ Shader "Custom/S_ChromaDepth"
 		_FocusNormal("Focus Normal", Vector) = (0,1,0,0)
 
 		_DepthDistance("Distance for color lerp", Float) = 0.1
-		_BaseColor("Base Color", Color) = (0.5, 0.5, 0.5, 1)
 	}
 
 		SubShader

@@ -29,7 +29,17 @@ public class FocusManager : MonoBehaviour
     void Update()
     {
         if (!cam)
-            return;
+        {
+            if (Camera.main != null)
+                cam = Camera.main.gameObject;
+            else
+            {
+                Debug.LogError("No Camera specified and no MainCamera found");
+                return;
+            }
+                
+        }
+            
         if (!seeThroughObject)
             return;
         if (!active)

@@ -22,7 +22,6 @@
 		ZWrite On
 		ZTest LEqual
 
-		//Blend SrcAlpha OneMinusSrcAlpha
 		Blend SrcAlpha OneMinusSrcAlpha
 
         Pass
@@ -31,8 +30,8 @@
 
 			
 			Stencil{
-				Ref[_StencilRef]
-				Comp Equal
+				Ref [_StencilRef]
+				Comp Always
 				Fail Keep
 				Pass Replace
 				ZFail Keep
@@ -44,7 +43,6 @@
 			#pragma multi_compile_instancing
 
             #include "UnityCG.cginc"
-			//#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Lighting.hlsl"
 
 			struct appdata
 			{
@@ -65,7 +63,8 @@
 				float3 worldPos : TEXCOORD1;
 				float3 worldNrm : TEXCOORD2;
 				float3 viewVec : TEXCOORD3;
-				//float3 worldViewDir : TEXCOORD5;
+
+				//Setup for Single Pass Instancing
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
             };
@@ -117,21 +116,12 @@
 				float angInc = saturate(1-dot(i.worldNrm, i.viewVec));
 				float curv = saturate(abs((0.5 - curvMap.x) * 2));
 				fixed4 col = fixed4(0, 0, 0, 1);
-				//dist = step(_WeightDistanceFalloff, dist);
 				
 				col.a = saturate(max(max(_WeightCurvature*curv,_WeightDistanceFalloff*distFalloff),_WeightAngleofIncidence*angInc));
 				col.xyz = 0;
 
 				float borderValue = (step(_FocusRadius, dist) - step(_BorderSize + _FocusRadius, dist));
 				col.xyz = borderValue * _BorderColor.xyz + (1 - borderValue) * float3(0, 0, 0);
-				if (dist > _FocusRadius)
-					col.a = 1;
-				if (dist > _FocusRadius+_BorderSize) {
-					col.a = 1;
-					col.xyz = 0;
-				}
-
-				//Colored Border
 				
 				
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-/*
+
 using UnityEngine.Rendering.PostProcessing;
 
 [Serializable]
@@ -32,4 +32,3 @@ public sealed class RadarPingRenderer : PostProcessEffectRenderer<RadarPing>
             distance = 0f;
     }
 }
-*/

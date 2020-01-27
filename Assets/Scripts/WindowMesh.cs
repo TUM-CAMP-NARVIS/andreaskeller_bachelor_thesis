@@ -16,8 +16,14 @@ public class WindowMesh : MonoBehaviour
     private Vector3 scale;
     private (int, float)[,] influenceIDs;
     // Start is called before the first frame update
+
+    //Save rotation, position
+    private Vector3 position;
+    private Quaternion rotation;
     void Start()
     {
+        position = transform.position;
+        rotation = transform.rotation;
         surfaceAlign = FindObjectOfType<SurfaceAlign>();
         setupWindow();
     }
@@ -25,8 +31,11 @@ public class WindowMesh : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.parent.position = surfaceAlign.transform.position;
-        transform.parent.rotation = surfaceAlign.transform.rotation;
+        transform.position = surfaceAlign.transform.position; ;// + position;
+        transform.rotation = surfaceAlign.transform.rotation * rotation;
+
+
+
         if (surfaceAlign.done)
         {
             if (!setup)
