@@ -20,9 +20,6 @@ public class MenuComponents : MonoBehaviour
     {
         panel = transform.GetChild(0).gameObject;
         menuPoints = new List<GameObject>();
-        surfaceAlign = FindObjectOfType<SurfaceAlign>();
-        focusObjectScaler = surfaceAlign.transform.parent.gameObject;
-        objectPlacer = FindObjectOfType<ObjectPlacer>();
 
         BuildMenu();
         
@@ -40,7 +37,7 @@ public class MenuComponents : MonoBehaviour
 
         int position = 80;
         //Title
-        GameObject title = Instantiate(Resources.Load("Prefabs/Title")) as GameObject;
+        GameObject title = Instantiate(Resources.Load("Prefabs/Menu/Title")) as GameObject;
         menuPoints.Add(title);
         title.transform.SetParent(panel.transform, false);
         title.transform.localPosition = new Vector3(0, position, 0);
@@ -48,34 +45,29 @@ public class MenuComponents : MonoBehaviour
         position -= 20;
         
 
-        /*
+        
         if (true)
         {
-            GameObject param1 = Instantiate(Resources.Load("Prefabs/Functionality")) as GameObject;
+            GameObject param1 = Instantiate(Resources.Load("Prefabs/Menu/Functionality")) as GameObject;
             menuPoints.Add(param1);
             param1.transform.SetParent(panel.transform, false);
             param1.transform.localPosition = new Vector3(0,position, 0);
             param1.transform.GetChild(0).GetComponent<Text>().text = "Render Skin";
             param1.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(delegate {
-                if (focusUpdateScript.skinActive)
+                if (phantom)
                 {
-                    focusUpdateScript.EnableSkin(false);
-                    param1.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "Disabled";
-                }
-                else
-                {
-                    focusUpdateScript.EnableSkin(true);
-                    param1.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "Enabled";
+                    phantom.GetComponent<PhantomManager>().ToggleSkin();
+                    param1.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "Toggle";
                 }
 
             });
             position -= 20;
         }
-        */
+        
 
         if (true)
         {
-            GameObject param1 = Instantiate(Resources.Load("Prefabs/Functionality")) as GameObject;
+            GameObject param1 = Instantiate(Resources.Load("Prefabs/Menu/Functionality")) as GameObject;
             menuPoints.Add(param1);
             param1.transform.SetParent(panel.transform, false);
             param1.transform.localPosition = new Vector3(0, position, 0);
@@ -87,9 +79,9 @@ public class MenuComponents : MonoBehaviour
             position -= 20;
         }
 
-        if (phantom)
+        if (false)
         {
-            GameObject param1 = Instantiate(Resources.Load("Prefabs/Parameter")) as GameObject;
+            GameObject param1 = Instantiate(Resources.Load("Prefabs/Menu/Parameter")) as GameObject;
             menuPoints.Add(param1);
             var desc = param1.transform.GetChild(0);
             var value = param1.transform.GetChild(1);
@@ -125,149 +117,7 @@ public class MenuComponents : MonoBehaviour
             position -= 20;
         }
 
-        if (phantom)
-        {
-            GameObject param1 = Instantiate(Resources.Load("Prefabs/Parameter")) as GameObject;
-            menuPoints.Add(param1);
-            var desc = param1.transform.GetChild(0);
-            var value = param1.transform.GetChild(1);
-            var plus = param1.transform.GetChild(2);
-            var minus = param1.transform.GetChild(3);
-            var reset = param1.transform.GetChild(4);
-            param1.transform.SetParent(panel.transform, false);
-            param1.transform.localPosition = new Vector3(0, position, 0);
-            desc.GetComponent<Text>().text = "rootNode Rotation";
-            var currentRotation = 0.0f;
-            value.GetComponent<Text>().text = "0";
-            value.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 20);
-
-            plus.transform.localPosition = new Vector3(plus.transform.localPosition.x + 10, plus.transform.localPosition.y, plus.transform.localPosition.z);
-            minus.transform.localPosition = new Vector3(minus.transform.localPosition.x - 10, minus.transform.localPosition.y, minus.transform.localPosition.z);
-            reset.transform.localPosition = new Vector3(reset.transform.localPosition.x + 10, reset.transform.localPosition.y, reset.transform.localPosition.z);
-
-            plus.GetComponent<Button>().onClick.AddListener(delegate {
-                rootNode.transform.Rotate(0, +45, 0);
-                currentRotation += 45.0f;
-                value.GetComponent<Text>().text = currentRotation.ToString();
-            });
-            minus.GetComponent<Button>().onClick.AddListener(delegate {
-                rootNode.transform.Rotate(0, -45, 0);
-                currentRotation -= 45.0f;
-                value.GetComponent<Text>().text = currentRotation.ToString();
-            });
-            reset.GetComponent<Button>().onClick.AddListener(delegate {
-                rootNode.transform.Rotate(0, (-1.0f)*currentRotation, 0);
-                currentRotation = 0.0f;
-                value.GetComponent<Text>().text = currentRotation.ToString();
-            });
-            position -= 20;
-        }
-
-        if (phantom)
-        {
-            GameObject param1 = Instantiate(Resources.Load("Prefabs/Parameter")) as GameObject;
-            menuPoints.Add(param1);
-            var desc = param1.transform.GetChild(0);
-            var value = param1.transform.GetChild(1);
-            var plus = param1.transform.GetChild(2);
-            var minus = param1.transform.GetChild(3);
-            var reset = param1.transform.GetChild(4);
-            param1.transform.SetParent(panel.transform, false);
-            param1.transform.localPosition = new Vector3(0, position, 0);
-            desc.GetComponent<Text>().text = "rootNode Pos x";
-            var defValue = rootNode.transform.position.y;
-            value.GetComponent<Text>().text = defValue.ToString();
-            value.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 20);
-
-            plus.transform.localPosition = new Vector3(plus.transform.localPosition.x + 10, plus.transform.localPosition.y, plus.transform.localPosition.z);
-            minus.transform.localPosition = new Vector3(minus.transform.localPosition.x - 10, minus.transform.localPosition.y, minus.transform.localPosition.z);
-            reset.transform.localPosition = new Vector3(reset.transform.localPosition.x + 10, reset.transform.localPosition.y, reset.transform.localPosition.z);
-
-            plus.GetComponent<Button>().onClick.AddListener(delegate {
-                var pos = rootNode.transform.position;
-                rootNode.transform.position = new Vector3(pos.x + 0.01f, pos.y, pos.z);
-                value.GetComponent<Text>().text = rootNode.transform.position.x.ToString();
-            });
-            minus.GetComponent<Button>().onClick.AddListener(delegate {
-                var pos = rootNode.transform.position;
-                rootNode.transform.position = new Vector3(pos.x - 0.01f, pos.y , pos.z);
-                value.GetComponent<Text>().text = rootNode.transform.position.x.ToString();
-            });
-            reset.GetComponent<Button>().onClick.AddListener(delegate {
-                rootNode.transform.position = new Vector3(defValue, rootNode.transform.position.y, rootNode.transform.position.z);
-            });
-            position -= 20;
-        }
-        if (phantom)
-        {
-            GameObject param1 = Instantiate(Resources.Load("Prefabs/Parameter")) as GameObject;
-            menuPoints.Add(param1);
-            var desc = param1.transform.GetChild(0);
-            var value = param1.transform.GetChild(1);
-            var plus = param1.transform.GetChild(2);
-            var minus = param1.transform.GetChild(3);
-            var reset = param1.transform.GetChild(4);
-            param1.transform.SetParent(panel.transform, false);
-            param1.transform.localPosition = new Vector3(0, position, 0);
-            desc.GetComponent<Text>().text = "rootNode Pos y";
-            var defValue = rootNode.transform.position.y;
-            value.GetComponent<Text>().text = defValue.ToString();
-            value.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 20);
-
-            plus.transform.localPosition = new Vector3(plus.transform.localPosition.x + 10, plus.transform.localPosition.y, plus.transform.localPosition.z);
-            minus.transform.localPosition = new Vector3(minus.transform.localPosition.x - 10, minus.transform.localPosition.y, minus.transform.localPosition.z);
-            reset.transform.localPosition = new Vector3(reset.transform.localPosition.x + 10, reset.transform.localPosition.y, reset.transform.localPosition.z);
-
-            plus.GetComponent<Button>().onClick.AddListener(delegate {
-                var pos = rootNode.transform.position;
-                rootNode.transform.position = new Vector3(pos.x, pos.y + 0.01f, pos.z);
-                value.GetComponent<Text>().text = rootNode.transform.position.y.ToString();
-            });
-            minus.GetComponent<Button>().onClick.AddListener(delegate {
-                var pos = rootNode.transform.position;
-                rootNode.transform.position = new Vector3(pos.x, pos.y - 0.01f, pos.z);
-                value.GetComponent<Text>().text = rootNode.transform.position.y.ToString();
-            });
-            reset.GetComponent<Button>().onClick.AddListener(delegate {
-                rootNode.transform.position = new Vector3(rootNode.transform.position.x, defValue, rootNode.transform.position.z);
-            });
-            position -= 20;
-        }
-        if (phantom)
-        {
-            GameObject param1 = Instantiate(Resources.Load("Prefabs/Parameter")) as GameObject;
-            menuPoints.Add(param1);
-            var desc = param1.transform.GetChild(0);
-            var value = param1.transform.GetChild(1);
-            var plus = param1.transform.GetChild(2);
-            var minus = param1.transform.GetChild(3);
-            var reset = param1.transform.GetChild(4);
-            param1.transform.SetParent(panel.transform, false);
-            param1.transform.localPosition = new Vector3(0, position, 0);
-            desc.GetComponent<Text>().text = "rootNode Pos z";
-            var defValue = rootNode.transform.position.z;
-            value.GetComponent<Text>().text = defValue.ToString();
-            value.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 20);
-
-            plus.transform.localPosition = new Vector3(plus.transform.localPosition.x + 10, plus.transform.localPosition.y, plus.transform.localPosition.z);
-            minus.transform.localPosition = new Vector3(minus.transform.localPosition.x - 10, minus.transform.localPosition.y, minus.transform.localPosition.z);
-            reset.transform.localPosition = new Vector3(reset.transform.localPosition.x + 10, reset.transform.localPosition.y, reset.transform.localPosition.z);
-
-            plus.GetComponent<Button>().onClick.AddListener(delegate {
-                var pos = rootNode.transform.position;
-                rootNode.transform.position = new Vector3(pos.x, pos.y, pos.z + 0.01f);
-                value.GetComponent<Text>().text = rootNode.transform.position.z.ToString();
-            });
-            minus.GetComponent<Button>().onClick.AddListener(delegate {
-                var pos = rootNode.transform.position;
-                rootNode.transform.position = new Vector3(pos.x, pos.y, pos.z - 0.01f);
-                value.GetComponent<Text>().text = rootNode.transform.position.z.ToString();
-            });
-            reset.GetComponent<Button>().onClick.AddListener(delegate {
-                rootNode.transform.position = new Vector3(rootNode.transform.position.x, rootNode.transform.position.y, defValue);
-            });
-            position -= 20;
-        }
+        
 
         /*
         if (phantom)

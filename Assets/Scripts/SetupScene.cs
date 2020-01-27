@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿//This controls the scene and enables changes to the visuals at runtime
+//
+//
+//
+//
+//
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //using Microsoft.MixedReality.Toolkit.Experimental.Utilities;
@@ -11,76 +17,81 @@ using TMPro;
 public class SetupScene : MonoBehaviour
 {
     private SceneStatus sceneStatus = SceneStatus.FirstLoad;
-    //private WorldAnchorManager worldAnchorManager;
-    private GameObject phantomAnchor;
-    private GameObject phantom;
-    private GameObject instrText;
+	
+    private SurfaceAlign surfaceAlign;
+    private FocusManager focusManager;
+    private PhantomManager phantomManager;
     private bool perf = true;
     enum SceneStatus {FirstLoad, Finished, WaitForAnchor, ManualAdjustment};
     // Start is called before the first frame update
     void Start()
     {
-        phantomAnchor = GameObject.Find("PhantomAnchor");
-        phantom = GameObject.FindWithTag("Phantom");
-        phantom.SetActive(false);
-        //Check if there is a World Anchor already stored for the Phantom
-        //worldAnchorManager = this.GetComponent<WorldAnchorManager>();
-        if (false)//!worldAnchorManager)
-            Debug.LogError("NO ANCHOR MANAGER");
+		if (Utils.IsHoloLens)
+		{
+			setupHololens();
+		}
+		else
+		{
+			setupZedMini();
+		}
 
-        instrText = GameObject.FindGameObjectWithTag("StepDescription");
+		surfaceAlign = FindObjectOfType<SurfaceAlign>();
+		focusManager = FindObjectOfType<FocusManager>();
+		phantomManager = FindObjectOfType<PhantomManager>();
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        switch (sceneStatus)
-        {
-            case SceneStatus.FirstLoad:
-                CheckAnchors();
-                break;
-            default:
-                return;
-
-        }
+		
     }
+	
+	void setupHololens()
+	{
+		
+	}
+	
+	void setupZedMini()
+	{
+		
+	}
 
-    void CheckAnchors()
-    {
-        if (false)//worldAnchorManager.AnchorStore.anchorCount != 0)
-        {
-            //Load anchor
-            //worldAnchorManager.AttachAnchor(phantom);
-            sceneStatus = SceneStatus.Finished;
-            if (instrText)
-                instrText.SetActive(false);
-            phantom.SetActive(true);
-            //phantom.GetComponent<PhantomManager>().SetManipulation(false);
-            //GetComponent<SpatialMappingCollider>().layer = 2;
-
-
-
-        }
-        else
-        {
-            //GetComponent<SpatialMappingRenderer>().renderState = SpatialMappingRenderer.RenderState.Visualization;
-            sceneStatus = SceneStatus.WaitForAnchor;
-        }
-    }
-
-    void SetAnchor(Vector3 position, Vector3 nrm)
-    {
-        phantomAnchor.transform.position = position;
-        phantomAnchor.transform.rotation = Quaternion.LookRotation(new Vector3(0, 1, 0), nrm);
-        phantom.SetActive(true);
-        //GetComponent<SpatialMappingRenderer>().renderState = SpatialMappingRenderer.RenderState.None;
-        //phantom.GetComponent<PhantomManager>().SetManipulation(true);
-        //GetComponent<SpatialMappingCollider>().layer = 2;
-        if (instrText)
-            instrText.GetComponent<TextMeshProUGUI>().text = "Adjust Position and Rotation";
-        sceneStatus = SceneStatus.ManualAdjustment;
-    }
+    //void CheckAnchors()
+    //{
+    //    if (false)//worldAnchorManager.AnchorStore.anchorCount != 0)
+    //    {
+    //        //Load anchor
+    //        //worldAnchorManager.AttachAnchor(phantom);
+    //        sceneStatus = SceneStatus.Finished;
+    //        if (instrText)
+    //            instrText.SetActive(false);
+    //        phantom.SetActive(true);
+    //        //phantom.GetComponent<PhantomManager>().SetManipulation(false);
+    //        //GetComponent<SpatialMappingCollider>().layer = 2;
+    //
+    //
+    //
+    //    }
+    //    else
+    //    {
+    //        //GetComponent<SpatialMappingRenderer>().renderState = SpatialMappingRenderer.RenderState.Visualization;
+    //        sceneStatus = SceneStatus.WaitForAnchor;
+    //    }
+    //}
+    //
+    //void SetAnchor(Vector3 position, Vector3 nrm)
+    //{
+    //    phantomAnchor.transform.position = position;
+    //    phantomAnchor.transform.rotation = Quaternion.LookRotation(new Vector3(0, 1, 0), nrm);
+    //    phantom.SetActive(true);
+    //    //GetComponent<SpatialMappingRenderer>().renderState = SpatialMappingRenderer.RenderState.None;
+    //    //phantom.GetComponent<PhantomManager>().SetManipulation(true);
+    //    //GetComponent<SpatialMappingCollider>().layer = 2;
+    //    if (instrText)
+    //        instrText.GetComponent<TextMeshProUGUI>().text = "Adjust Position and Rotation";
+    //    sceneStatus = SceneStatus.ManualAdjustment;
+    //}
 
     //public void RegisterInput(MixedRealityPointerEventData d)
     //{

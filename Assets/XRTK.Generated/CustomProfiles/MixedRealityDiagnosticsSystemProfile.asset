@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: MixedRealityDiagnosticsSystemProfile
   m_EditorClassIdentifier: 
   isCustomProfile: 1
-  diagnosticsWindowPrefab: {fileID: 0}
+  diagnosticsWindowPrefab: {fileID: 2161880003638299081, guid: 011457a3a51780b42bd54d6fe6859470,
+    type: 3}
   showDiagnosticsWindowOnStart: 0
   registeredDiagnosticsDataProviders:
   - dataProviderType:
@@ -21,5 +22,5 @@ MonoBehaviour:
         XRTK
     dataProviderName: New Diagnostics Data Provider
     priority: 5
-    runtimePlatform: 16
+    runtimePlatform: 18
     profile: {fileID: 0}
