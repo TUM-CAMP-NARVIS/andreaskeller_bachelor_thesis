@@ -12,6 +12,7 @@ using UnityEngine.SpatialTracking;
 //using Microsoft.MixedReality.Toolkit.Input;
 //using Microsoft.MixedReality.Toolkit.UI;
 //using Microsoft.MixedReality.Toolkit;
+using Mirror;
 using UnityEngine.XR.WSA;
 using TMPro;
 
@@ -53,8 +54,11 @@ public class MultiplatformSceneManager : MonoBehaviour
 	//
 	void setupHololens()
 	{
-		
-	}
+        var networkManager = FindObjectOfType<NetworkManager>();
+        networkManager.networkAddress = "192.168.1.116";
+        networkManager.StartClient();
+        
+    }
 	
 	void setupZedMini()
 	{
@@ -67,6 +71,11 @@ public class MultiplatformSceneManager : MonoBehaviour
             posedriver.SetPoseSource(TrackedPoseDriver.DeviceType.GenericXRController, TrackedPoseDriver.TrackedPose.LeftPose);
 
         }
+
+        //Networking
+        var networkManager = FindObjectOfType<NetworkManager>();
+        networkManager.StartServer();
+        networkManager.StartClient();
             
 	}
 
