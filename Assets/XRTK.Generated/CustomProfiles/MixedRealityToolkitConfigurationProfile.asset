@@ -16,28 +16,28 @@ MonoBehaviour:
   enableCameraSystem: 1
   cameraSystemType:
     reference: XRTK.Services.CameraSystem.MixedRealityCameraSystem, XRTK
-  cameraProfile: {fileID: 11400000, guid: 2b0ab6f5348646cebf8585d46c3a3edc, type: 2}
+  cameraProfile: {fileID: 11400000, guid: b7bd65ade3d031547b3866555a694878, type: 2}
   enableInputSystem: 1
-  inputSystemProfile: {fileID: 11400000, guid: a176466fbf4e44a087639abca7e5ba47, type: 2}
+  inputSystemProfile: {fileID: 11400000, guid: 54662c62b6c45994a8b55fa44c56bd31, type: 2}
   inputSystemType:
     reference: XRTK.Services.InputSystem.MixedRealityInputSystem, XRTK
   enableBoundarySystem: 1
   boundarySystemType:
     reference: XRTK.Services.BoundarySystem.MixedRealityBoundarySystem, XRTK
-  boundaryVisualizationProfile: {fileID: 11400000, guid: 66c6942c137e4200b9fa363d94982582,
+  boundaryVisualizationProfile: {fileID: 11400000, guid: cea0e211d57f9d0479ae9a165b7f8fef,
     type: 2}
-  enableTeleportSystem: 1
+  enableTeleportSystem: 0
   teleportSystemType:
     reference: XRTK.Services.Teleportation.MixedRealityTeleportSystem, XRTK
   enableSpatialAwarenessSystem: 1
   spatialAwarenessSystemType:
     reference: XRTK.Services.SpatialAwarenessSystem.MixedRealitySpatialAwarenessSystem,
       XRTK
-  spatialAwarenessProfile: {fileID: 11400000, guid: 41ce31a4954544c58d16f6b3c4c88f4b,
+  spatialAwarenessProfile: {fileID: 11400000, guid: 589766cc945cf0741b6eb4105ba715a9,
     type: 2}
-  networkingSystemProfile: {fileID: 11400000, guid: 72aa9c32198a4dce9219e6ab19d5dc6f,
+  networkingSystemProfile: {fileID: 11400000, guid: 4465c387aace5ce4fbbbdf33a8deb2b8,
     type: 2}
-  enableNetworkingSystem: 1
+  enableNetworkingSystem: 0
   networkingSystemType:
     reference: XRTK.Services.NetworkingSystem.MixedRealityNetworkingSystem, XRTK
   diagnosticsSystemProfile: {fileID: 11400000, guid: 6119cd3b52766f34c8cb882b598a68a0,

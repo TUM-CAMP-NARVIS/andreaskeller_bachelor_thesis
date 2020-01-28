@@ -13,6 +13,7 @@ public class WindowMesh : MonoBehaviour
     private Mesh mesh;
     private Vector3[] verts;
     private Vector3[] normals;
+    private Vector3 oldPos;
     private Vector3 scale;
     private (int, float)[,] influenceIDs;
     // Start is called before the first frame update
@@ -31,10 +32,10 @@ public class WindowMesh : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = surfaceAlign.transform.position; ;// + position;
+        transform.position = surfaceAlign.transform.position;// + position;
         transform.rotation = surfaceAlign.transform.rotation * rotation;
 
-
+        
 
         if (surfaceAlign.done)
         {
@@ -42,9 +43,12 @@ public class WindowMesh : MonoBehaviour
             {
                 calculateInfluence();
             }
-
-
-            move();
+            if (oldPos != transform.position)
+            {
+                move();
+                oldPos = transform.position;
+            }
+                
         }
     }
 

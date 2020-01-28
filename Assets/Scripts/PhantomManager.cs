@@ -8,17 +8,29 @@ public class PhantomManager : MonoBehaviour
 
     public GameObject insides;
     public GameObject insides_Chroma;
+    private GameObject skin;
     private int materialUsed = 0;
     public bool hatchingInverted = false;
     private bool hatchingInv = false;
 
     public bool useTriPlanar = false;
     private bool useTriPl = false;
-    
+
+    private FocusManager focusManager;
+
 
     void Start()
     {
-        
+        focusManager = FindObjectOfType<FocusManager>();
+        var getSkin = focusManager.GetSkin();
+        if (getSkin == null)
+        {
+            skin = transform.Find("skin").gameObject;
+            focusManager.RegisterSkin(skin);
+        }
+        else
+            skin = getSkin;
+            
     }
 
     // Update is called once per frame
@@ -29,14 +41,22 @@ public class PhantomManager : MonoBehaviour
 
         if (useTriPl != useTriPlanar)
             ToggleTriPlanar();
-
-        Vector3 focusPosition = FindObjectOfType<FocusManager>().focusPosition;
-        Vector3 focusNormal = FindObjectOfType<FocusManager>().focusNormal;
-        foreach (Transform child in insides_Chroma.transform)
+        if (insides_Chroma && insides_Chroma.activeSelf)
         {
-            child.GetComponent<Renderer>().material.SetVector("_FocusPosition", focusPosition);
-            child.GetComponent<Renderer>().material.SetVector("_FocusNormal", focusNormal);
+            foreach (Transform child in insides_Chroma.transform)
+            {
+                var renderer = child.GetComponent<Renderer>();
+                if (renderer)
+                {
+                    renderer.material.SetVector("_FocusPosition", focusManager.focusPosition);
+                    renderer.material.SetVector("_FocusNormal", focusManager.focusNormal);
+                }
+            }
         }
+        var skinRenderer = skin.GetComponent<Renderer>();
+        if (skinRenderer.enabled)
+            skinRenderer.material.SetVector("_FocusPosition", focusManager.focusPosition);
+
     }
 
     //public void ToggleManipulation()

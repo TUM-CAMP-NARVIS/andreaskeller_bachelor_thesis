@@ -15,10 +15,10 @@ MonoBehaviour:
   symbolicLinks:
   - sourceRelativePath: /SteamVR/SteamVR
     targetRelativePath: /Assets/SteamVR
-    isActive: 1
+    isActive: 0
   - sourceRelativePath: /SteamVR/SteamVR_Input
     targetRelativePath: /Assets/SteamVR_Input
-    isActive: 1
+    isActive: 0
   - sourceRelativePath: /SteamVR/SteamVR_Resources
     targetRelativePath: /Assets/SteamVR_Resources
     isActive: 1

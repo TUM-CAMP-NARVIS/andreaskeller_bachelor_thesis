@@ -20,6 +20,7 @@ public class SurfaceAlign : MonoBehaviour
     private GameObject skin;
     private int ctrPointsInt = -4;
     private int lvlscaler;
+    private Vector3 oldFocusPosition = new Vector3(20,20,20);
 
 
     public List<ControlPoint> controlPoints { get; private set; } = new List<ControlPoint>();
@@ -63,10 +64,12 @@ public class SurfaceAlign : MonoBehaviour
         //Align the window if user is focusing on the phantom
         if (focusManager.isFocused)
         {
-            if (focusManager.isStatic)
+            //Check if focus manager actually moved the focus
+            if (focusManager.isStatic || focusManager.focusPosition == oldFocusPosition)
                 return;
 
             this.transform.position = focusManager.focusPosition + focusManager.focusNormal * 0.05f;
+            oldFocusPosition = focusManager.focusPosition;
 
             //This doesnt keep the focuspoints axis-aligned, adding that might be useful?
             transform.up = focusManager.focusNormal;

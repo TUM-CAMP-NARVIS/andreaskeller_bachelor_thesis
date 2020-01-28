@@ -555,7 +555,7 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLWasmStreaming: 0
   scriptingDefineSymbols:
-    1: MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER;MIRROR_3_12_OR_NEWER;MIRROR_4_0_OR_NEWER;UNITY_POST_PROCESSING_STACK_V2;ZED_STEAM_VR;ZED_SVR_2_0_INPUT
+    1: MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER;MIRROR_3_12_OR_NEWER;MIRROR_4_0_OR_NEWER;UNITY_POST_PROCESSING_STACK_V2
     7: UNITY_POST_PROCESSING_STACK_V2
     13: UNITY_POST_PROCESSING_STACK_V2
     14: MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER;MIRROR_3_12_OR_NEWER;MIRROR_4_0_OR_NEWER
@@ -590,7 +590,7 @@ PlayerSettings:
   metroCertificateNotAfter: 00a28ac9beead601
   metroApplicationDescription: BA
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: BA-crossplatform
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0

@@ -9,7 +9,8 @@ public class FocusRegionUpdater : MonoBehaviour
     void Start()
     {
         focusManager = FindObjectOfType<FocusManager>();
-        focusManager.RegisterSkin(transform.Find("skin").gameObject);
+        if (focusManager.GetSkin()==null)
+            focusManager.RegisterSkin(transform.Find("skin").gameObject);
     }
 
 
@@ -18,10 +19,15 @@ public class FocusRegionUpdater : MonoBehaviour
         if (focusManager)
         {
             Vector3 focusPosition = focusManager.focusPosition;
+            Vector3 focusNormal = focusManager.focusNormal;
             foreach (Transform child in transform)
             {
                 if (child.GetComponent<Renderer>())
+                {
                     child.GetComponent<Renderer>().material.SetVector("_FocusPosition", focusPosition);
+                }
+                    
+
             }
 
         }

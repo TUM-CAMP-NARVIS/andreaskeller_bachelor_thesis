@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class FocusManager : MonoBehaviour
 {
+    [Tooltip("The object containing the Mesh Collider you want to have the window appear on")]
     public GameObject seeThroughObject;
+    [Tooltip("The minimum distance you have to move your head in order to move the window, the higher the value the more stable the window")]
     public float lazyMouseDistance = 0.005f;
+    [Tooltip("The camera you want to control the window with, if not set it is looking for the MainCamera tag")]
     public GameObject cam;
 
     
@@ -94,7 +97,7 @@ public class FocusManager : MonoBehaviour
                 Vector3 rayTarget = focusPosition + (moveDistance * moveDirection);
                 Vector3 rayDirection = Vector3.Normalize(rayTarget - rayOrigin);
 
-                ray = new Ray(rayOrigin, cameraForward);
+                ray = new Ray(rayOrigin, rayDirection);
 
                 if (Physics.Raycast(ray, out hit))
                 {
