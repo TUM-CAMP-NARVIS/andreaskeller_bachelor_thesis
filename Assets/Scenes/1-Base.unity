@@ -1302,6 +1302,12 @@ PrefabInstance:
       propertyPath: vuforiaCam
       value: 
       objectReference: {fileID: 1572102318}
+    - target: {fileID: 2499400468173168704, guid: 11c69eb317e223941a62a04fa2a43c48,
+        type: 3}
+      propertyPath: prefab
+      value: 
+      objectReference: {fileID: 4605727927753966638, guid: e2d46f50eab038a4392db70e0601132f,
+        type: 3}
     - target: {fileID: 2499400468173168705, guid: 11c69eb317e223941a62a04fa2a43c48,
         type: 3}
       propertyPath: m_LocalPosition.x

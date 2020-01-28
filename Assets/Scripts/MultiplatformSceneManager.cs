@@ -25,6 +25,8 @@ public class MultiplatformSceneManager : MonoBehaviour
     public GameObject zedStereoRig;
     public GameObject phantomAnchor;
 
+    public GameObject prefab;
+
     private SurfaceAlign surfaceAlign;
     private FocusManager focusManager;
     private PhantomManager phantomManager;
@@ -95,6 +97,9 @@ public class MultiplatformSceneManager : MonoBehaviour
         //Networking
         var networkManager = FindObjectOfType<NetworkManager>();
         networkManager.StartServer();
+
+        var viveTracker = Instantiate(prefab);
+        NetworkServer.Spawn(prefab);
         connectToServer("localhost");
         
 	}
