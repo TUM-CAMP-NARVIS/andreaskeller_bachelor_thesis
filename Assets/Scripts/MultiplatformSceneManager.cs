@@ -15,6 +15,7 @@ using UnityEngine.SpatialTracking;
 using Mirror;
 using UnityEngine.XR.WSA;
 using TMPro;
+using System;
 
 public class MultiplatformSceneManager : MonoBehaviour
 {
@@ -32,7 +33,11 @@ public class MultiplatformSceneManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-		if (Utils.IsHoloLens)
+        surfaceAlign = FindObjectOfType<SurfaceAlign>();
+        focusManager = FindObjectOfType<FocusManager>();
+        phantomManager = FindObjectOfType<PhantomManager>();
+
+        if (Utils.IsHoloLens)
 		{
 			setupHololens();
 		}
@@ -45,9 +50,7 @@ public class MultiplatformSceneManager : MonoBehaviour
 			setupZedMini();
 		}
 
-		surfaceAlign = FindObjectOfType<SurfaceAlign>();
-		focusManager = FindObjectOfType<FocusManager>();
-		phantomManager = FindObjectOfType<PhantomManager>();
+		
 
     }
 
@@ -60,9 +63,9 @@ public class MultiplatformSceneManager : MonoBehaviour
 	void setupHololens()
 	{
         var networkManager = FindObjectOfType<NetworkManager>();
-        networkManager.networkAddress = "192.168.1.116";
-        networkManager.StartClient();
-        
+
+        connectToServer("192.168.1.116");
+
     }
 
     void setupIOS()
@@ -72,10 +75,8 @@ public class MultiplatformSceneManager : MonoBehaviour
             vuforiaCam.SetActive(true);
             focusManager.cam = vuforiaCam;
         }
-            
-        var networkManager = FindObjectOfType<NetworkManager>();
-        networkManager.networkAddress = "192.168.1.116";
-        networkManager.StartClient();
+
+        connectToServer("192.168.1.116");
         
     }
 	
@@ -94,9 +95,26 @@ public class MultiplatformSceneManager : MonoBehaviour
         //Networking
         var networkManager = FindObjectOfType<NetworkManager>();
         networkManager.StartServer();
-        networkManager.StartClient();
-            
+        connectToServer("localhost");
+        
 	}
+
+    void connectToServer(string ip)
+    {
+        NetworkClient.RegisterHandler<ConnectMessage>(OnConnected,false);
+        NetworkClient.RegisterHandler<DisconnectMessage>(OnDisconnected,false);
+        NetworkClient.Connect(ip);
+    }
+
+    private void OnConnected(NetworkConnection arg1, ConnectMessage arg2)
+    {
+        Debug.Log("connected to server!");
+    }
+    private void OnDisconnected(NetworkConnection arg1, DisconnectMessage arg2)
+    {
+        Debug.Log("disconnected from server!");
+    }
+
 
     //void CheckAnchors()
     //{
