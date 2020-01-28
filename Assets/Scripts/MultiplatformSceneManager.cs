@@ -20,6 +20,7 @@ public class MultiplatformSceneManager : MonoBehaviour
 {
     private SceneStatus sceneStatus = SceneStatus.FirstLoad;
 
+    public GameObject vuforiaCam;
     public GameObject zedStereoRig;
     public GameObject phantomAnchor;
 
@@ -34,6 +35,10 @@ public class MultiplatformSceneManager : MonoBehaviour
 		if (Utils.IsHoloLens)
 		{
 			setupHololens();
+		}
+        else if (Utils.IsIOS)
+		{
+			setupIOS();
 		}
 		else
 		{
@@ -54,6 +59,20 @@ public class MultiplatformSceneManager : MonoBehaviour
 	//
 	void setupHololens()
 	{
+        var networkManager = FindObjectOfType<NetworkManager>();
+        networkManager.networkAddress = "192.168.1.116";
+        networkManager.StartClient();
+        
+    }
+
+    void setupIOS()
+    {
+        if (vuforiaCam)
+        {
+            vuforiaCam.SetActive(true);
+            focusManager.cam = vuforiaCam;
+        }
+            
         var networkManager = FindObjectOfType<NetworkManager>();
         networkManager.networkAddress = "192.168.1.116";
         networkManager.StartClient();
