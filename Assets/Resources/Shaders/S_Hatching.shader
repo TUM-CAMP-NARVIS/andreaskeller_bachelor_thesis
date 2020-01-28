@@ -7,6 +7,7 @@
 		_HatchingBig("Hatching Texture Big", 2D) = "white" {}
 		_UVScale("UV Scale", Float) = 6.0
 		_BaseColor("Base Color", Color) = (0.5, 0.5, 0.5, 1)
+		_Intensity("Hatching Intensity", Range(0,2)) = 1.0
 	}
 
 	SubShader
@@ -61,6 +62,7 @@
 				UNITY_DEFINE_INSTANCED_PROP(float4, _HatchingBig_ST)
 				UNITY_DEFINE_INSTANCED_PROP(float, _UVScale)
 				UNITY_DEFINE_INSTANCED_PROP(float4, _BaseColor)
+				UNITY_DEFINE_INSTANCED_PROP(float, _Intensity)
 			UNITY_INSTANCING_BUFFER_END(Props)
 
 			v2f vert(appdata_base v)
@@ -115,7 +117,9 @@
 #endif
 				float step = 1.0f / 6.0f;
 				float4 col = float4(0, 0, 0, 1);
+				
 #ifdef _INVERTHATCHING
+				shading = saturate(shading * _Intensity);
 				if (shading <= step) {
 					col = lerp(hatchSmall.r, hatchSmall.g, 6.0f * shading);
 				}
@@ -135,6 +139,7 @@
 					col = lerp(hatchBig.b, float4(0, 0, 0, 1), 6.0f * (shading - 5.0f * step));
 				}
 #else
+				shading = saturate(shading * (2.0f-_Intensity));
 				if (shading <= step) {
 					col = lerp(hatchBig.b, hatchBig.g, 6.0f * shading);
 				}

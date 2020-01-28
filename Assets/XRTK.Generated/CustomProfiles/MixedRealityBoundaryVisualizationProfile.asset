@@ -18,10 +18,10 @@ MonoBehaviour:
   floorMaterial: {fileID: 2100000, guid: cff739f75e6f4d2aa27638b66200ef95, type: 2}
   floorPhysicsLayer: 0
   floorScale: {x: 10, y: 10}
-  showPlayArea: 1
+  showPlayArea: 0
   playAreaMaterial: {fileID: 2100000, guid: 86884506517247c991a07caf162eeba4, type: 2}
   playAreaPhysicsLayer: 2
-  showTrackedArea: 1
+  showTrackedArea: 0
   trackedAreaMaterial: {fileID: 2100000, guid: d22e9250d3fe4a8e975edae99c735282, type: 2}
   trackedAreaPhysicsLayer: 2
   showBoundaryWalls: 0

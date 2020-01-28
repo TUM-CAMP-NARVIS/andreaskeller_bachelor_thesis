@@ -10,6 +10,7 @@ public class Utils
         Unknown,
         HoloLens,
         VR,
+        IOS,
     }
 
     public static PlayerType CurrentPlayerType
@@ -26,9 +27,16 @@ public class Utils
                     case "OpenVR":
                         playerType = PlayerType.VR;
                         break;
+#if UNITY_IOS
+                    default:
+                        playerType = PlayerType.IOS;
+                        break;
+#else
                     default:
                         playerType = PlayerType.VR;
                         break;
+#endif
+
                 }
             }
 
@@ -49,6 +57,14 @@ public class Utils
         get
         {
             return CurrentPlayerType == PlayerType.VR;
+        }
+    }
+
+    public static bool IsIOS
+    {
+        get
+        {
+            return CurrentPlayerType == PlayerType.IOS;
         }
     }
 }

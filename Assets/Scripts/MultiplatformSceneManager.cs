@@ -7,6 +7,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SpatialTracking;
 //using Microsoft.MixedReality.Toolkit.Experimental.Utilities;
 //using Microsoft.MixedReality.Toolkit.Input;
 //using Microsoft.MixedReality.Toolkit.UI;
@@ -19,7 +20,8 @@ public class MultiplatformSceneManager : MonoBehaviour
     private SceneStatus sceneStatus = SceneStatus.FirstLoad;
 
     public GameObject zedStereoRig;
-	
+    public GameObject phantomAnchor;
+
     private SurfaceAlign surfaceAlign;
     private FocusManager focusManager;
     private PhantomManager phantomManager;
@@ -58,6 +60,14 @@ public class MultiplatformSceneManager : MonoBehaviour
 	{
         if (zedStereoRig)
             zedStereoRig.SetActive(true);
+
+        if (phantomAnchor)
+        {
+            var posedriver = phantomAnchor.AddComponent<TrackedPoseDriver>();
+            posedriver.SetPoseSource(TrackedPoseDriver.DeviceType.GenericXRController, TrackedPoseDriver.TrackedPose.LeftPose);
+
+        }
+            
 	}
 
     //void CheckAnchors()

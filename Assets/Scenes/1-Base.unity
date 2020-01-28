@@ -140,7 +140,7 @@ PrefabInstance:
     - target: {fileID: 5646103215612901224, guid: a0d474fbc8031f0469c31b75e0dec1f1,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.24
       objectReference: {fileID: 0}
     - target: {fileID: 5646103215612901224, guid: a0d474fbc8031f0469c31b75e0dec1f1,
         type: 3}
@@ -621,6 +621,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1171604877}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1226165203 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1240175370371366280, guid: 813cac7dfcf91ac439ac53b55f96b1dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1240175371328534107}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1287213667
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -680,6 +686,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 81231073789856822, guid: e13ee7e0790c7d243b7aa67fe604acac,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 114711245158774928, guid: e13ee7e0790c7d243b7aa67fe604acac,
         type: 3}
       propertyPath: enableTracking
@@ -714,6 +725,11 @@ PrefabInstance:
         type: 3}
       propertyPath: advancedPanelOpen
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114711245158774928, guid: e13ee7e0790c7d243b7aa67fe604acac,
+        type: 3}
+      propertyPath: depthMode
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e13ee7e0790c7d243b7aa67fe604acac, type: 3}
@@ -950,15 +966,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: PhantomAnchor
       objectReference: {fileID: 0}
-    - target: {fileID: 1240175370992697619, guid: 813cac7dfcf91ac439ac53b55f96b1dc,
+    - target: {fileID: 1240175370566300610, guid: 813cac7dfcf91ac439ac53b55f96b1dc,
         type: 3}
-      propertyPath: m_LocalPosition.x
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1240175370712483670, guid: 813cac7dfcf91ac439ac53b55f96b1dc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1240175370876759759, guid: 813cac7dfcf91ac439ac53b55f96b1dc,
+        type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1240175370992697619, guid: 813cac7dfcf91ac439ac53b55f96b1dc,
         type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.142
+      propertyPath: m_LocalPosition.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1240175370992697619, guid: 813cac7dfcf91ac439ac53b55f96b1dc,
         type: 3}
@@ -1005,6 +1031,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1240175370992697619, guid: 813cac7dfcf91ac439ac53b55f96b1dc,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1240175371011834692, guid: 813cac7dfcf91ac439ac53b55f96b1dc,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 1240175371011834692, guid: 813cac7dfcf91ac439ac53b55f96b1dc,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.084
+      objectReference: {fileID: 0}
+    - target: {fileID: 1240175371379006922, guid: 813cac7dfcf91ac439ac53b55f96b1dc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 813cac7dfcf91ac439ac53b55f96b1dc, type: 3}
 --- !u!1001 &2499400467474188687
@@ -1019,6 +1065,11 @@ PrefabInstance:
       propertyPath: zedStereoRig
       value: 
       objectReference: {fileID: 1083552530}
+    - target: {fileID: 2499400468173168704, guid: 11c69eb317e223941a62a04fa2a43c48,
+        type: 3}
+      propertyPath: phantomAnchor
+      value: 
+      objectReference: {fileID: 1226165203}
     - target: {fileID: 2499400468173168705, guid: 11c69eb317e223941a62a04fa2a43c48,
         type: 3}
       propertyPath: m_LocalPosition.x

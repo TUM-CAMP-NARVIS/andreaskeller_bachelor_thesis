@@ -21,7 +21,7 @@ MonoBehaviour:
   inputSystemProfile: {fileID: 11400000, guid: 54662c62b6c45994a8b55fa44c56bd31, type: 2}
   inputSystemType:
     reference: XRTK.Services.InputSystem.MixedRealityInputSystem, XRTK
-  enableBoundarySystem: 1
+  enableBoundarySystem: 0
   boundarySystemType:
     reference: XRTK.Services.BoundarySystem.MixedRealityBoundarySystem, XRTK
   boundaryVisualizationProfile: {fileID: 11400000, guid: cea0e211d57f9d0479ae9a165b7f8fef,
