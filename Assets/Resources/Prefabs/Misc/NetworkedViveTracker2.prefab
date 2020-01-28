@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4605727927753966639}
   - component: {fileID: 8055277065999908872}
   m_Layer: 0
-  m_Name: NetworkedViveTracker
+  m_Name: NetworkedViveTracker2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -124,6 +124,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: d5d640d9f9615584daf64ea5e7c4f158,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7e4e21f6b657aa9449e8e1444837695f, type: 2}
     - target: {fileID: -927199367670048503, guid: d5d640d9f9615584daf64ea5e7c4f158,
         type: 3}
       propertyPath: m_Name
