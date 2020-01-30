@@ -29,8 +29,9 @@ public class SynchronizationManager : MonoBehaviour
         if (markerSeen && synchronized)
             return;
         Debug.Log("received imagetracker position");
-        pos = imageTarget.transform.position+ new Vector3(0,0,0.1f);
         rot = imageTarget.transform.rotation;
+        pos = imageTarget.transform.position + (rot*new Vector3(0,0,0.1f));
+        
         syncSpace.transform.position = pos;
         syncSpace.transform.rotation = rot;
         markerSeen = true;
@@ -43,14 +44,13 @@ public class SynchronizationManager : MonoBehaviour
         {
             Debug.Log("Synchronizing");
             syncSpace.transform.position = -posNetworked + syncSpace.transform.position;
-            //offsetRot = Quaternion.Inverse(rot) * this.rot;
             synchronized = true;
         }
         if (synchronized)
         {
             Debug.Log("Updating ViveTracker position:");
             viveTracker.transform.localPosition = posNetworked;
-            //syncSpace.transform.rotation = rot * offsetRot;
+            viveTracker.transform.rotation = rot;
             Debug.Log(syncSpace.transform.position);
             Debug.Log(viveTracker.transform.localPosition);
         }
