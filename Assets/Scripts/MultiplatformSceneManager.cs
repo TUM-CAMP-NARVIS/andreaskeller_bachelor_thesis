@@ -126,16 +126,7 @@ public class MultiplatformSceneManager : MonoBehaviour
 
     void setupIOS()
     {
-        if (vuforiaCam)
-        {
-            vuforiaCam.SetActive(true);
-            focusManager.cam = vuforiaCam;
-            vuforiaCam.tag = "MainCamera";
-            mainCamera.tag = "None";
-            mainCamera.transform.parent = vuforiaCam.transform;
-            mainCamera.GetComponent<Camera>().enabled = false;
-        }
-
+        mainCamera.AddComponent<Vuforia.VuforiaBehaviour>();
         connectToServer("192.168.1.116");
         
     }
