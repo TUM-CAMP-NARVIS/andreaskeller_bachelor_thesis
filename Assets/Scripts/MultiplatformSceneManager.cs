@@ -30,6 +30,9 @@ public class MultiplatformSceneManager : MonoBehaviour
     private SurfaceAlign surfaceAlign;
     private FocusManager focusManager;
     private PhantomManager phantomManager;
+
+    private NetworkManager networkManager;
+
     private bool perf = true;
     enum SceneStatus {FirstLoad, Finished, WaitForAnchor, ManualAdjustment};
     // Start is called before the first frame update
@@ -39,6 +42,8 @@ public class MultiplatformSceneManager : MonoBehaviour
         focusManager = FindObjectOfType<FocusManager>();
         phantomManager = FindObjectOfType<PhantomManager>();
 
+
+        networkManager = FindObjectOfType<NetworkManager>();
         if (Utils.IsHoloLens)
 		{
 			setupHololens();
@@ -101,7 +106,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         }
 
         //Networking
-        var networkManager = FindObjectOfType<NetworkManager>();
+        
         networkManager.StartServer();
 
         
@@ -111,10 +116,12 @@ public class MultiplatformSceneManager : MonoBehaviour
 
     void connectToServer(string ip)
     {
-        //NetworkClient.RegisterHandler<ConnectMessage>(OnConnected,false);
-        //NetworkClient.RegisterHandler<DisconnectMessage>(OnDisconnected,false);
+        networkManager.networkAddress = ip;
+        networkManager.StartClient();
+        //NetworkClient.RegisterHandler<ConnectMessage>(OnConnected);
+        //NetworkClient.RegisterHandler<DisconnectMessage>(OnDisconnected);
         //NetworkClient.RegisterHandler<SpawnMessage>(OnSpawnMessage, false);
-        NetworkClient.Connect(ip);
+        //NetworkClient.Connect(ip);
     }
 
     private void OnSpawnMessage(NetworkConnection arg1, SpawnMessage arg2)
