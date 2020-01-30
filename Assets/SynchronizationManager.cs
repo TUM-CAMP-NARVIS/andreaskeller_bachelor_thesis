@@ -6,6 +6,7 @@ public class SynchronizationManager : MonoBehaviour
 {
 
     public GameObject imageTarget;
+    public GameObject syncSpace;
     public GameObject viveTracker;
 
     private Vector3 pos;
@@ -25,27 +26,32 @@ public class SynchronizationManager : MonoBehaviour
 
     void Synchronize()
     {
+        if (markerSeen)
+            return;
         Debug.Log("received imagetracker position");
-        pos = imageTarget.transform.position;
+        pos = imageTarget.transform.position+ new Vector3(0,0,0.1f);
         rot = imageTarget.transform.rotation;
+        syncSpace.transform.position = pos;
+        syncSpace.transform.rotation = rot;
         markerSeen = true;
         Debug.Log(pos);
     }
 
-    public void updateViveTracker(Vector3 pos, Quaternion rot)
+    public void updateViveTracker(Vector3 posNetworked, Quaternion rot)
     {
         if (!synchronized && markerSeen)
         {
             Debug.Log("Synchronizing");
-            offsetPos = this.pos - pos;
-            offsetRot = Quaternion.Inverse(rot) * this.rot;
+            syncSpace.transform.position = this.pos - posNetworked;
+            //offsetRot = Quaternion.Inverse(rot) * this.rot;
+            synchronized = true;
         }
         if (synchronized)
         {
             Debug.Log("Updating ViveTracker position:");
-            viveTracker.transform.position = pos + offsetPos;
-            viveTracker.transform.rotation = rot * offsetRot;
-            Debug.Log(viveTracker.transform.position);
+            viveTracker.transform.localPosition = posNetworked;
+            //syncSpace.transform.rotation = rot * offsetRot;
+            Debug.Log(syncSpace.transform.position);
         }
         
     }
