@@ -25,22 +25,27 @@ public class SynchronizationManager : MonoBehaviour
 
     void Synchronize()
     {
+        Debug.Log("received imagetracker position");
         pos = imageTarget.transform.position;
         rot = imageTarget.transform.rotation;
         markerSeen = true;
+        Debug.Log(pos);
     }
 
     public void updateViveTracker(Vector3 pos, Quaternion rot)
     {
         if (!synchronized && markerSeen)
         {
+            Debug.Log("Synchronizing");
             offsetPos = this.pos - pos;
             offsetRot = Quaternion.Inverse(rot) * this.rot;
         }
         if (synchronized)
         {
+            Debug.Log("Updating ViveTracker position:");
             viveTracker.transform.position = pos + offsetPos;
             viveTracker.transform.rotation = rot * offsetRot;
+            Debug.Log(viveTracker.transform.position);
         }
         
     }
