@@ -17,6 +17,30 @@ using UnityEngine.XR.WSA;
 using TMPro;
 using System;
 
+public struct ViveTrackerMessage : IMessageBase
+{
+    public Vector3 position;
+    public Quaternion rotation;
+
+    public ViveTrackerMessage(Vector3 position, Quaternion rotation)
+    {
+        this.position = position;
+        this.rotation = rotation
+    }
+
+    public void Deserialize(NetworkReader reader)
+    {
+        position = reader.ReadVector3();
+        rotation = reader.ReadQuaternion();
+    }
+
+    public void Serialize(NetworkWriter writer)
+    {
+        writer.WriteVector3(position);
+        writer.WriteQuaternion(rotation);
+    }
+}
+
 public class MultiplatformSceneManager : MonoBehaviour
 {
     private SceneStatus sceneStatus = SceneStatus.FirstLoad;
@@ -32,6 +56,8 @@ public class MultiplatformSceneManager : MonoBehaviour
     private PhantomManager phantomManager;
 
     private NetworkManager networkManager;
+
+    private GameObject spawnedObject;
 
     private bool perf = true;
     enum SceneStatus {FirstLoad, Finished, WaitForAnchor, ManualAdjustment};
@@ -68,7 +94,22 @@ public class MultiplatformSceneManager : MonoBehaviour
             return;
         if (Input.GetKeyDown("b"))
         {
-            NetworkServer.Spawn(Instantiate(prefab));
+            var viveTracker = Instantiate(prefab);
+
+            //var poseDriver = viveTracker.AddComponent<TrackedPoseDriver>();
+            //poseDriver.SetPoseSource(TrackedPoseDriver.DeviceType.GenericXRController, TrackedPoseDriver.TrackedPose.LeftPose);
+            NetworkServer.Spawn(viveTracker);
+
+            spawnedObject = viveTracker;
+            //spawnedObjectNetID = viveTracker.GetComponent<NetworkIdentity>().netId;
+        }
+
+        if (spawnedObject!=null)
+        {
+            var tracker = new ViveTrackerMessage();
+            tracker.position = spawnedObject.transform.position;
+            tracker.rotation = spawnedObject.transform.rotation;
+            NetworkServer.SendToAll<ViveTrackerMessage>(tracker);
         }
         
     }
@@ -98,19 +139,14 @@ public class MultiplatformSceneManager : MonoBehaviour
         if (zedStereoRig)
             zedStereoRig.SetActive(true);
 
-        if (phantomAnchor)
+        if (phantomAnchor&&false)
         {
             var posedriver = phantomAnchor.AddComponent<TrackedPoseDriver>();
             posedriver.SetPoseSource(TrackedPoseDriver.DeviceType.GenericXRController, TrackedPoseDriver.TrackedPose.LeftPose);
 
         }
 
-        //Networking
-        
         networkManager.StartServer();
-
-        
-        connectToServer("localhost");
         
 	}
 
@@ -118,15 +154,17 @@ public class MultiplatformSceneManager : MonoBehaviour
     {
         networkManager.networkAddress = ip;
         networkManager.StartClient();
+        NetworkClient.RegisterHandler<ViveTrackerMessage>(OnTrackerMessage);
         //NetworkClient.RegisterHandler<ConnectMessage>(OnConnected);
         //NetworkClient.RegisterHandler<DisconnectMessage>(OnDisconnected);
         //NetworkClient.RegisterHandler<SpawnMessage>(OnSpawnMessage, false);
         //NetworkClient.Connect(ip);
     }
 
-    private void OnSpawnMessage(NetworkConnection arg1, SpawnMessage arg2)
+    private void OnTrackerMessage(NetworkConnection arg1, ViveTrackerMessage arg2)
     {
-        var networkedViveTracker = Instantiate(prefab, arg2.position, arg2.rotation);
+        phantomAnchor.transform.position = arg2.position;
+        phantomAnchor.transform.rotation = arg2.rotation;
 
     }
 
