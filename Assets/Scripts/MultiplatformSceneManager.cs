@@ -99,7 +99,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         networkManager.StartServer();
 
         var viveTracker = Instantiate(prefab);
-        NetworkServer.Spawn(prefab);
+        NetworkServer.Spawn(viveTracker);
         connectToServer("localhost");
         
 	}
