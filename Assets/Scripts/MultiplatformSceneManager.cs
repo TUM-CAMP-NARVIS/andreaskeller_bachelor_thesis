@@ -57,11 +57,18 @@ public class MultiplatformSceneManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    //void Update()
-    //{
-	//	
-    //}
-	//
+    void Update()
+    {
+        if (!Utils.IsVR)
+            return;
+        if (Input.GetKeyDown("b"))
+        {
+            var viveTracker = Instantiate(prefab);
+            NetworkServer.Spawn(viveTracker);
+        }
+        
+    }
+	
 	void setupHololens()
 	{
         var networkManager = FindObjectOfType<NetworkManager>();
@@ -98,8 +105,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         var networkManager = FindObjectOfType<NetworkManager>();
         networkManager.StartServer();
 
-        var viveTracker = Instantiate(prefab);
-        NetworkServer.Spawn(viveTracker);
+        
         connectToServer("localhost");
         
 	}
@@ -108,7 +114,14 @@ public class MultiplatformSceneManager : MonoBehaviour
     {
         NetworkClient.RegisterHandler<ConnectMessage>(OnConnected,false);
         NetworkClient.RegisterHandler<DisconnectMessage>(OnDisconnected,false);
+        NetworkClient.RegisterHandler<SpawnMessage>(OnSpawnMessage, false);
         NetworkClient.Connect(ip);
+    }
+
+    private void OnSpawnMessage(NetworkConnection arg1, SpawnMessage arg2)
+    {
+        var networkedViveTracker = Instantiate(prefab, arg2.position, arg2.rotation);
+
     }
 
     private void OnConnected(NetworkConnection arg1, ConnectMessage arg2)
