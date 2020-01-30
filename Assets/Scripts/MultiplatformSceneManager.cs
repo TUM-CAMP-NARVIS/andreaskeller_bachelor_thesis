@@ -126,7 +126,6 @@ public class MultiplatformSceneManager : MonoBehaviour
 
     void setupIOS()
     {
-        mainCamera.AddComponent<Vuforia.VuforiaBehaviour>();
         connectToServer("192.168.1.116");
         
     }

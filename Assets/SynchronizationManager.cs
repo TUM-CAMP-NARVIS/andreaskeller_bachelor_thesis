@@ -34,11 +34,14 @@ public class SynchronizationManager : MonoBehaviour
     {
         if (!synchronized && markerSeen)
         {
-            offsetPos = pos - this.pos;
+            offsetPos = this.pos - pos;
             offsetRot = Quaternion.Inverse(rot) * this.rot;
         }
-
-        viveTracker.transform.position = pos + offsetPos;
-        viveTracker.transform.rotation = rot * offsetRot;
+        if (synchronized)
+        {
+            viveTracker.transform.position = pos + offsetPos;
+            viveTracker.transform.rotation = rot * offsetRot;
+        }
+        
     }
 }
