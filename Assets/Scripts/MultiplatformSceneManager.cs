@@ -25,7 +25,7 @@ public struct ViveTrackerMessage : IMessageBase
     public ViveTrackerMessage(Vector3 position, Quaternion rotation)
     {
         this.position = position;
-        this.rotation = rotation
+        this.rotation = rotation;
     }
 
     public void Deserialize(NetworkReader reader)
@@ -47,13 +47,15 @@ public class MultiplatformSceneManager : MonoBehaviour
 
     public GameObject vuforiaCam;
     public GameObject zedStereoRig;
+    private GameObject mainCamera;
     public GameObject phantomAnchor;
+    public GameObject viveTracker;
 
     public GameObject prefab;
 
     private SurfaceAlign surfaceAlign;
     private FocusManager focusManager;
-    private PhantomManager phantomManager;
+    private SynchronizationManager syncMan;
 
     private NetworkManager networkManager;
 
@@ -66,8 +68,8 @@ public class MultiplatformSceneManager : MonoBehaviour
     {
         surfaceAlign = FindObjectOfType<SurfaceAlign>();
         focusManager = FindObjectOfType<FocusManager>();
-        phantomManager = FindObjectOfType<PhantomManager>();
-
+        syncMan = FindObjectOfType<SynchronizationManager>();
+        mainCamera = Camera.main.gameObject;
 
         networkManager = FindObjectOfType<NetworkManager>();
         if (Utils.IsHoloLens)
@@ -96,8 +98,8 @@ public class MultiplatformSceneManager : MonoBehaviour
         {
             var viveTracker = Instantiate(prefab);
 
-            //var poseDriver = viveTracker.AddComponent<TrackedPoseDriver>();
-            //poseDriver.SetPoseSource(TrackedPoseDriver.DeviceType.GenericXRController, TrackedPoseDriver.TrackedPose.LeftPose);
+            var poseDriver = viveTracker.AddComponent<TrackedPoseDriver>();
+            poseDriver.SetPoseSource(TrackedPoseDriver.DeviceType.GenericXRController, TrackedPoseDriver.TrackedPose.LeftPose);
             NetworkServer.Spawn(viveTracker);
 
             spawnedObject = viveTracker;
@@ -128,6 +130,10 @@ public class MultiplatformSceneManager : MonoBehaviour
         {
             vuforiaCam.SetActive(true);
             focusManager.cam = vuforiaCam;
+            vuforiaCam.tag = "MainCamera";
+            mainCamera.tag = "None";
+            mainCamera.transform.parent = vuforiaCam.transform;
+            mainCamera.GetComponent<Camera>().enabled = false;
         }
 
         connectToServer("192.168.1.116");
@@ -163,9 +169,10 @@ public class MultiplatformSceneManager : MonoBehaviour
 
     private void OnTrackerMessage(NetworkConnection arg1, ViveTrackerMessage arg2)
     {
-        phantomAnchor.transform.position = arg2.position;
-        phantomAnchor.transform.rotation = arg2.rotation;
-
+        //phantomAnchor.transform.position = arg2.position;
+        //phantomAnchor.transform.rotation = arg2.rotation;
+        syncMan.updateViveTracker(arg2.position, arg2.rotation);
+        
     }
 
     private void OnConnected(NetworkConnection arg1, ConnectMessage arg2)
@@ -178,96 +185,5 @@ public class MultiplatformSceneManager : MonoBehaviour
     }
 
 
-    //void CheckAnchors()
-    //{
-    //    if (false)//worldAnchorManager.AnchorStore.anchorCount != 0)
-    //    {
-    //        //Load anchor
-    //        //worldAnchorManager.AttachAnchor(phantom);
-    //        sceneStatus = SceneStatus.Finished;
-    //        if (instrText)
-    //            instrText.SetActive(false);
-    //        phantom.SetActive(true);
-    //        //phantom.GetComponent<PhantomManager>().SetManipulation(false);
-    //        //GetComponent<SpatialMappingCollider>().layer = 2;
-    //
-    //
-    //
-    //    }
-    //    else
-    //    {
-    //        //GetComponent<SpatialMappingRenderer>().renderState = SpatialMappingRenderer.RenderState.Visualization;
-    //        sceneStatus = SceneStatus.WaitForAnchor;
-    //    }
-    //}
-    //
-    //void SetAnchor(Vector3 position, Vector3 nrm)
-    //{
-    //    phantomAnchor.transform.position = position;
-    //    phantomAnchor.transform.rotation = Quaternion.LookRotation(new Vector3(0, 1, 0), nrm);
-    //    phantom.SetActive(true);
-    //    //GetComponent<SpatialMappingRenderer>().renderState = SpatialMappingRenderer.RenderState.None;
-    //    //phantom.GetComponent<PhantomManager>().SetManipulation(true);
-    //    //GetComponent<SpatialMappingCollider>().layer = 2;
-    //    if (instrText)
-    //        instrText.GetComponent<TextMeshProUGUI>().text = "Adjust Position and Rotation";
-    //    sceneStatus = SceneStatus.ManualAdjustment;
-    //}
-
-    //public void RegisterInput(MixedRealityPointerEventData d)
-    //{
-    //    switch (sceneStatus)
-    //    {
-    //        case SceneStatus.WaitForAnchor:
-    //            SetAnchor(d.Pointer.Result.Details.Point, d.Pointer.Result.Details.Normal);
-    //            break;
-    //        default:
-    //            break;
-    //    }
-    //}
-
-    //public void ToggleFineAdjustment()
-    //{
-    //    if (sceneStatus == SceneStatus.Finished)
-    //    {
-    //        worldAnchorManager.RemoveAnchor(phantom);
-    //        phantom.GetComponent<PhantomManager>().SetManipulation(true);
-    //        sceneStatus = SceneStatus.ManualAdjustment;
-    //    }
-    //    else if (sceneStatus == SceneStatus.ManualAdjustment)
-    //    {
-    //        phantom.GetComponent<PhantomManager>().SetManipulation(false);
-    //        worldAnchorManager.AttachAnchor(phantom);
-    //        sceneStatus = SceneStatus.Finished;
-    //        instrText.SetActive(false);
-    //    }
-    //}
-
-    //public void RedoInitialPlacement()
-    //{
-    //    worldAnchorManager.RemoveAnchor(phantom);
-    //    phantom.SetActive(false);
-    //    GetComponent<SpatialMappingRenderer>().renderState = SpatialMappingRenderer.RenderState.Visualization;
-    //    GetComponent<SpatialMappingCollider>().layer = 31;
-    //    sceneStatus = SceneStatus.WaitForAnchor;
-    //    instrText.SetActive(true);
-    //    instrText.GetComponent<TextMeshProUGUI>().text = "Select Phantom Location";
-    //
-    //}
-
-    //public void ToggleVisualProfiler()
-    //{
-    //    return;
-    //    if (perf)
-    //    {
-    //        var mrtkScene = FindObjectOfType<MixedRealityToolkit>();
-    //        mrtkScene.ActiveProfile = (MixedRealityToolkitConfigurationProfile)Resources.Load("CustomProfiles/MRTKConfigProfile_NoDiag", typeof(MixedRealityToolkitConfigurationProfile));
-    //    }
-    //    else
-    //    {
-    //        var mrtkScene = FindObjectOfType<MixedRealityToolkit>();
-    //        mrtkScene.ActiveProfile = (MixedRealityToolkitConfigurationProfile)Resources.Load("CustomProfiles/MRTKConfigProfile", typeof(MixedRealityToolkitConfigurationProfile));
-    //    }
-    //    
-    //}
+   
 }
