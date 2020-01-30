@@ -63,8 +63,7 @@ public class MultiplatformSceneManager : MonoBehaviour
             return;
         if (Input.GetKeyDown("b"))
         {
-            var viveTracker = Instantiate(prefab);
-            NetworkServer.Spawn(viveTracker);
+            NetworkServer.Spawn(Instantiate(prefab));
         }
         
     }
@@ -112,9 +111,9 @@ public class MultiplatformSceneManager : MonoBehaviour
 
     void connectToServer(string ip)
     {
-        NetworkClient.RegisterHandler<ConnectMessage>(OnConnected,false);
-        NetworkClient.RegisterHandler<DisconnectMessage>(OnDisconnected,false);
-        NetworkClient.RegisterHandler<SpawnMessage>(OnSpawnMessage, false);
+        //NetworkClient.RegisterHandler<ConnectMessage>(OnConnected,false);
+        //NetworkClient.RegisterHandler<DisconnectMessage>(OnDisconnected,false);
+        //NetworkClient.RegisterHandler<SpawnMessage>(OnSpawnMessage, false);
         NetworkClient.Connect(ip);
     }
 
