@@ -31,6 +31,10 @@ public class Utils
                     default:
                         playerType = PlayerType.IOS;
                         break;
+#elif UNITY_WSA
+                    default:
+                        playerType = PlayerType.HoloLens;
+                        break;
 #else
                     default:
                         playerType = PlayerType.VR;

@@ -109,6 +109,13 @@ public class MultiplatformSceneManager : MonoBehaviour
 	
 	void setupHololens()
 	{
+        var cam = Camera.main.gameObject;
+
+        if (cam.GetComponent<Vuforia.VuforiaBehaviour>() == null)
+        {
+            var vuf = cam.AddComponent<Vuforia.VuforiaBehaviour>();
+        }
+
         syncMan.UnhideObjects();
         var auth = FindObjectOfType<BasicAuthenticator>();
         auth.username = "testHolo";
@@ -118,6 +125,13 @@ public class MultiplatformSceneManager : MonoBehaviour
 
     void setupIOS()
     {
+        var cam = Camera.main.gameObject;
+
+        if (cam.GetComponent<Vuforia.VuforiaBehaviour>()==null)
+        {
+            var vuf = cam.AddComponent<Vuforia.VuforiaBehaviour>();
+        }
+            
         var auth = FindObjectOfType<BasicAuthenticator>();
         auth.username = "testIOS";
         syncMan.UnhideObjects();
