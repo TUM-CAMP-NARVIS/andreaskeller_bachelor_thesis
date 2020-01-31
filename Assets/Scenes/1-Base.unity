@@ -308,6 +308,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Window
       objectReference: {fileID: 0}
+    - target: {fileID: 5646103215612901227, guid: a0d474fbc8031f0469c31b75e0dec1f1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0d474fbc8031f0469c31b75e0dec1f1, type: 3}
 --- !u!4 &452213443 stripped
@@ -801,6 +806,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SurfaceAlign
+      objectReference: {fileID: 0}
+    - target: {fileID: 7018112481179279384, guid: 7f96271b6e6a5f84491b30df4ed12674,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f96271b6e6a5f84491b30df4ed12674, type: 3}
@@ -1753,6 +1763,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PhantomAnchor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1240175370371366280, guid: 813cac7dfcf91ac439ac53b55f96b1dc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1240175370566300610, guid: 813cac7dfcf91ac439ac53b55f96b1dc,
         type: 3}
