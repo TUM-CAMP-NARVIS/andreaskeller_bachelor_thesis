@@ -76,7 +76,7 @@ public class SynchronizationManager : MonoBehaviour
         {
             if (id != 0)
                 return;
-            viveTracker.transform.localPosition = offsetRot*posNetworked;
+            viveTracker.transform.localPosition = posNetworked;
             viveTracker.transform.localRotation = rotNetworked;
         }
     }
@@ -84,7 +84,7 @@ public class SynchronizationManager : MonoBehaviour
     public void Synchronize()
     {
         syncSpace.transform.rotation = rot*Quaternion.Inverse(rotNetworked);
-        syncSpace.transform.position = (-posNetworked + pos);
+        syncSpace.transform.position = pos +(syncSpace.transform.TransformDirection(-posNetworked));//Quaternion.Inverse(syncSpace.transform.rotation)*(pos) - posNetworked;
         offsetRot = Quaternion.Inverse(syncSpace.transform.rotation);
         synchronized = !synchronized;
 
