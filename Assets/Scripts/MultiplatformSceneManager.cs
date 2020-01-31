@@ -4,38 +4,39 @@
 //
 //
 //
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SpatialTracking;
-//using Microsoft.MixedReality.Toolkit.Experimental.Utilities;
-//using Microsoft.MixedReality.Toolkit.Input;
-//using Microsoft.MixedReality.Toolkit.UI;
-//using Microsoft.MixedReality.Toolkit;
 using Mirror;
-using UnityEngine.XR.WSA;
-using TMPro;
-using System;
 
-public struct ViveTrackerMessage : IMessageBase
+public struct TrackedObjectMessage : IMessageBase
 {
+    public enum Type {ViveTracker, ViveController, HMD };
+    public short id;
+    public Type type;
     public Vector3 position;
     public Quaternion rotation;
 
-    public ViveTrackerMessage(Vector3 position, Quaternion rotation)
+
+    public TrackedObjectMessage(short id, Type type, Vector3 position, Quaternion rotation)
     {
+        this.id = id;
+        this.type = type;
         this.position = position;
         this.rotation = rotation;
     }
 
     public void Deserialize(NetworkReader reader)
     {
+        id = reader.ReadInt16();
+        type = (Type) reader.ReadInt16();
         position = reader.ReadVector3();
         rotation = reader.ReadQuaternion();
     }
 
     public void Serialize(NetworkWriter writer)
     {
+        writer.WriteInt16(id);
+        writer.WriteInt16((short)type);
         writer.WriteVector3(position);
         writer.WriteQuaternion(rotation);
     }
@@ -43,33 +44,22 @@ public struct ViveTrackerMessage : IMessageBase
 
 public class MultiplatformSceneManager : MonoBehaviour
 {
-    private SceneStatus sceneStatus = SceneStatus.FirstLoad;
 
-    public GameObject vuforiaCam;
     public GameObject zedStereoRig;
-    private GameObject mainCamera;
     public GameObject phantomAnchor;
-    public GameObject viveTracker;
 
     public GameObject prefab;
 
-    private SurfaceAlign surfaceAlign;
-    private FocusManager focusManager;
     private SynchronizationManager syncMan;
 
     private NetworkManager networkManager;
 
     private GameObject spawnedObject;
 
-    private bool perf = true;
-    enum SceneStatus {FirstLoad, Finished, WaitForAnchor, ManualAdjustment};
     // Start is called before the first frame update
     void Start()
     {
-        surfaceAlign = FindObjectOfType<SurfaceAlign>();
-        focusManager = FindObjectOfType<FocusManager>();
         syncMan = FindObjectOfType<SynchronizationManager>();
-        mainCamera = Camera.main.gameObject;
 
         networkManager = FindObjectOfType<NetworkManager>();
         if (Utils.IsHoloLens)
@@ -100,34 +90,34 @@ public class MultiplatformSceneManager : MonoBehaviour
 
             var poseDriver = viveTracker.AddComponent<TrackedPoseDriver>();
             poseDriver.SetPoseSource(TrackedPoseDriver.DeviceType.GenericXRController, TrackedPoseDriver.TrackedPose.LeftPose);
-            NetworkServer.Spawn(viveTracker);
+            //NetworkServer.Spawn(viveTracker);
 
             spawnedObject = viveTracker;
-            //spawnedObjectNetID = viveTracker.GetComponent<NetworkIdentity>().netId;
         }
 
         if (spawnedObject!=null)
         {
-            var tracker = new ViveTrackerMessage();
+            var tracker = new TrackedObjectMessage();
+            tracker.id = 0;
+            tracker.type = TrackedObjectMessage.Type.ViveTracker;
             tracker.position = spawnedObject.transform.position;
             tracker.rotation = spawnedObject.transform.rotation;
-            NetworkServer.SendToAll<ViveTrackerMessage>(tracker);
+            NetworkServer.SendToAll<TrackedObjectMessage>(tracker);
         }
         
     }
 	
 	void setupHololens()
 	{
-        var networkManager = FindObjectOfType<NetworkManager>();
-
+        syncMan.UnhideObjects();
         connectToServer("192.168.1.116");
-
+        
     }
 
     void setupIOS()
     {
+        syncMan.UnhideObjects();
         connectToServer("192.168.1.116");
-        
     }
 	
 	void setupZedMini()
@@ -150,30 +140,12 @@ public class MultiplatformSceneManager : MonoBehaviour
     {
         networkManager.networkAddress = ip;
         networkManager.StartClient();
-        NetworkClient.RegisterHandler<ViveTrackerMessage>(OnTrackerMessage);
-        //NetworkClient.RegisterHandler<ConnectMessage>(OnConnected);
-        //NetworkClient.RegisterHandler<DisconnectMessage>(OnDisconnected);
-        //NetworkClient.RegisterHandler<SpawnMessage>(OnSpawnMessage, false);
-        //NetworkClient.Connect(ip);
+        NetworkClient.RegisterHandler<TrackedObjectMessage>(OnTrackerMessage);
     }
 
-    private void OnTrackerMessage(NetworkConnection arg1, ViveTrackerMessage arg2)
+    private void OnTrackerMessage(NetworkConnection arg1, TrackedObjectMessage arg2)
     {
-        //phantomAnchor.transform.position = arg2.position;
-        //phantomAnchor.transform.rotation = arg2.rotation;
-        syncMan.updateViveTracker(arg2.position, arg2.rotation);
-        
+        syncMan.updateTrackedObject(arg2.id, arg2.type, arg2.position, arg2.rotation);
     }
-
-    private void OnConnected(NetworkConnection arg1, ConnectMessage arg2)
-    {
-        Debug.Log("connected to server!");
-    }
-    private void OnDisconnected(NetworkConnection arg1, DisconnectMessage arg2)
-    {
-        Debug.Log("disconnected from server!");
-    }
-
-
    
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,13 +10,16 @@ public class SynchronizationManager : MonoBehaviour
     public GameObject syncSpace;
     public GameObject viveTracker;
 
+    public List<GameObject> trackedObjects = new List<GameObject>();
+
+    enum State { Synchronized, Desynchronized}
+
     private Quaternion rotNetworked;
     private Vector3 posNetworked;
 
     private Vector3 pos;
     private Quaternion rot;
 
-    private Vector3 offsetPos = new Vector3(0,0,0);
     private Quaternion offsetRot = Quaternion.identity;
 
     private bool synchronized = false;
@@ -24,19 +28,17 @@ public class SynchronizationManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //This is only for the devices not natively supporting vive tracking
         if (Utils.IsVR)
             this.enabled = false;
+
     }
 
     void Update()
     {
-        if (Input.GetKeyDown("b"))
-        {
-            Calculate();
-        }
         if (markerSeen && !synchronized)
         {
-            Synchronize();
+            MoveToMarker();
         }
     }
 
@@ -50,7 +52,7 @@ public class SynchronizationManager : MonoBehaviour
         markerSeen = false;
     }
 
-    void Synchronize()
+    void MoveToMarker()
     {
         if (synchronized)
             return;
@@ -65,31 +67,32 @@ public class SynchronizationManager : MonoBehaviour
         //Debug.Log(pos);
     }
 
-    public void updateViveTracker(Vector3 posNetworked, Quaternion rotNetworked)
+    public void updateTrackedObject(short id, TrackedObjectMessage.Type type, Vector3 posNetworked, Quaternion rotNetworked)
     {
         //Debug.Log("Updating vive tracker position");
         this.rotNetworked = rotNetworked;
         this.posNetworked = posNetworked;
         if (synchronized)
         {
-            
-
-            Debug.Log("Updating ViveTracker position and rotation");
+            if (id != 0)
+                return;
             viveTracker.transform.localPosition = offsetRot*posNetworked;
-            //Debug.Log(viveTracker.transform.localPosition + " - " + posNetworked);
-            
             viveTracker.transform.localRotation = rotNetworked;
-            
         }
-        //Debug.Log(posNetworked);
     }
 
-    public void Calculate()
+    public void Synchronize()
     {
         syncSpace.transform.rotation = rot*Quaternion.Inverse(rotNetworked);
         syncSpace.transform.position = (-posNetworked + pos);
         offsetRot = Quaternion.Inverse(syncSpace.transform.rotation);
         synchronized = !synchronized;
 
+    }
+
+    internal void UnhideObjects()
+    {
+        syncSpace.SetActive(true);
+        imageTarget.SetActive(true);
     }
 }
