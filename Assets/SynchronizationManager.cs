@@ -24,9 +24,27 @@ public class SynchronizationManager : MonoBehaviour
             this.enabled = false;
     }
 
+    void Update()
+    {
+        if (markerSeen && !synchronized)
+        {
+            Synchronize();
+        }
+    }
+
+    public void targetIsVisible()
+    {
+        markerSeen = true;
+    }
+
+    public void targetLost()
+    {
+        markerSeen = false;
+    }
+
     void Synchronize()
     {
-        if (markerSeen && synchronized)
+        if (synchronized)
             return;
         Debug.Log("received imagetracker position");
         rot = imageTarget.transform.rotation;
@@ -34,25 +52,25 @@ public class SynchronizationManager : MonoBehaviour
         
         syncSpace.transform.position = pos;
         syncSpace.transform.rotation = rot;
-        markerSeen = true;
         Debug.Log(pos);
     }
 
-    public void updateViveTracker(Vector3 posNetworked, Quaternion rot)
+    public void updateViveTracker(Vector3 posNetworked, Quaternion rotNetworked)
     {
         if (!synchronized && markerSeen)
         {
             Debug.Log("Synchronizing");
             syncSpace.transform.position = -posNetworked + syncSpace.transform.position;
+            syncSpace.transform.rotation = Quaternion.Inverse(rotNetworked) * rot;//rotNetworked * x = rot -- x = rot * Quaternion.inv(rotNetworked)
             synchronized = true;
         }
         if (synchronized)
         {
-            Debug.Log("Updating ViveTracker position:");
+            //Debug.Log("Updating ViveTracker position:");
             viveTracker.transform.localPosition = posNetworked;
-            viveTracker.transform.rotation = rot;
-            Debug.Log(syncSpace.transform.position);
-            Debug.Log(viveTracker.transform.localPosition);
+            viveTracker.transform.localRotation = rotNetworked;
+            //Debug.Log(syncSpace.transform.position);
+            //Debug.Log(viveTracker.transform.localPosition);
         }
         
     }
