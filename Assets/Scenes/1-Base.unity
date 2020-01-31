@@ -239,7 +239,7 @@ MonoBehaviour:
   OnClientAuthenticated:
     m_PersistentCalls:
       m_Calls: []
-  username: testIOS
+  username: test
   password: test
 --- !u!1001 &452213442
 PrefabInstance:

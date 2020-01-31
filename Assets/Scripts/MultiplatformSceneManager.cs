@@ -7,7 +7,7 @@
 using UnityEngine;
 using UnityEngine.SpatialTracking;
 using Mirror;
-
+using Mirror.Authenticators;
 public struct TrackedObjectMessage : IMessageBase
 {
     public enum Type {ViveTracker, ViveController, HMD };
@@ -110,12 +110,16 @@ public class MultiplatformSceneManager : MonoBehaviour
 	void setupHololens()
 	{
         syncMan.UnhideObjects();
+        var auth = FindObjectOfType<BasicAuthenticator>();
+        auth.username = "testHolo";
         connectToServer("192.168.1.116");
         
     }
 
     void setupIOS()
     {
+        var auth = FindObjectOfType<BasicAuthenticator>();
+        auth.username = "testIOS";
         syncMan.UnhideObjects();
         connectToServer("192.168.1.116");
     }
