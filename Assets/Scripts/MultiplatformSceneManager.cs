@@ -51,6 +51,7 @@ public class MultiplatformSceneManager : MonoBehaviour
     public GameObject prefab;
 
     private SynchronizationManager syncMan;
+    private MenuManager menuMan;
 
     private NetworkManager networkManager;
 
@@ -63,7 +64,7 @@ public class MultiplatformSceneManager : MonoBehaviour
     void Start()
     {
         syncMan = FindObjectOfType<SynchronizationManager>();
-
+        menuMan = FindObjectOfType<MenuManager>();
         networkManager = FindObjectOfType<NetworkManager>();
         if (Utils.IsHoloLens)
 		{
@@ -101,9 +102,11 @@ public class MultiplatformSceneManager : MonoBehaviour
         
     }
 
+    #region PhantomViveTracker
     public void AttachPhantomToTracker()
     {
-        phantomAnchor.transform.position = spawnedObject.transform.position + (spawnedObject.transform.rotation * new Vector3(0, 0, 0.2f));
+        phantomAnchor.transform.rotation = spawnedObject.transform.rotation;
+        phantomAnchor.transform.position = spawnedObject.transform.position + (spawnedObject.transform.rotation * new Vector3(0, 0, -0.1f));
         phantomAnchor.transform.parent = spawnedObject.transform;
         m_bPhantomAttached = true;
 
@@ -123,9 +126,16 @@ public class MultiplatformSceneManager : MonoBehaviour
             AttachPhantomToTracker();
     }
 
+    #endregion
+
     public void ToggleNetworking()
     {
         m_bNetworkingEnabled = !m_bNetworkingEnabled;
+    }
+
+    public void ResetConnections()
+    {
+        NetworkServer.DisconnectAllConnections();
     }
 	
 	void setupHololens()
@@ -141,6 +151,8 @@ public class MultiplatformSceneManager : MonoBehaviour
         var auth = FindObjectOfType<BasicAuthenticator>();
         auth.username = "testHolo";
         connectToServer("192.168.1.116");
+
+        menuMan.NetworkServerYesNo(false);
 
         spawnedObject = syncMan.viveTracker;
         
@@ -159,7 +171,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         auth.username = "testIOS";
         syncMan.UnhideObjects();
         connectToServer("192.168.1.116");
-
+        menuMan.NetworkServerYesNo(false);
         spawnedObject = syncMan.viveTracker;
     }
 	
@@ -170,7 +182,8 @@ public class MultiplatformSceneManager : MonoBehaviour
             zedStereoRig.SetActive(true);
             zedStereoRig.transform.GetChild(0).GetChild(0).gameObject.tag = "MainCamera";
         }
-            
+
+        menuMan.NetworkServerYesNo(true);
         var cam = Camera.main.gameObject;
         cam.GetComponent<Camera>().enabled = false;
         
@@ -195,11 +208,16 @@ public class MultiplatformSceneManager : MonoBehaviour
 
     }
 
-    void connectToServer(string ip)
+    public void connectToServer(string ip)
     {
         networkManager.networkAddress = ip;
         networkManager.StartClient();
         NetworkClient.RegisterHandler<TrackedObjectMessage>(OnTrackerMessage);
+    }
+
+    public void DisconnectFromServer()
+    {
+        NetworkClient.Disconnect();
     }
 
     private void OnTrackerMessage(NetworkConnection arg1, TrackedObjectMessage arg2)

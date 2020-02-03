@@ -5,7 +5,7 @@ using UnityEngine;
 public class PhantomManager : MonoBehaviour
 {
     // Start is called before the first frame update
-    enum Status { hatching, normal, chroma }
+    public enum Status { hatching, normal, chroma }
 
     public GameObject insides_Hatching;
     public GameObject insides_Chroma;
@@ -22,9 +22,10 @@ public class PhantomManager : MonoBehaviour
     private GameObject skin_stencil;
     private GameObject skin_stencilwindow;
 
-    private Status status;
+    public Status status;
 
     private FocusManager focusManager;
+    private MenuManager menuMan;
 
 
     void Start()
@@ -33,20 +34,9 @@ public class PhantomManager : MonoBehaviour
         skin_stencil = transform.Find("skin_stencil").gameObject;
         skin_stencilwindow = transform.Find("skin_stencilwindow").gameObject;
 
-        if (insides_Normal != null && insides_Hatching != null && insides_Chroma != null)
-        {
-            insides_Chroma.SetActive(false);
-            insides_Hatching.SetActive(false);
-            insides_Normal.SetActive(true);
-            skin_inv.SetActive(false);
-            skin_stencil.SetActive(true);
-            skin_stencilwindow.SetActive(false);
-            status = Status.normal;
-        }
-
-        
-
         focusManager = FindObjectOfType<FocusManager>();
+        menuMan = FindObjectOfType<MenuManager>();
+
         var getSkin = focusManager.GetSkin();
         if (getSkin == null)
         {
@@ -57,6 +47,27 @@ public class PhantomManager : MonoBehaviour
             skin = getSkin;
 
         skin.SetActive(true);
+
+        if (insides_Normal != null && insides_Hatching != null && insides_Chroma != null)
+        {
+            insides_Chroma.SetActive(false);
+            insides_Hatching.SetActive(false);
+            insides_Normal.SetActive(true);
+            skin_inv.SetActive(false);
+            skin_stencil.SetActive(true);
+            skin_stencilwindow.SetActive(false);
+
+            menuMan.BichlmeierSetActive(skin.GetComponent<MeshRenderer>().enabled);
+            menuMan.HatchingSetActive(false);
+            status = Status.normal;
+        }
+
+        
+
+        
+        
+
+        
     }
 
     // Update is called once per frame
@@ -82,7 +93,7 @@ public class PhantomManager : MonoBehaviour
                 }
             }
         }
-        var skinRenderer = skin.GetComponent<Renderer>();
+        var skinRenderer = skin.GetComponent<MeshRenderer>();
         if (skinRenderer.enabled)
             skinRenderer.material.SetVector("_FocusPosition", focusManager.focusPosition);
 
@@ -117,12 +128,14 @@ public class PhantomManager : MonoBehaviour
             case Status.normal:
                 insides_Normal.SetActive(false);
                 insides_Hatching.SetActive(true);
+                menuMan.HatchingSetActive(true);
                 status = Status.hatching;
                 break;
             case Status.hatching:
                 insides_Hatching.SetActive(false);
                 insides_Chroma.SetActive(true);
                 skin_inv.SetActive(true);
+                menuMan.HatchingSetActive(false);
                 status = Status.chroma;
                 break;
             default:
@@ -157,8 +170,10 @@ public class PhantomManager : MonoBehaviour
 
     public void ToggleSkin()
     {
-        var skin = transform.Find("skin");
-        skin.GetComponent<MeshRenderer>().enabled = !skin.GetComponent<MeshRenderer>().enabled;
+        var newstatus = !skin.GetComponent<MeshRenderer>().enabled;
+        skin.GetComponent<MeshRenderer>().enabled = newstatus;
+        menuMan.BichlmeierSetActive(newstatus);
+
     }
 
     public void ToggleWindow()
@@ -208,17 +223,30 @@ public class PhantomManager : MonoBehaviour
     #region BichlmeierParam
     public void SkinIncrParam(string param)
     {
-        float intensity = insides_Hatching.transform.GetChild(0).GetComponent<Renderer>().material.GetFloat(param);
-        skin.GetComponent<Renderer>().material.SetFloat(param, (intensity + 0.1f));
+        float intensity = skin.GetComponent<MeshRenderer>().material.GetFloat(param);
+        skin.GetComponent<MeshRenderer>().material.SetFloat(param, (intensity + 0.1f));
     }
     public void SkinDecrParam(string param)
     {
-        float intensity = insides_Hatching.transform.GetChild(0).GetComponent<Renderer>().material.GetFloat(param);
-        skin.GetComponent<Renderer>().material.SetFloat(param, (intensity - 0.1f));
+        float intensity =skin.GetComponent<MeshRenderer>().material.GetFloat(param);
+        skin.GetComponent<MeshRenderer>().material.SetFloat(param, (intensity - 0.1f));
     }
     public void SkinResetParam(string param)
     {
-        skin.GetComponent<Renderer>().material.SetFloat(param, 1);
+        skin.GetComponent<MeshRenderer>().material.SetFloat(param, 1);
     }
+
+    public void SkinIncrParamSmall(string param)
+    {
+        float intensity = skin.GetComponent<MeshRenderer>().material.GetFloat(param);
+        skin.GetComponent<MeshRenderer>().material.SetFloat(param, (intensity + 0.01f));
+    }
+
+    public void SkinDecrParamSmall(string param)
+    {
+        float intensity = skin.GetComponent<MeshRenderer>().material.GetFloat(param);
+        skin.GetComponent<MeshRenderer>().material.SetFloat(param, (intensity - 0.01f));
+    }
+
     #endregion
 }
