@@ -16,6 +16,7 @@
 		{
 			Tags {"LightMode" = "ForwardBase"}
 
+
 			Stencil{
 					Ref[_StencilRef]
 					Comp Equal
@@ -23,6 +24,7 @@
 					Pass Replace
 					ZFail Keep
 				}
+
 
 			CGPROGRAM
 			#pragma multi_compile _ _INVERTHATCHING

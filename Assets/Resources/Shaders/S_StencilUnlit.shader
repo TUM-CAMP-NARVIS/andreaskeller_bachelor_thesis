@@ -17,13 +17,13 @@
 		Blend SrcAlpha OneMinusSrcAlpha
 
 
-			Stencil{
-					Ref[_StencilRef]
-					Comp Equal
-					Fail Keep
-					Pass Replace
-					ZFail Keep
-				}
+            Stencil{
+                    Ref[_StencilRef]
+                    Comp Equal
+                    Fail Keep
+                    Pass Replace
+                    ZFail Keep
+                }
 
         Pass
         {

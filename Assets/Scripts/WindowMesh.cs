@@ -32,6 +32,15 @@ public class WindowMesh : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!surfaceAlign.isActive)
+        {
+            this.GetComponent<MeshRenderer>().enabled = false;
+            return;
+        }
+        else
+        {
+            this.GetComponent<MeshRenderer>().enabled = true;
+        }
         transform.position = surfaceAlign.transform.position;// + position;
         transform.rotation = surfaceAlign.transform.rotation * rotation;
 

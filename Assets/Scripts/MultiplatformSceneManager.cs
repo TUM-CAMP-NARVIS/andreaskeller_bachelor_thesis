@@ -56,6 +56,9 @@ public class MultiplatformSceneManager : MonoBehaviour
 
     private GameObject spawnedObject;
 
+    private bool m_bPhantomAttached = false;
+    private bool m_bNetworkingEnabled = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -84,18 +87,9 @@ public class MultiplatformSceneManager : MonoBehaviour
     {
         if (!Utils.IsVR)
             return;
-        if (Input.GetKeyDown("b"))
-        {
-            var viveTracker = Instantiate(prefab);
+        
 
-            var poseDriver = viveTracker.AddComponent<TrackedPoseDriver>();
-            poseDriver.SetPoseSource(TrackedPoseDriver.DeviceType.GenericXRController, TrackedPoseDriver.TrackedPose.LeftPose);
-            //NetworkServer.Spawn(viveTracker);
-
-            spawnedObject = viveTracker;
-        }
-
-        if (spawnedObject!=null)
+        if (spawnedObject!=null && m_bNetworkingEnabled)
         {
             var tracker = new TrackedObjectMessage();
             tracker.id = 0;
@@ -105,6 +99,33 @@ public class MultiplatformSceneManager : MonoBehaviour
             NetworkServer.SendToAll<TrackedObjectMessage>(tracker);
         }
         
+    }
+
+    public void AttachPhantomToTracker()
+    {
+        phantomAnchor.transform.position = spawnedObject.transform.position + (spawnedObject.transform.rotation * new Vector3(0, 0, 0.2f));
+        phantomAnchor.transform.parent = spawnedObject.transform;
+        m_bPhantomAttached = true;
+
+    }
+
+    public void DetachPhantomFromTracker()
+    {
+        phantomAnchor.transform.parent = phantomAnchor.transform.parent.parent;
+        m_bPhantomAttached = false;
+    }
+
+    public void TogglePhantomAttached()
+    {
+        if (m_bPhantomAttached)
+            DetachPhantomFromTracker();
+        else
+            AttachPhantomToTracker();
+    }
+
+    public void ToggleNetworking()
+    {
+        m_bNetworkingEnabled = !m_bNetworkingEnabled;
     }
 	
 	void setupHololens()
@@ -120,6 +141,8 @@ public class MultiplatformSceneManager : MonoBehaviour
         var auth = FindObjectOfType<BasicAuthenticator>();
         auth.username = "testHolo";
         connectToServer("192.168.1.116");
+
+        spawnedObject = syncMan.viveTracker;
         
     }
 
@@ -136,12 +159,22 @@ public class MultiplatformSceneManager : MonoBehaviour
         auth.username = "testIOS";
         syncMan.UnhideObjects();
         connectToServer("192.168.1.116");
+
+        spawnedObject = syncMan.viveTracker;
     }
 	
 	void setupZedMini()
 	{
         if (zedStereoRig)
+        {
             zedStereoRig.SetActive(true);
+            zedStereoRig.transform.GetChild(0).GetChild(0).gameObject.tag = "MainCamera";
+        }
+            
+        var cam = Camera.main.gameObject;
+        cam.GetComponent<Camera>().enabled = false;
+        
+        
 
         if (phantomAnchor&&false)
         {
@@ -151,8 +184,16 @@ public class MultiplatformSceneManager : MonoBehaviour
         }
 
         networkManager.StartServer();
-        
-	}
+
+        var viveTracker = Instantiate(prefab);
+
+        var poseDriver = viveTracker.AddComponent<TrackedPoseDriver>();
+        poseDriver.SetPoseSource(TrackedPoseDriver.DeviceType.GenericXRController, TrackedPoseDriver.TrackedPose.LeftPose);
+        //NetworkServer.Spawn(viveTracker);
+
+        spawnedObject = viveTracker;
+
+    }
 
     void connectToServer(string ip)
     {

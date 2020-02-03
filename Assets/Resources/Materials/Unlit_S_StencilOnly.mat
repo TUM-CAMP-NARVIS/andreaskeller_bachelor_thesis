@@ -20,5 +20,5 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Floats:
-    - _StencilValue: 14
+    - _StencilValue: 15
     m_Colors: []

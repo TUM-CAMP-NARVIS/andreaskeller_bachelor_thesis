@@ -20,14 +20,15 @@ Shader "Custom/S_ChromaDepth"
 			{
 				Tags {"LightMode" = "ForwardBase"}
 
-				Stencil{
-						Ref[_StencilRef]
-						Comp Equal
-						Fail Keep
-						Pass Replace
-						ZFail Keep
-					}
+			Stencil{
+					Ref[_StencilRef]
+					Comp Equal
+					Fail Keep
+					Pass Replace
+					ZFail Keep
+				}
 
+		 
 				CGPROGRAM
 
 			// GPU Instancing

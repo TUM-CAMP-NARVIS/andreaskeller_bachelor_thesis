@@ -14,6 +14,7 @@ public class SurfaceAlign : MonoBehaviour
    
 
     public bool done { get; private set; } = false;
+    public bool isActive { get; private set; } = true;
 
     //Private Properties
     private FocusManager focusManager;
@@ -46,6 +47,8 @@ public class SurfaceAlign : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!isActive)
+            return;
         if (!skin)
         {
             skin = focusManager.GetSkin();
@@ -339,5 +342,10 @@ public class SurfaceAlign : MonoBehaviour
         visualizeControlPoints = !visualizeControlPoints;
         foreach (GameObject g in primitives)
             g.SetActive(visualizeControlPoints);
+    }
+
+    public void ToggleActive()
+    {
+        isActive = !isActive;
     }
 }
