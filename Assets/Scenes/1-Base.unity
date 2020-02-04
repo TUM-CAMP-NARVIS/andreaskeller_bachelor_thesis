@@ -10840,6 +10840,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 739047240}
+  - component: {fileID: 1226165204}
   m_Layer: 0
   m_Name: PhantomAnchor
   m_TagString: Untagged
@@ -10847,6 +10848,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1226165204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226165203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serverOnly: 0
+  m_AssetId: 
+  m_SceneId: 1906996799
 --- !u!1 &1237459826
 GameObject:
   m_ObjectHideFlags: 0
@@ -11573,6 +11589,11 @@ PrefabInstance:
     - target: {fileID: 114711245158774928, guid: e13ee7e0790c7d243b7aa67fe604acac,
         type: 3}
       propertyPath: depthOcclusion
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114711245158774928, guid: e13ee7e0790c7d243b7aa67fe604acac,
+        type: 3}
+      propertyPath: postProcessing
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
