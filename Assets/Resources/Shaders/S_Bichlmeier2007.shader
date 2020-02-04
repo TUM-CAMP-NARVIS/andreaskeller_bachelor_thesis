@@ -27,6 +27,11 @@
 
 		Blend SrcAlpha OneMinusSrcAlpha
 
+		GrabPass
+		{
+			"_ZedMiniTexture"
+		}
+
         Pass
         {
 			Tags { "LightMode" = "ForwardBase" }
@@ -44,6 +49,7 @@
             #pragma vertex vert
             #pragma fragment frag
 			#pragma multi_compile_instancing
+			#pragma multi_compile _ _ZEDMINI_BLENDING
 
             #include "UnityCG.cginc"
 
@@ -67,7 +73,7 @@
 				float3 worldNrm : TEXCOORD2;
 				float3 viewVec : TEXCOORD3;
 
-				float2 screenPos : TEXCOORD4;
+				float4 grabPos : TEXCOORD4;
 
 				//Setup for Single Pass Instancing
 				UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -86,7 +92,7 @@
 				UNITY_DEFINE_INSTANCED_PROP(float, _BorderSize)
 				UNITY_DEFINE_INSTANCED_PROP(fixed4, _BorderColor)
 				UNITY_DEFINE_INSTANCED_PROP(sampler2D, _CurvatureMap)
-				UNITY_DEFINE_INSTANCED_PROP(sampler2D, _ZedImage)
+				UNITY_DEFINE_INSTANCED_PROP(sampler2D, _ZedMiniTexture)
 			UNITY_INSTANCING_BUFFER_END(Props)
 			
 
@@ -110,7 +116,7 @@
 
 				o.viewVec = normalize(_WorldSpaceCameraPos.xyz - o.worldPos);
 
-				o.screenPos = ComputeScreenPos(o.vertex);
+				o.grabPos = ComputeGrabScreenPos(o.vertex);
 
                 return o;
             }
@@ -147,7 +153,7 @@
 				float borderValue = (outsideFocus - step(_BorderSize + _FocusRadius, dist));
 				//If the fragment is the border then make it red 
 #ifdef _ZEDMINI_BLENDING
-				float3 zed = tex2D(_ZedImage, i.screenPos).xyz;
+				float3 zed = tex2Dproj(_ZedMiniTexture, i.grabPos).xyz;
 				col.xyz = borderValue * _BorderColor.xyz + (1 - borderValue) * zed;
 #else
 				col.xyz = borderValue * _BorderColor.xyz + (1 - borderValue) * float3(0, 0, 0);

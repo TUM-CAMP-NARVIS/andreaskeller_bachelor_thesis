@@ -49,6 +49,7 @@ public class MultiplatformSceneManager : MonoBehaviour
     public GameObject phantomAnchor;
 
     public GameObject prefab;
+    public GameObject ipaddress;
 
     private SynchronizationManager syncMan;
     private MenuManager menuMan;
@@ -150,10 +151,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         syncMan.UnhideObjects();
         var auth = FindObjectOfType<BasicAuthenticator>();
         auth.username = "testHolo";
-        connectToServer("192.168.1.116");
-
         menuMan.NetworkServerYesNo(false);
-
         spawnedObject = syncMan.viveTracker;
         
     }
@@ -170,7 +168,6 @@ public class MultiplatformSceneManager : MonoBehaviour
         var auth = FindObjectOfType<BasicAuthenticator>();
         auth.username = "testIOS";
         syncMan.UnhideObjects();
-        connectToServer("192.168.1.116");
         menuMan.NetworkServerYesNo(false);
         spawnedObject = syncMan.viveTracker;
     }
@@ -211,6 +208,25 @@ public class MultiplatformSceneManager : MonoBehaviour
     public void connectToServer(string ip)
     {
         networkManager.networkAddress = ip;
+        networkManager.StartClient();
+        NetworkClient.RegisterHandler<TrackedObjectMessage>(OnTrackerMessage);
+    }
+
+    public void connectToServerIP()
+    {
+        TMPro.TMP_InputField input;
+        if (ipaddress == null)
+        {
+            ipaddress = GameObject.Find("ipaddress");
+            if (ipaddress == null)
+                return;
+        }
+
+        input = ipaddress.GetComponent<TMPro.TMP_InputField>();
+        if (input == null)
+            return;
+
+        networkManager.networkAddress = input.text;
         networkManager.StartClient();
         NetworkClient.RegisterHandler<TrackedObjectMessage>(OnTrackerMessage);
     }
