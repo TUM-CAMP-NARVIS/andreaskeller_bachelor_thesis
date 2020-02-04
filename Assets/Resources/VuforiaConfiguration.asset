@@ -14,58 +14,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vuforia:
     vuforiaLicenseKey: 
-    ufoLicenseKey: QWZXWUlBZi8vLy8vQUFBQUtHVDJFcGpncFVPNGhMVkNtdU5wOTMySFc4WEpaMUVBUmJJV2ttN3hIY2grSUxURWdXZlNHak13L2F5STlzcXBLMDZyWWloY3h0dnl3NnBZbFJVVWhBY2lGQjhFNUtHU0xNRnJhcjRwNnRJckZ1Z21xa1h5dG8xUTZoVHRUTmRoT0pkeFZyUGRPQTFlK2V2Q2NYS1l3OWJ3eThyRGtOREhzY2RQUVNsbm9UQ0l5ekpBdklKSzIwNERmZ0VGY3V4dXp5eWNpQkxkS3lCbjNyRGJFQkRYV2dCNllCMFN2VE5NaTZNN1Q4WHVENHR1bzlrTkFvMUNoYjkrWm1SRi9Hek1IQXhXSDExV3cvRGhwZVZ5WFhNNkFNdzd4bHBhcmg0TzBENkhKYzFMM3ZkK0NHZnlITWNHenNpOXhvQzdYU2JQcWh6TVg1VFAvREtVb0FqdkxLN3ZXaUtORDNNT3dOK2tyVjRCRFU3aTJSZ2E=
+    ufoLicenseKey: QVJ1WEJzMy8vLy8vQUFBQUtEc095K2V1dTBPZHJra0tZdGZVVFB0Ym9lYW5FejBHUHplSklUMEtWK2x6dXYwdWhySk9yK1FTajQ3ZmV1Rmk3aU16REJIa3N4M0RpVlg0cDJ5MG1wN2VOQjhJSkcxUkxGRFFIV0dCcWd3Um16SW8rUGxtRkVPSkNSOUZUK2JORVlCOHI2RklaaVQ1MlBxbVFUNDVSeWcwZk9TUXFNRk50OTRoR3RoMTAwcFVqTmRtUkcwZkpSMEFVQm1DUDQvTktFWmU2UmtrRUxBZUIraExXUHEwUm5SQ0svcHQ0Rk5vQVhCNGQ3V0V3eFMyTjZ4YzdPUjdtMGppMmg2dXhHRlh6cndmTUVMcnZENlVEZTl5c2pkNDBGTk5VNGdhTWhMMVljeG9aMmZxRUwwNUt3TVlXT3R4SmVpRHAyNFZrbUJ5cmZ1Q0dPTGxyWVhURjZST0xoa0xrY0FRY0pzellUcGIzd1U5d1ZOOWI0d28=
     delayedInitialization: 0
     cameraDeviceModeSetting: -1
-    maxSimultaneousImageTargets: 1
+    maxSimultaneousImageTargets: 2
     maxSimultaneousObjectTargets: 1
     useDelayedLoadingObjectTargets: 0
     modelTargetRecoWhileExtendedTracked: 1
-    version: 8.3.8
-    eulaAcceptedVersions: '{"Values":["8.3","7.5","8.0","8.1","7.1"]}'
-  digitalEyewear:
-    cameraOffset: 0.06
-    distortionRenderingLayer: 31
-    eyewearType: 1
-    stereoFramework: 0
-    seeThroughConfiguration: 1
-    viewerName: 
-    viewerManufacturer: 
-    useCustomViewer: 0
-    customViewer:
-      Version: 0
-      Name: 
-      Manufacturer: 
-      ButtonType: 0
-      ScreenToLensDistance: 0
-      InterLensDistance: 0
-      TrayAlignment: 0
-      LensCenterToTrayDistance: 0
-      DistortionCoefficients: {x: 0, y: 0}
-      FieldOfView: {x: 0, y: 0, z: 0, w: 0}
-      ContainsMagnet: 0
+    version: 8.6.7
+    eulaAcceptedVersions: '{"Values":["8.3","7.5","8.0","8.1","7.1","8.5","8.6"]}'
+    modelTargetMode: 0
   database:
     disableModelExtraction: 0
   videoBackground:
-    clippingMode: 0
     numDivisions: 2
     videoBackgroundShader: {fileID: 4800000, guid: f40623b353e2f1943b1b3ba42975db7a,
       type: 3}
-    matteShader: {fileID: 4800000, guid: 66d0d78a3000021448b598bb54a3bfdf, type: 3}
     videoBackgroundEnabled: 1
   deviceTracker:
     autoInitTracker: 1
     autoStartTracker: 1
     arcoreRequirement: 1
-    trackingMode: 1
-    posePrediction: 0
-    modelCorrectionMode: 0
-    modelTransformEnabled: 0
-    modelTransform: {x: 0, y: 0.1, z: -0.1}
+    autoImportArcore: 0
   smartTerrain:
     autoInitTracker: 0
     autoStartTracker: 0
   webcam:
-    deviceNameSetInEditor: 
+    deviceNameSetInEditor: Integrated Webcam
     turnOffWebCam: 1
     renderTextureLayer: 30

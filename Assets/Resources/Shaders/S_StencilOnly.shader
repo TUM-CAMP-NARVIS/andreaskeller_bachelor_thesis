@@ -2,11 +2,11 @@
 {
     Properties
     {
-		[IntRange] _StencilValue("Stencil Reference Value", Range(0,255)) = 5
+		[IntRange] _StencilValue("Stencil Reference Value", Range(0,255)) = 14
     }
     SubShader
     {
-        Tags { "Queue" = "Geometry-1" "RenderType"="Opaque" }
+        Tags { "Queue" = "Geometry-10" "RenderType"="Opaque" }
         LOD 100
 		
 
@@ -20,7 +20,7 @@
         {
 			Cull Off
 
-			Blend Zero One
+			Blend One One
 			ZWrite Off
             
 			CGPROGRAM

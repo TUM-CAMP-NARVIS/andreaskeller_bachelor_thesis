@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96a16673d92d4e8fa24750357b3cf906, type: 3}
+  m_Name: MixedRealityInputSystemProfile
+  m_EditorClassIdentifier: 
+  isCustomProfile: 1
+  focusProviderType:
+    reference: XRTK.Services.InputSystem.FocusProvider, XRTK
+  inputActionsProfile: {fileID: 11400000, guid: bb7d745bb781a9645a96599ebcfe94a4,
+    type: 2}
+  inputActionRulesProfile: {fileID: 11400000, guid: e73da4ed430e9a54cb2dd104e7d9bff8,
+    type: 2}
+  pointerProfile: {fileID: 11400000, guid: 6ecb8e98eb6b74243bb2ed6bc85d60bf, type: 2}
+  gesturesProfile: {fileID: 11400000, guid: cfbbd4446e807f8458e8d03d70f83266, type: 2}
+  speechCommandsProfile: {fileID: 11400000, guid: f731b5db612e440448277ed1d5397675,
+    type: 2}
+  controllerDataProvidersProfile: {fileID: 11400000, guid: e4bad5b6ce7a2694694b6a8a2ba7c224,
+    type: 2}
+  controllerMappingProfiles: {fileID: 11400000, guid: 15a12c0356bbcc4449a8c0c724ace704,
+    type: 2}
+  controllerVisualizationProfile: {fileID: 11400000, guid: e59412a64df6ca8448907ebaa3c68631,
+    type: 2}

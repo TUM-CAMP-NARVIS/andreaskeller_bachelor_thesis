@@ -1,8 +1,10 @@
 fileFormatVersion: 2
-guid: 7df2d210aad792f4082e8a2fd276d03b
+guid: 5242d85749a0ff14f80c29ca1ae26709
 ShaderImporter:
   externalObjects: {}
-  defaultTextures: []
+  defaultTextures:
+  - _HatchingSmall: {fileID: 2800000, guid: 1d4f1657eb33ee74b8664ff0f01f3842, type: 3}
+  - _HatchingBig: {fileID: 2800000, guid: 5a8f4193717d48a448995bff2aa37a9c, type: 3}
   nonModifiableTextures: []
   userData: 
   assetBundleName: 

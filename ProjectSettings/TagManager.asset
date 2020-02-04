@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - HelpObject
+  - FxTemporaire
+  - zomBunny
+  - StepDescription
+  - Phantom
+  - projectile
   layers:
   - Default
   - TransparentFX
@@ -13,6 +19,7 @@ TagManager:
   - UI
   - 
   - 
+  - PostProcess
   - 
   - 
   - 
@@ -34,9 +41,8 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - Spatial Awareness
+  - Spatial Awareness Surfaces
+  - Spatial Awareness Meshes
   m_SortingLayers:
   - name: Default
     uniqueID: 0

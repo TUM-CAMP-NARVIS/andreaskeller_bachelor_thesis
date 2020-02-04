@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8053d706eb6545b99330d640fbe7e7d2, type: 3}
+  m_Name: MixedRealityToolkitConfigurationProfile
+  m_EditorClassIdentifier: 
+  isCustomProfile: 1
+  enableCameraSystem: 1
+  cameraSystemType:
+    reference: XRTK.Services.CameraSystem.MixedRealityCameraSystem, XRTK
+  cameraProfile: {fileID: 11400000, guid: b7bd65ade3d031547b3866555a694878, type: 2}
+  enableInputSystem: 1
+  inputSystemProfile: {fileID: 11400000, guid: 54662c62b6c45994a8b55fa44c56bd31, type: 2}
+  inputSystemType:
+    reference: XRTK.Services.InputSystem.MixedRealityInputSystem, XRTK
+  enableBoundarySystem: 0
+  boundarySystemType:
+    reference: XRTK.Services.BoundarySystem.MixedRealityBoundarySystem, XRTK
+  boundaryVisualizationProfile: {fileID: 11400000, guid: cea0e211d57f9d0479ae9a165b7f8fef,
+    type: 2}
+  enableTeleportSystem: 0
+  teleportSystemType:
+    reference: XRTK.Services.Teleportation.MixedRealityTeleportSystem, XRTK
+  enableSpatialAwarenessSystem: 1
+  spatialAwarenessSystemType:
+    reference: XRTK.Services.SpatialAwarenessSystem.MixedRealitySpatialAwarenessSystem,
+      XRTK
+  spatialAwarenessProfile: {fileID: 11400000, guid: 589766cc945cf0741b6eb4105ba715a9,
+    type: 2}
+  networkingSystemProfile: {fileID: 11400000, guid: 4465c387aace5ce4fbbbdf33a8deb2b8,
+    type: 2}
+  enableNetworkingSystem: 0
+  networkingSystemType:
+    reference: XRTK.Services.NetworkingSystem.MixedRealityNetworkingSystem, XRTK
+  diagnosticsSystemProfile: {fileID: 11400000, guid: 6119cd3b52766f34c8cb882b598a68a0,
+    type: 2}
+  enableDiagnosticsSystem: 1
+  diagnosticsSystemType:
+    reference: XRTK.Services.DiagnosticsSystem.MixedRealityDiagnosticsSystem, XRTK
+  registeredServiceProvidersProfile: {fileID: 11400000, guid: acea2c25fd504369954fa833a8c4ea5b,
+    type: 2}
