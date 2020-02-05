@@ -9,6 +9,7 @@ public class MenuManager : MonoBehaviour
     public GameObject hatching;
     public GameObject bichlmeier;
     public GameObject networkingClient;
+    public GameObject general;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,10 +18,18 @@ public class MenuManager : MonoBehaviour
 
     public void HatchingSetActive(bool b)
     {
+        if (!Utils.IsVR)
+        {
+            return;
+        }
         hatching.SetActive(b);
     }
     public void BichlmeierSetActive(bool b)
     {
+        if (!Utils.IsVR)
+        {
+            return;
+        }
         bichlmeier.SetActive(b);
     }
 
@@ -35,5 +44,12 @@ public class MenuManager : MonoBehaviour
             ipField.GetComponent<TMPro.TMP_InputField>().text = "localhost";
         else
             ipField.GetComponent<TMPro.TMP_InputField>().text = "192.168.1.116";
+    }
+
+    public void HideAllButServer()
+    {
+        hatching.SetActive(false);
+        bichlmeier.SetActive(false);
+        general.SetActive(false);
     }
 }

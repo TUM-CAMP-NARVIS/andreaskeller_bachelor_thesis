@@ -26,6 +26,7 @@ public class PhantomManager : MonoBehaviour
 
     private FocusManager focusManager;
     private MenuManager menuMan;
+    private SurfaceAlign surfAlign;
 
 
     void Start()
@@ -36,6 +37,8 @@ public class PhantomManager : MonoBehaviour
 
         focusManager = FindObjectOfType<FocusManager>();
         menuMan = FindObjectOfType<MenuManager>();
+        surfAlign = FindObjectOfType<SurfaceAlign>();
+
 
         var getSkin = focusManager.GetSkin();
         if (getSkin == null)
@@ -60,14 +63,7 @@ public class PhantomManager : MonoBehaviour
             menuMan.BichlmeierSetActive(skin.GetComponent<MeshRenderer>().enabled);
             menuMan.HatchingSetActive(false);
             status = Status.normal;
-        }
-
-        
-
-        
-        
-
-        
+        }        
     }
 
     // Update is called once per frame
@@ -107,6 +103,8 @@ public class PhantomManager : MonoBehaviour
             
 
     }
+
+    
 
     public void ToggleHatching()
     {
@@ -187,7 +185,7 @@ public class PhantomManager : MonoBehaviour
 
     public void ToggleWindow()
     {
-        var surfAlign = FindObjectOfType<SurfaceAlign>();
+        
         if (surfAlign != null)
         {
             surfAlign.ToggleActive();
@@ -218,6 +216,30 @@ public class PhantomManager : MonoBehaviour
         foreach (Transform child in insides_Hatching.transform)
         {
             child.GetComponent<Renderer>().material.SetFloat("_Intensity", (intensity - 0.1f));
+        }
+    }
+    public void HatchUVScaleReset()
+    {
+        foreach (Transform child in insides_Hatching.transform)
+        {
+            child.GetComponent<Renderer>().material.SetFloat("_UVScale", 50);
+        }
+    }
+
+    public void HatchUVScaleIncrease()
+    {
+        float intensity = insides_Hatching.transform.GetChild(0).GetComponent<Renderer>().material.GetFloat("_UVScale");
+        foreach (Transform child in insides_Hatching.transform)
+        {
+            child.GetComponent<Renderer>().material.SetFloat("_UVScale", (intensity + 1));
+        }
+    }
+    public void HatchUVScaleDecrease()
+    {
+        float intensity = insides_Hatching.transform.GetChild(0).GetComponent<Renderer>().material.GetFloat("_UVScale");
+        foreach (Transform child in insides_Hatching.transform)
+        {
+            child.GetComponent<Renderer>().material.SetFloat("_UVScale", (intensity - 1));
         }
     }
     public void HatchIntensityReset()
@@ -257,5 +279,184 @@ public class PhantomManager : MonoBehaviour
         skin.GetComponent<MeshRenderer>().material.SetFloat(param, (intensity - 0.01f));
     }
 
+    #endregion
+
+    #region state-management
+    public struct State
+    {
+        public Status status;
+
+        public bool skinEnabled;
+        public bool windowEnabled;
+
+
+        public BichlmeierState bichlmeierState;
+        public HatchingState hatchingState;
+
+        public State(Status status, bool skinEnabled, bool windowEnabled, BichlmeierState bichlmeierState, HatchingState hatchingState)
+        {
+            this.status = status;
+            this.skinEnabled = skinEnabled;
+            this.windowEnabled = windowEnabled;
+            this.bichlmeierState = bichlmeierState;
+            this.hatchingState = hatchingState;
+        }
+    }
+
+    public struct BichlmeierState
+    {
+        public float alpha, beta, gamma, weightCurv, weightAngle, weightDistance, focusSize;
+
+        public BichlmeierState(float a, float b, float g, float weightCurv, float weightAngle, float weightDistance, float focusSize)
+        {
+            this.alpha = a;
+            this.beta = b;
+            this.gamma = g;
+            this.weightAngle = weightAngle;
+            this.weightCurv = weightCurv;
+            this.weightDistance = weightDistance;
+            this.focusSize = focusSize;
+        }
+
+    }
+
+    public struct HatchingState
+    {
+        public float intensity, uvscale;
+        public bool isInverted;
+        public bool isTriPlanar;
+
+        public HatchingState(float intensity, float uvscale, bool isInverted, bool isTriPlanar)
+        {
+            this.intensity = intensity;
+            this.uvscale = uvscale;
+            this.isInverted = isInverted;
+            this.isTriPlanar = isTriPlanar;
+        }
+
+    }
+
+    public SceneStateMessage GetFullUpdate()
+    {
+        BichlmeierState bState = GetBichlmeier();
+        HatchingState hState = GetHatching();
+
+
+        State update = new State(status, skin.GetComponent<MeshRenderer>().enabled,surfAlign.isActive, bState, hState);
+        
+        return new SceneStateMessage(update);
+    }
+
+    public BichlmeierState GetBichlmeier()
+    {
+        var mat = skin.GetComponent<MeshRenderer>().material;
+        var a = mat.GetFloat("_Alpha");
+        var b = mat.GetFloat("_Beta");
+        var g = mat.GetFloat("_Gamma");
+        var wC = mat.GetFloat("_WeightCurvature");
+        var wA = mat.GetFloat("_WeightAngleofIncidence");
+        var wD = mat.GetFloat("_WeightDistanceFalloff");
+        var focusSize = mat.GetFloat("_FocusRadius");
+        BichlmeierState bState = new BichlmeierState(a, b, g, wC, wA, wD, focusSize);
+        return bState;
+    }
+
+    public void ApplyBichlmeierState(BichlmeierState update)
+    {
+        var mat = skin.GetComponent<MeshRenderer>().material;
+        mat.SetFloat("_Alpha", update.alpha);
+        mat.SetFloat("_Beta", update.beta);
+        mat.SetFloat("_Gamma", update.gamma);
+        mat.SetFloat("_WeightCurvature", update.weightCurv);
+        mat.SetFloat("_WeightAngleofIncidence", update.weightAngle);
+        mat.SetFloat("_WeightDistanceFalloff", update.weightDistance);
+        mat.SetFloat("_FocusRadius", update.focusSize);
+    }
+
+    public HatchingState GetHatching()
+    {
+        var mat = insides_Hatching.transform.GetChild(0).GetComponent<Renderer>().material;
+        HatchingState hState = new HatchingState(mat.GetFloat("_Intensity"), mat.GetFloat("_UVScale"), mat.IsKeywordEnabled("_TRIPLANAR"), mat.IsKeywordEnabled("_INVERTHATCHING"));
+        return hState;
+    }
+
+    public void ApplyHatchingState(HatchingState update)
+    {
+        foreach (Transform child in insides_Hatching.transform)
+        {
+            child.GetComponent<Renderer>().material.SetFloat("_UVScale", update.uvscale);
+            child.GetComponent<Renderer>().material.SetFloat("_Intensity", update.intensity);
+
+            if (update.isTriPlanar)
+            {
+                child.GetComponent<Renderer>().material.EnableKeyword("_TRIPLANAR");
+            }
+            if (update.isInverted)
+            {
+                child.GetComponent<Renderer>().material.EnableKeyword("_INVERTHATCHING");
+            }
+        }
+    }
+
+    public void applyUpdate(SceneStateMessage update)
+    {
+        if (update.status != status)
+        {
+            switch (status)
+            {
+                case Status.chroma:
+                    if (update.status == Status.normal)
+                    {
+                        CycleInsides();
+                    }
+                    else
+                    {
+                        CycleInsides();
+                        CycleInsides();
+                    }
+                    break;
+                case Status.hatching:
+                    if (update.status == Status.chroma)
+                    {
+                        CycleInsides();
+                    }
+                    else
+                    {
+                        CycleInsides();
+                        CycleInsides();
+                    }
+                    break;
+                default:
+                    if (update.status == Status.hatching)
+                    {
+                        CycleInsides();
+                    }
+                    else
+                    {
+                        CycleInsides();
+                        CycleInsides();
+                    }
+                    break;
+            }
+        }
+
+        BichlmeierState bState = new BichlmeierState(update.a, update.b, update.g, update.wC, update.wA, update.wD, update.focusSize);
+
+        ApplyBichlmeierState(bState);
+
+        HatchingState hState = new HatchingState(update.i, update.u, update.inv, update.tri);
+        ApplyHatchingState(hState);
+
+        if (surfAlign.isActive != update.windowEnabled)
+        {
+            ToggleWindow();
+        }
+
+        if (skin.GetComponent<MeshRenderer>().enabled != update.skinEnabled)
+        {
+            ToggleSkin();
+        }
+        
+    }
     #endregion
 }

@@ -12,7 +12,7 @@ public class SynchronizationManager : MonoBehaviour
 
     public List<GameObject> trackedObjects = new List<GameObject>();
 
-    enum State { Synchronized, Desynchronized}
+    enum State { Synchronized, Scale, Desynchronized}
 
     private Quaternion rotNetworked;
     private Vector3 posNetworked;
@@ -20,8 +20,11 @@ public class SynchronizationManager : MonoBehaviour
     private Vector3 pos;
     private Quaternion rot;
 
+    private Vector3 pos1;
+
     private Quaternion offsetRot = Quaternion.identity;
 
+    private State syncState = State.Desynchronized;
     private bool synchronized = false;
     private bool markerSeen = false;
 
@@ -36,7 +39,7 @@ public class SynchronizationManager : MonoBehaviour
 
     void Update()
     {
-        if (markerSeen && !synchronized)
+        if (markerSeen && syncState == State.Desynchronized)
         {
             MoveToMarker();
         }
@@ -54,11 +57,12 @@ public class SynchronizationManager : MonoBehaviour
 
     void MoveToMarker()
     {
-        if (synchronized)
+        if (syncState != State.Desynchronized)
             return;
+        syncSpace.transform.localScale = new Vector3(1, 1, 1);
         //Debug.Log("received imagetracker position");
         rot = imageTarget.transform.rotation;
-        pos = imageTarget.transform.position + (rot*new Vector3(0,0,0.1f));
+        pos = imageTarget.transform.position + (rot*new Vector3(0.1f,0,0.1f));
         
         viveTracker.transform.localPosition = new Vector3(0,0,0);
         viveTracker.transform.localRotation = Quaternion.identity;
@@ -72,7 +76,7 @@ public class SynchronizationManager : MonoBehaviour
         //Debug.Log("Updating vive tracker position");
         this.rotNetworked = rotNetworked;
         this.posNetworked = posNetworked;
-        if (synchronized)
+        if (syncState == State.Synchronized)
         {
             if (id != 0)
                 return;
@@ -83,10 +87,31 @@ public class SynchronizationManager : MonoBehaviour
 
     public void Synchronize()
     {
-        syncSpace.transform.rotation = rot*Quaternion.Inverse(rotNetworked);
-        syncSpace.transform.position = pos +(syncSpace.transform.TransformDirection(-posNetworked));//Quaternion.Inverse(syncSpace.transform.rotation)*(pos) - posNetworked;
-        offsetRot = Quaternion.Inverse(syncSpace.transform.rotation);
-        synchronized = !synchronized;
+        switch (syncState)
+        {
+            case State.Desynchronized:
+                pos1 = posNetworked;
+                syncSpace.transform.position = pos - (rot * new Vector3(0.2f, 0, 0));
+                pos = syncSpace.transform.position;
+                syncState = State.Scale;
+                break;
+            case State.Scale:
+                var dist = Vector3.Distance(pos1, posNetworked);
+                float scale = 0.2f / dist;
+                syncSpace.transform.localScale = new Vector3(scale, scale, scale);
+                syncSpace.transform.rotation = rot * Quaternion.Inverse(rotNetworked);
+                syncSpace.transform.position = pos + (syncSpace.transform.TransformVector(-posNetworked));
+                offsetRot = Quaternion.Inverse(syncSpace.transform.rotation);
+                syncState = State.Synchronized;
+                break;
+            default:
+                syncState = State.Desynchronized;
+                break;
+        }
+        //syncSpace.transform.rotation = rot*Quaternion.Inverse(rotNetworked);
+        //syncSpace.transform.position = pos +(syncSpace.transform.TransformDirection(-posNetworked));//Quaternion.Inverse(syncSpace.transform.rotation)*(pos) - posNetworked;
+        //offsetRot = Quaternion.Inverse(syncSpace.transform.rotation);
+        //synchronized = !synchronized;
 
     }
 

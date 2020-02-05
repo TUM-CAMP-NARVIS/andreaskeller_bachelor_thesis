@@ -8,39 +8,7 @@ using UnityEngine;
 using UnityEngine.SpatialTracking;
 using Mirror;
 using Mirror.Authenticators;
-public struct TrackedObjectMessage : IMessageBase
-{
-    public enum Type {ViveTracker, ViveController, HMD };
-    public short id;
-    public Type type;
-    public Vector3 position;
-    public Quaternion rotation;
 
-
-    public TrackedObjectMessage(short id, Type type, Vector3 position, Quaternion rotation)
-    {
-        this.id = id;
-        this.type = type;
-        this.position = position;
-        this.rotation = rotation;
-    }
-
-    public void Deserialize(NetworkReader reader)
-    {
-        id = reader.ReadInt16();
-        type = (Type) reader.ReadInt16();
-        position = reader.ReadVector3();
-        rotation = reader.ReadQuaternion();
-    }
-
-    public void Serialize(NetworkWriter writer)
-    {
-        writer.WriteInt16(id);
-        writer.WriteInt16((short)type);
-        writer.WriteVector3(position);
-        writer.WriteQuaternion(rotation);
-    }
-}
 
 public class MultiplatformSceneManager : MonoBehaviour
 {
@@ -49,12 +17,12 @@ public class MultiplatformSceneManager : MonoBehaviour
     public GameObject phantomAnchor;
 
     public GameObject prefab;
-    public GameObject ipaddress;
 
+    //Manager objects in scene
     private SynchronizationManager syncMan;
     private MenuManager menuMan;
-
     private NetworkManager networkManager;
+    private PhantomManager phantomManager;
 
     private GameObject spawnedObject;
 
@@ -64,9 +32,15 @@ public class MultiplatformSceneManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        phantomAnchor.SetActive(true);
+
         syncMan = FindObjectOfType<SynchronizationManager>();
         menuMan = FindObjectOfType<MenuManager>();
         networkManager = FindObjectOfType<NetworkManager>();
+        phantomManager = FindObjectOfType<PhantomManager>();
+
+        
+
         if (Utils.IsHoloLens)
 		{
 			setupHololens();
@@ -100,7 +74,14 @@ public class MultiplatformSceneManager : MonoBehaviour
             tracker.rotation = spawnedObject.transform.rotation;
             NetworkServer.SendToAll<TrackedObjectMessage>(tracker);
         }
-        
+
+
+        if (Input.GetKeyDown("r"))
+        {
+            var update = phantomManager.GetFullUpdate();
+            NetworkServer.SendToAll<SceneStateMessage>(update);
+        }
+
     }
 
     #region PhantomViveTracker
@@ -152,7 +133,9 @@ public class MultiplatformSceneManager : MonoBehaviour
         var auth = FindObjectOfType<BasicAuthenticator>();
         auth.username = "testHolo";
         menuMan.NetworkServerYesNo(false);
+        menuMan.HideAllButServer();
         spawnedObject = syncMan.viveTracker;
+
         
     }
 
@@ -210,8 +193,10 @@ public class MultiplatformSceneManager : MonoBehaviour
         networkManager.networkAddress = ip;
         networkManager.StartClient();
         NetworkClient.RegisterHandler<TrackedObjectMessage>(OnTrackerMessage);
+        NetworkClient.RegisterHandler<SceneStateMessage>(OnSceneStateMessage);
     }
 
+    /*
     public void connectToServerIP()
     {
         TMPro.TMP_InputField input;
@@ -230,6 +215,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         networkManager.StartClient();
         NetworkClient.RegisterHandler<TrackedObjectMessage>(OnTrackerMessage);
     }
+    */
 
     public void DisconnectFromServer()
     {
@@ -239,6 +225,11 @@ public class MultiplatformSceneManager : MonoBehaviour
     private void OnTrackerMessage(NetworkConnection arg1, TrackedObjectMessage arg2)
     {
         syncMan.updateTrackedObject(arg2.id, arg2.type, arg2.position, arg2.rotation);
+    }
+
+    private void OnSceneStateMessage(NetworkConnection arg1, SceneStateMessage arg2)
+    {
+        phantomManager.applyUpdate(arg2);
     }
    
 }
