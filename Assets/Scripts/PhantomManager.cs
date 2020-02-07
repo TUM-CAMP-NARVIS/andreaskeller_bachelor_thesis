@@ -201,82 +201,41 @@ public class PhantomManager : MonoBehaviour
         }
     }
 
-    #region HatchingParams
-    public void HatchIntensityIncrease()
+    #region ParameterAdjustment
+    public float ChangeParam(string param, float step, ParameterManager.ParameterType type)
     {
-        float intensity = insides_Hatching.transform.GetChild(0).GetComponent<Renderer>().material.GetFloat("_Intensity");
-        foreach (Transform child in insides_Hatching.transform)
+        float intensity = 0;
+        if (type == ParameterManager.ParameterType.Bichlmeier)
         {
-            child.GetComponent<Renderer>().material.SetFloat("_Intensity", (intensity+0.1f));
+            intensity = skin.GetComponent<MeshRenderer>().material.GetFloat(param) + step;
+            skin.GetComponent<MeshRenderer>().material.SetFloat(param, (intensity));
         }
-    }
-    public void HatchIntensityDecrease()
-    {
-        float intensity = insides_Hatching.transform.GetChild(0).GetComponent<Renderer>().material.GetFloat("_Intensity");
-        foreach (Transform child in insides_Hatching.transform)
+        else
         {
-            child.GetComponent<Renderer>().material.SetFloat("_Intensity", (intensity - 0.1f));
+            intensity = insides_Hatching.transform.GetChild(0).GetComponent<Renderer>().material.GetFloat(param) + step;
+            foreach (Transform child in insides_Hatching.transform)
+            {
+                child.GetComponent<Renderer>().material.SetFloat(param, (intensity ));
+            }
         }
-    }
-    public void HatchUVScaleReset()
-    {
-        foreach (Transform child in insides_Hatching.transform)
-        {
-            child.GetComponent<Renderer>().material.SetFloat("_UVScale", 50);
-        }
-    }
+        return intensity;
 
-    public void HatchUVScaleIncrease()
+    }
+    public float ResetParam(string param, float orig, ParameterManager.ParameterType type)
     {
-        float intensity = insides_Hatching.transform.GetChild(0).GetComponent<Renderer>().material.GetFloat("_UVScale");
-        foreach (Transform child in insides_Hatching.transform)
+        if (type == ParameterManager.ParameterType.Bichlmeier)
         {
-            child.GetComponent<Renderer>().material.SetFloat("_UVScale", (intensity + 1));
+            skin.GetComponent<MeshRenderer>().material.SetFloat(param, orig);
         }
-    }
-    public void HatchUVScaleDecrease()
-    {
-        float intensity = insides_Hatching.transform.GetChild(0).GetComponent<Renderer>().material.GetFloat("_UVScale");
-        foreach (Transform child in insides_Hatching.transform)
+        else if (type == ParameterManager.ParameterType.Hatching)
         {
-            child.GetComponent<Renderer>().material.SetFloat("_UVScale", (intensity - 1));
+            foreach (Transform child in insides_Hatching.transform)
+            {
+                child.GetComponent<Renderer>().material.SetFloat(param, orig);
+            }
         }
-    }
-    public void HatchIntensityReset()
-    {
-        foreach (Transform child in insides_Hatching.transform)
-        {
-            child.GetComponent<Renderer>().material.SetFloat("_Intensity", 1);
-        }
-    }
-    #endregion
-
-    #region BichlmeierParam
-    public void SkinIncrParam(string param)
-    {
-        float intensity = skin.GetComponent<MeshRenderer>().material.GetFloat(param);
-        skin.GetComponent<MeshRenderer>().material.SetFloat(param, (intensity + 0.1f));
-    }
-    public void SkinDecrParam(string param)
-    {
-        float intensity =skin.GetComponent<MeshRenderer>().material.GetFloat(param);
-        skin.GetComponent<MeshRenderer>().material.SetFloat(param, (intensity - 0.1f));
-    }
-    public void SkinResetParam(string param)
-    {
-        skin.GetComponent<MeshRenderer>().material.SetFloat(param, 1);
-    }
-
-    public void SkinIncrParamSmall(string param)
-    {
-        float intensity = skin.GetComponent<MeshRenderer>().material.GetFloat(param);
-        skin.GetComponent<MeshRenderer>().material.SetFloat(param, (intensity + 0.01f));
-    }
-
-    public void SkinDecrParamSmall(string param)
-    {
-        float intensity = skin.GetComponent<MeshRenderer>().material.GetFloat(param);
-        skin.GetComponent<MeshRenderer>().material.SetFloat(param, (intensity - 0.01f));
+        
+        return orig;
     }
 
     #endregion

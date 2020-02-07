@@ -57,21 +57,8 @@ namespace Mirror.Authenticators
         public void OnAuthRequestMessage(NetworkConnection conn, AuthRequestMessage msg)
         {
             Debug.LogFormat("Authentication Request: {0} {1}", msg.authUsername, msg.authPassword);
-            string[] users = new string[3];
-            users[0] = "test";
-            users[1] = "testIOS";
-            users[2] = "testHolo";
             // check the credentials by calling your web server, database table, playfab api, or any method appropriate.
-            bool isUser = false;
-            for (int i = 0; i<3; i++)
-            {
-                if (msg.authUsername == users[i])
-                {
-                    isUser = true;
-                    break;
-                }
-                    
-            }
+            bool isUser = true;
 
             if (isUser && msg.authPassword == password)
             {

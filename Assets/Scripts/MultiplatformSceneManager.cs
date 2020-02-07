@@ -100,12 +100,20 @@ public class MultiplatformSceneManager : MonoBehaviour
         m_bPhantomAttached = false;
     }
 
-    public void TogglePhantomAttached()
+    public void TogglePhantomAttached(GameObject cube = null)
     {
         if (m_bPhantomAttached)
             DetachPhantomFromTracker();
         else
             AttachPhantomToTracker();
+
+        if (cube != null)
+        {
+            if (m_bPhantomAttached)
+                cube.GetComponent<MeshRenderer>().material.color = new Color(0, 1, 0);
+            else
+                cube.GetComponent<MeshRenderer>().material.color = new Color(1, 0, 0);
+        }
     }
 
     #endregion
@@ -131,7 +139,7 @@ public class MultiplatformSceneManager : MonoBehaviour
 
         syncMan.UnhideObjects();
         var auth = FindObjectOfType<BasicAuthenticator>();
-        auth.username = "testHolo";
+        auth.username = SystemInfo.deviceUniqueIdentifier;
         menuMan.NetworkServerYesNo(false);
         menuMan.HideAllButServer();
         spawnedObject = syncMan.viveTracker;
@@ -149,7 +157,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         }
             
         var auth = FindObjectOfType<BasicAuthenticator>();
-        auth.username = "testIOS";
+        auth.username = SystemInfo.deviceUniqueIdentifier;
         syncMan.UnhideObjects();
         menuMan.NetworkServerYesNo(false);
         spawnedObject = syncMan.viveTracker;
