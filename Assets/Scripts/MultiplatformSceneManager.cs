@@ -123,9 +123,14 @@ public class MultiplatformSceneManager : MonoBehaviour
         m_bNetworkingEnabled = !m_bNetworkingEnabled;
     }
 
-    public void ResetConnections()
+    public void ResetConnections(GameObject button)
     {
-        NetworkServer.DisconnectAllConnections();
+        var color = button.GetComponent<MeshRenderer>().material.color;
+        button.GetComponent<MeshRenderer>().material.color = new Color(color.r, color.b, color.g);
+
+
+        networkManager.StopServer();
+        networkManager.StartServer();
     }
 	
 	void setupHololens()
