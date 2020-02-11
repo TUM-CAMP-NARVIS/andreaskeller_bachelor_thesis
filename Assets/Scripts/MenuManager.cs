@@ -10,10 +10,12 @@ public class MenuManager : MonoBehaviour
     public GameObject bichlmeier;
     public GameObject networkingClient;
     public GameObject general;
+
+    private PhantomManager pMan;
     // Start is called before the first frame update
     void Start()
     {
-
+        pMan = FindObjectOfType<PhantomManager>();
     }
 
     public void HatchingSetActive(bool b)
@@ -52,4 +54,18 @@ public class MenuManager : MonoBehaviour
         bichlmeier.SetActive(false);
         general.SetActive(false);
     }
+
+    public void ToggleSkin()
+    {
+        pMan.ToggleSkin();
+    }
+    public void ToggleWindow()
+    {
+        pMan.ToggleWindow();
+    }
+    public void CycleInsides()
+    {
+        pMan.CycleInsides();
+    }
+
 }

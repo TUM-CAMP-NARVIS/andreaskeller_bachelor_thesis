@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New Material
+  m_Name: StencilUnlit_Inv
   m_Shader: {fileID: 4800000, guid: da1d6f80664d8994ba3f862f3e9c695f, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4

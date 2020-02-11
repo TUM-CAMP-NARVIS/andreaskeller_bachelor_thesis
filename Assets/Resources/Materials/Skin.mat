@@ -75,7 +75,7 @@ Material:
     - _DepthScale: 1
     - _DstBlend: 0
     - _EnvironmentReflections: 1
-    - _FocusRadius: 0.1
+    - _FocusRadius: 0.05
     - _FocusSmooth: 0.05
     - _FresnelPower: 2.02
     - _Gamma: 1

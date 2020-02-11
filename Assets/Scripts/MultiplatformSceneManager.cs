@@ -88,7 +88,7 @@ public class MultiplatformSceneManager : MonoBehaviour
     public void AttachPhantomToTracker()
     {
         phantomAnchor.transform.rotation = spawnedObject.transform.rotation;
-        phantomAnchor.transform.position = spawnedObject.transform.position + (spawnedObject.transform.rotation * new Vector3(0, 0, -0.1f));
+        phantomAnchor.transform.position = spawnedObject.transform.position + (spawnedObject.transform.rotation * new Vector3(0.1f, -0.0074f, 0.12297f));
         phantomAnchor.transform.parent = spawnedObject.transform;
         m_bPhantomAttached = true;
 

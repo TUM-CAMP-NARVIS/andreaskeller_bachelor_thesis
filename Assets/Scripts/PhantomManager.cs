@@ -10,17 +10,18 @@ public class PhantomManager : MonoBehaviour
     public GameObject insides_Hatching;
     public GameObject insides_Chroma;
     public GameObject insides_Normal;
-    private GameObject skin;
+
+    public GameObject skin;
+    public GameObject skin_inv;
+    public GameObject skin_stencil;
+    public GameObject skin_stencilwindow;
+
     private int materialUsed = 0;
     public bool hatchingInverted = false;
     private bool hatchingInv = false;
 
     public bool useTriPlanar = false;
     private bool useTriPl = false;
-
-    private GameObject skin_inv;
-    private GameObject skin_stencil;
-    private GameObject skin_stencilwindow;
 
     public Status status;
 
@@ -31,23 +32,35 @@ public class PhantomManager : MonoBehaviour
 
     void Start()
     {
-        skin_inv = transform.Find("skin_inv").gameObject;
-        skin_stencil = transform.Find("skin_stencil").gameObject;
-        skin_stencilwindow = transform.Find("skin_stencilwindow").gameObject;
+        if (skin_inv == null)
+        {
+            skin_inv = transform.Find("skin_inv").gameObject;
+
+        }
+        if (skin_stencil == null)
+            skin_stencil = transform.Find("skin_stencil").gameObject;
+
+        if (skin_stencilwindow == null)
+            skin_stencilwindow = transform.Find("skin_stencilwindow").gameObject;
+
+
 
         focusManager = FindObjectOfType<FocusManager>();
         menuMan = FindObjectOfType<MenuManager>();
         surfAlign = FindObjectOfType<SurfaceAlign>();
 
-
-        var getSkin = focusManager.GetSkin();
-        if (getSkin == null)
+        if (skin == null)
         {
-            skin = transform.Find("skin").gameObject;
-            focusManager.RegisterSkin(skin);
+            var getSkin = focusManager.GetSkin();
+            if (getSkin == null)
+            {
+                skin = transform.Find("skin").gameObject;
+                focusManager.RegisterSkin(skin);
+            }
+            else
+                skin = getSkin;
         }
-        else
-            skin = getSkin;
+        
 
         skin.SetActive(true);
 
