@@ -163,6 +163,7 @@ Material:
     - _InnerGlow: 0
     - _InnerGlowPower: 4
     - _InstancedColor: 0
+    - _Intensity: 1
     - _InvertHatching: 1
     - _Iridescence: 0
     - _IridescenceAngle: -0.78
@@ -209,7 +210,7 @@ Material:
     - _StencilReference: 0
     - _Surface: 0
     - _TriplanarMappingBlendSharpness: 4
-    - _UVScale: 50
+    - _UVScale: 5
     - _UVScaler: 6
     - _UVSec: 0
     - _UseTriPlanar: 0

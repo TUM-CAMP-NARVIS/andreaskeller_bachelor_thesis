@@ -202,16 +202,19 @@ public class PhantomManager : MonoBehaviour
         if (surfAlign != null)
         {
             surfAlign.ToggleActive();
+
+            if (surfAlign.isActive)
+            {
+                skin_stencilwindow.SetActive(false);
+                skin_stencil.SetActive(true);
+            }
+            else
+            {
+                skin_stencilwindow.SetActive(true);
+                skin_stencil.SetActive(false);
+            }
         }
-        if (surfAlign.isActive)
-        {
-            skin_stencilwindow.SetActive(false);
-            skin_stencil.SetActive(true);
-        } else
-        {
-            skin_stencilwindow.SetActive(true);
-            skin_stencil.SetActive(false);
-        }
+        
     }
 
     #region ParameterAdjustment

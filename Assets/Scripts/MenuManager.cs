@@ -68,4 +68,13 @@ public class MenuManager : MonoBehaviour
         pMan.CycleInsides();
     }
 
+    public void InvertHatching()
+    {
+        pMan.ToggleHatching();
+    }
+    public void TriplanarHatching()
+    {
+        pMan.ToggleTriPlanar();
+    }
+
 }
