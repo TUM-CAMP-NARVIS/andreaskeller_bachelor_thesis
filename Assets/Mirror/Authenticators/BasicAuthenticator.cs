@@ -51,18 +51,16 @@ namespace Mirror.Authenticators
                 authPassword = password
             };
 
-            NetworkClient.Send(authRequestMessage);
+            conn.Send(authRequestMessage);
         }
 
         public void OnAuthRequestMessage(NetworkConnection conn, AuthRequestMessage msg)
         {
             Debug.LogFormat("Authentication Request: {0} {1}", msg.authUsername, msg.authPassword);
-            // check the credentials by calling your web server, database table, playfab api, or any method appropriate.
-            bool isUser = true;
 
-            if (isUser && msg.authPassword == password)
+            // check the credentials by calling your web server, database table, playfab api, or any method appropriate.
+            if (msg.authUsername == username && msg.authPassword == password)
             {
-                //Changed to only check password - by AndiK
                 // create and send msg to client so it knows to proceed
                 AuthResponseMessage authResponseMessage = new AuthResponseMessage
                 {

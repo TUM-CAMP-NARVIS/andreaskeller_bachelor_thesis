@@ -3926,6 +3926,10 @@ MonoBehaviour:
   insides_Hatching: {fileID: 84044689}
   insides_Chroma: {fileID: 1035481357}
   insides_Normal: {fileID: 1709248247}
+  skin: {fileID: 0}
+  skin_inv: {fileID: 0}
+  skin_stencil: {fileID: 0}
+  skin_stencilwindow: {fileID: 0}
   hatchingInverted: 0
   useTriPlanar: 0
   status: 0
@@ -12400,9 +12404,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneId: 1906996799
   serverOnly: 0
   m_AssetId: 
-  m_SceneId: 1906996799
 --- !u!1 &1233201223
 GameObject:
   m_ObjectHideFlags: 0
@@ -22325,6 +22329,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ipAddressText: {fileID: 379842338}
   connectionStatusLight: {fileID: 1897817592}
+--- !u!114 &629260871412006565 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 629260871087273370, guid: 03db77d8215007342a498bf23b23df8b,
+    type: 3}
+  m_PrefabInstance: {fileID: 629260871412006562}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629260871412006563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7424c1070fad4ba2a7a96b02fbeb4bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &629260871412006566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629260871412006563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c761308e733c51245b2e8bb4201f46dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  secretHandshake: -7498595584363633709
+  serverBroadcastListenPort: 47777
+  ActiveDiscoveryInterval: 3
+  transport: {fileID: 629260871412006565}
+  OnServerFound:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 500976239}
+        m_MethodName: OnDiscoveredServer
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &2499400467474188687
 PrefabInstance:
   m_ObjectHideFlags: 0

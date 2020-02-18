@@ -57,6 +57,8 @@ public class SynchronizationManager : MonoBehaviour
 
     void MoveToMarker()
     {
+        //Old Scene with the big Phantom
+        /*
         if (syncState != State.Desynchronized)
             return;
         syncSpace.transform.localScale = new Vector3(1, 1, 1);
@@ -69,6 +71,18 @@ public class SynchronizationManager : MonoBehaviour
         syncSpace.transform.position = pos;
         syncSpace.transform.rotation = rot;
         //Debug.Log(pos);
+        */
+        if (syncState != State.Desynchronized)
+            return;
+        syncSpace.transform.localScale = new Vector3(1, 1, 1);
+        //Debug.Log("received imagetracker position");
+        rot = imageTarget.transform.rotation * Quaternion.Euler(-90, 0, 0) ;
+        pos = imageTarget.transform.position + (rot * new Vector3(0, -0.122f, 0.064f));
+
+        viveTracker.transform.localPosition = new Vector3(0, 0, 0);
+        viveTracker.transform.localRotation = Quaternion.identity;
+        syncSpace.transform.position = pos;
+        syncSpace.transform.rotation = rot;
     }
 
     public void updateTrackedObject(short id, TrackedObjectMessage.Type type, Vector3 posNetworked, Quaternion rotNetworked)
@@ -90,10 +104,15 @@ public class SynchronizationManager : MonoBehaviour
         switch (syncState)
         {
             case State.Desynchronized:
-                pos1 = posNetworked;
-                syncSpace.transform.position = pos - (rot * new Vector3(0.2f, 0, 0));
-                pos = syncSpace.transform.position;
-                syncState = State.Scale;
+                
+                syncSpace.transform.rotation = rot * Quaternion.Inverse(rotNetworked);
+                syncSpace.transform.position = pos + (syncSpace.transform.TransformDirection(-posNetworked));//Quaternion.Inverse(syncSpace.transform.rotation)*(pos) - posNetworked;
+                offsetRot = Quaternion.Inverse(syncSpace.transform.rotation);
+                syncState = State.Synchronized;
+                //pos1 = posNetworked;
+                //syncSpace.transform.position = pos - (rot * new Vector3(0.2f, 0, 0));
+                //pos = syncSpace.transform.position;
+                //syncState = State.Scale;
                 break;
             case State.Scale:
                 var dist = Vector3.Distance(pos1, posNetworked);

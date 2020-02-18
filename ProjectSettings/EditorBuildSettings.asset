@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Study.unity
     guid: ed3882b6ef87eff4a9593912d5432f44
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/1-Base.unity
     guid: ea983cba665471d42a9ee41fa969109d
   - enabled: 0

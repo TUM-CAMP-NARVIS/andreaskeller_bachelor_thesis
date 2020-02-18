@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.SpatialTracking;
 using Mirror;
 using Mirror.Authenticators;
+using Mirror.Discovery;
 
 
 public class MultiplatformSceneManager : MonoBehaviour
@@ -28,6 +29,8 @@ public class MultiplatformSceneManager : MonoBehaviour
 
     private bool m_bPhantomAttached = false;
     private bool m_bNetworkingEnabled = false;
+    private int counter = 0;
+    public int framesBetweenUpdates = 60;
 
     // Start is called before the first frame update
     void Start()
@@ -61,8 +64,11 @@ public class MultiplatformSceneManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        counter++;
         if (!Utils.IsVR)
+        {
             return;
+        }
         
 
         if (spawnedObject!=null && m_bNetworkingEnabled)
@@ -82,6 +88,14 @@ public class MultiplatformSceneManager : MonoBehaviour
             NetworkServer.SendToAll<SceneStateMessage>(update);
         }
 
+        if (counter >= framesBetweenUpdates)
+        {
+            FindObjectOfType<NetworkDiscovery>().AdvertiseServer();
+            var update = phantomManager.GetFullUpdate();
+            NetworkServer.SendToAll<SceneStateMessage>(update);
+            counter = 0;
+        }
+        
     }
 
     #region PhantomViveTracker
@@ -90,6 +104,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         phantomAnchor.transform.rotation = spawnedObject.transform.rotation;
         phantomAnchor.transform.position = spawnedObject.transform.position + (spawnedObject.transform.rotation * new Vector3(0.1f, -0.0074f, 0.12297f));
         phantomAnchor.transform.parent = spawnedObject.transform;
+        
         m_bPhantomAttached = true;
 
     }
@@ -149,7 +164,8 @@ public class MultiplatformSceneManager : MonoBehaviour
         menuMan.HideAllButServer();
         spawnedObject = syncMan.viveTracker;
 
-        
+        FindObjectOfType<NetworkDiscovery>().StartDiscovery();
+
     }
 
     void setupIOS()
@@ -166,6 +182,8 @@ public class MultiplatformSceneManager : MonoBehaviour
         syncMan.UnhideObjects();
         menuMan.NetworkServerYesNo(false);
         spawnedObject = syncMan.viveTracker;
+
+        FindObjectOfType<NetworkDiscovery>().StartDiscovery();
     }
 	
 	void setupZedMini()
@@ -207,6 +225,14 @@ public class MultiplatformSceneManager : MonoBehaviour
         networkManager.StartClient();
         NetworkClient.RegisterHandler<TrackedObjectMessage>(OnTrackerMessage);
         NetworkClient.RegisterHandler<SceneStateMessage>(OnSceneStateMessage);
+    }
+
+    public void OnDiscoveredServer(ServerResponse info)
+    {
+        Debug.Log("Found Server at " + info.uri.ToString());
+        if (NetworkClient.isConnected)
+            return;
+        connectToServer(info.uri.ToString());
     }
 
     /*

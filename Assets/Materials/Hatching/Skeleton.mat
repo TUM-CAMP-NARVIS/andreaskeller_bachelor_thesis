@@ -228,7 +228,7 @@ Material:
     - _StencilReference: 0
     - _Surface: 0
     - _TriplanarMappingBlendSharpness: 4
-    - _UVScale: 10
+    - _UVScale: 50
     - _UVScaler: 6
     - _UVSec: 0
     - _UseTriPlanar: 0
@@ -242,7 +242,7 @@ Material:
     - _ZTest: 4
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.32591954, g: 0.7075472, b: 0.29703632, a: 1}
+    - _BaseColor: {r: 0.9198113, g: 1, b: 0.99749035, a: 1}
     - _CameraFadeParams: {r: 0, g: 0, b: 0, a: 0}
     - _ClippingBorderColor: {r: 1, g: 0.2, b: 0, a: 1}
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
