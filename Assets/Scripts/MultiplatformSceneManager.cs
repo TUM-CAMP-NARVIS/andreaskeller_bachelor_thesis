@@ -83,6 +83,29 @@ public class MultiplatformSceneManager : MonoBehaviour
             NetworkServer.SendToAll<TrackedObjectMessage>(tracker);
         }
 
+        if (Input.GetKeyDown("n"))
+        {
+            m_bNetworkingEnabled = true;
+        }
+        if (Input.GetKeyDown("m"))
+        {
+            m_bNetworkingEnabled = false;
+        }
+
+        if (m_bNetworkingEnabled)
+        {
+            if (spawnedObject != null)
+            {
+                spawnedObject.transform.GetChild(0).GetComponent<Renderer>().material.color = new Color(0.5f, 1, 0.5f);
+            }
+        }
+        else
+        {
+            if (spawnedObject != null)
+            {
+                spawnedObject.transform.GetChild(0).GetComponent<Renderer>().material.color = new Color(1f, 0.5f, 0.5f);
+            }
+        }
 
         if (Input.GetKeyDown("r"))
         {
@@ -164,7 +187,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         menuMan.NetworkServerYesNo(false);
         menuMan.HideAllButServer();
         spawnedObject = syncMan.viveTracker;
-
+        AttachPhantomToTracker();
         FindObjectOfType<NetworkDiscovery>().StartDiscovery();
 
     }
@@ -182,6 +205,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         auth.username = SystemInfo.deviceUniqueIdentifier;
         syncMan.UnhideObjects();
         menuMan.NetworkServerYesNo(false);
+        AttachPhantomToTracker();
         spawnedObject = syncMan.viveTracker;
 
 
@@ -240,7 +264,7 @@ public class MultiplatformSceneManager : MonoBehaviour
 
     public void connectToServer(System.Uri uri)
     {
-        NetworkClient.Connect(uri);
+        networkManager.StartClient(uri);
         NetworkClient.RegisterHandler<TrackedObjectMessage>(OnTrackerMessage);
         NetworkClient.RegisterHandler<SceneStateMessage>(OnSceneStateMessage);
     }
@@ -250,7 +274,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         Debug.Log("Found Server at " + info.uri.ToString());
         if (NetworkClient.isConnected)
             return;
-        connectToServer(info.uri.ToString());
+        connectToServer(info.uri);
     }
 
     /*
