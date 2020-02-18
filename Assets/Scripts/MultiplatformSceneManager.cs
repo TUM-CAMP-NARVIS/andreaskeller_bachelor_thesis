@@ -238,6 +238,13 @@ public class MultiplatformSceneManager : MonoBehaviour
         NetworkClient.RegisterHandler<SceneStateMessage>(OnSceneStateMessage);
     }
 
+    public void connectToServer(System.Uri uri)
+    {
+        NetworkClient.Connect(uri);
+        NetworkClient.RegisterHandler<TrackedObjectMessage>(OnTrackerMessage);
+        NetworkClient.RegisterHandler<SceneStateMessage>(OnSceneStateMessage);
+    }
+
     public void OnDiscoveredServer(ServerResponse info)
     {
         Debug.Log("Found Server at " + info.uri.ToString());
