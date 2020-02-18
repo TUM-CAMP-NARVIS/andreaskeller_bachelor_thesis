@@ -104,6 +104,7 @@ namespace Mirror.Discovery
         /// <param name="networkManager">Network Manager</param>
         public void AdvertiseServer()
         {
+            Debug.Log("Advertising Server");
             if (!SupportedOnThisPlatform)
                 throw new PlatformNotSupportedException("Network discovery not supported in this platform");
 
@@ -130,11 +131,13 @@ namespace Mirror.Discovery
                 }
                 catch (ObjectDisposedException)
                 {
+                    Debug.Log("Socket has been closed");
                     // socket has been closed
                     break;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Debug.LogError(e.ToString());
                     continue;
                 }
             }

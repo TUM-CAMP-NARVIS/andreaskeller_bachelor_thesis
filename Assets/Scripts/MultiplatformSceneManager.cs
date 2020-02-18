@@ -24,6 +24,7 @@ public class MultiplatformSceneManager : MonoBehaviour
     private MenuManager menuMan;
     private NetworkManager networkManager;
     private PhantomManager phantomManager;
+    private NetworkDiscovery networkDiscovery;
 
     private GameObject spawnedObject;
 
@@ -42,7 +43,8 @@ public class MultiplatformSceneManager : MonoBehaviour
         networkManager = FindObjectOfType<NetworkManager>();
         phantomManager = FindObjectOfType<PhantomManager>();
 
-        
+        networkDiscovery = FindObjectOfType<NetworkDiscovery>();
+        networkDiscovery.secretHandshake = 1234567890;
 
         if (Utils.IsHoloLens)
 		{
@@ -90,7 +92,6 @@ public class MultiplatformSceneManager : MonoBehaviour
 
         if (counter >= framesBetweenUpdates)
         {
-            FindObjectOfType<NetworkDiscovery>().AdvertiseServer();
             var update = phantomManager.GetFullUpdate();
             NetworkServer.SendToAll<SceneStateMessage>(update);
             counter = 0;
@@ -183,7 +184,12 @@ public class MultiplatformSceneManager : MonoBehaviour
         menuMan.NetworkServerYesNo(false);
         spawnedObject = syncMan.viveTracker;
 
-        FindObjectOfType<NetworkDiscovery>().StartDiscovery();
+
+        var networkDiscovery = FindObjectOfType<NetworkDiscovery>();
+        networkDiscovery.StartDiscovery();
+#if UNITY_EDITOR
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(networkDiscovery.OnServerFound, OnDiscoveredServer);
+#endif
     }
 	
 	void setupZedMini()
@@ -207,7 +213,12 @@ public class MultiplatformSceneManager : MonoBehaviour
 
         }
 
-        networkManager.StartServer();
+        //Start Server
+        NetworkManager.singleton.StartServer();
+        
+        networkDiscovery.AdvertiseServer();
+
+        //networkManager.StartServer();
 
         var viveTracker = Instantiate(prefab);
 
