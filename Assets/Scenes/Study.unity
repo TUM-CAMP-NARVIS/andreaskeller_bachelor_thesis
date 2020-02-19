@@ -12661,22 +12661,22 @@ PrefabInstance:
     - target: {fileID: 114711245158774928, guid: e13ee7e0790c7d243b7aa67fe604acac,
         type: 3}
       propertyPath: spatialMappingFoldoutOpen
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114711245158774928, guid: e13ee7e0790c7d243b7aa67fe604acac,
         type: 3}
       propertyPath: recordingFoldoutOpen
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114711245158774928, guid: e13ee7e0790c7d243b7aa67fe604acac,
         type: 3}
       propertyPath: streamingOutFoldoutOpen
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114711245158774928, guid: e13ee7e0790c7d243b7aa67fe604acac,
         type: 3}
       propertyPath: advancedPanelOpen
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114711245158774928, guid: e13ee7e0790c7d243b7aa67fe604acac,
         type: 3}

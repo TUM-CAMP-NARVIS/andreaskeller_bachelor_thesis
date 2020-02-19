@@ -34,6 +34,27 @@ public struct TrackedObjectMessage : IMessageBase
     }
 }
 
+public struct InputVisualizationMessage : IMessageBase
+{
+    public bool enableHeadCursor;
+
+
+    public InputVisualizationMessage(bool enableHeadCursor)
+    {
+        this.enableHeadCursor = enableHeadCursor;
+    }
+
+    public void Deserialize(NetworkReader reader)
+    {
+        enableHeadCursor = reader.ReadBoolean();
+    }
+
+    public void Serialize(NetworkWriter writer)
+    {
+        writer.WriteBoolean(enableHeadCursor);
+    }
+}
+
 public struct SceneStateMessage : IMessageBase
 {
     public PhantomManager.Status status;

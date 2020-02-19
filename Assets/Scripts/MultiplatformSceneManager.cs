@@ -9,6 +9,7 @@ using UnityEngine.SpatialTracking;
 using Mirror;
 using Mirror.Authenticators;
 using Mirror.Discovery;
+using XRTK.SDK.Input;
 
 
 public class MultiplatformSceneManager : MonoBehaviour
@@ -119,7 +120,29 @@ public class MultiplatformSceneManager : MonoBehaviour
             NetworkServer.SendToAll<SceneStateMessage>(update);
             counter = 0;
         }
-        
+
+        if (Input.GetKeyDown("c"))
+        {
+            var inputMessage = new InputVisualizationMessage();
+            inputMessage.enableHeadCursor = false;
+            NetworkServer.SendToAll<InputVisualizationMessage>(inputMessage);
+
+            GazeProvider gazeProvider = FindObjectOfType<GazeProvider>();
+            gazeProvider.GazeCursor.SetVisibility(false);
+
+        }
+        if (Input.GetKeyDown("v"))
+        {
+            var inputMessage = new InputVisualizationMessage();
+            inputMessage.enableHeadCursor = true;
+            NetworkServer.SendToAll<InputVisualizationMessage>(inputMessage);
+
+            GazeProvider gazeProvider = FindObjectOfType<GazeProvider>();
+            gazeProvider.GazeCursor.SetVisibility(true);
+
+        }
+
+
     }
 
     #region PhantomViveTracker
@@ -260,6 +283,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         networkManager.StartClient();
         NetworkClient.RegisterHandler<TrackedObjectMessage>(OnTrackerMessage);
         NetworkClient.RegisterHandler<SceneStateMessage>(OnSceneStateMessage);
+        NetworkClient.RegisterHandler<InputVisualizationMessage>(OnInputVisualizationMessage);
     }
 
     public void connectToServer(System.Uri uri)
@@ -267,6 +291,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         networkManager.StartClient(uri);
         NetworkClient.RegisterHandler<TrackedObjectMessage>(OnTrackerMessage);
         NetworkClient.RegisterHandler<SceneStateMessage>(OnSceneStateMessage);
+        NetworkClient.RegisterHandler<InputVisualizationMessage>(OnInputVisualizationMessage);
     }
 
     public void OnDiscoveredServer(ServerResponse info)
@@ -276,27 +301,6 @@ public class MultiplatformSceneManager : MonoBehaviour
             return;
         connectToServer(info.uri);
     }
-
-    /*
-    public void connectToServerIP()
-    {
-        TMPro.TMP_InputField input;
-        if (ipaddress == null)
-        {
-            ipaddress = GameObject.Find("ipaddress");
-            if (ipaddress == null)
-                return;
-        }
-
-        input = ipaddress.GetComponent<TMPro.TMP_InputField>();
-        if (input == null)
-            return;
-
-        networkManager.networkAddress = input.text;
-        networkManager.StartClient();
-        NetworkClient.RegisterHandler<TrackedObjectMessage>(OnTrackerMessage);
-    }
-    */
 
     public void DisconnectFromServer()
     {
@@ -311,6 +315,12 @@ public class MultiplatformSceneManager : MonoBehaviour
     private void OnSceneStateMessage(NetworkConnection arg1, SceneStateMessage arg2)
     {
         phantomManager.applyUpdate(arg2);
+    }
+
+    private void OnInputVisualizationMessage(NetworkConnection arg1, InputVisualizationMessage arg2)
+    {
+        GazeProvider gazeProvider = FindObjectOfType<GazeProvider>();
+        gazeProvider.GazeCursor.SetVisibility(arg2.enableHeadCursor);
     }
    
 }
