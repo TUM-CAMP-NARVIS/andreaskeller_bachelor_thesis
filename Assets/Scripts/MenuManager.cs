@@ -37,7 +37,7 @@ public class MenuManager : MonoBehaviour
 
     public void NetworkServerYesNo(bool b)
     {
-        networkingServer.SetActive(b);
+        networkingServer.SetActive(false);
         networkingClient.SetActive(!b);
         var ipField = networkingClient.transform.parent.Find("ipaddress");
         if (ipField == null)

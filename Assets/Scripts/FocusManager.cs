@@ -11,7 +11,10 @@ public class FocusManager : MonoBehaviour
     [Tooltip("The camera you want to control the window with, if not set it is looking for the MainCamera tag")]
     public GameObject cam;
 
-    
+    public bool enableOverride = false;
+
+    public Vector3 overridePosition = new Vector3(0,0,0);
+    public Vector3 overrideForward = new Vector3(0,0,0);
 
     public bool isFocused { get; private set; } = false;
 
@@ -22,6 +25,7 @@ public class FocusManager : MonoBehaviour
     public Vector3 focusNormal { get; private set; } = new Vector3();
 
     private bool active = true;
+
 
     // Start is called before the first frame update
     void Start()
@@ -48,8 +52,19 @@ public class FocusManager : MonoBehaviour
         if (!active)
             return;
 
+        
+
         var cameraPos = cam.transform.position;
         var cameraForward = cam.transform.forward;
+
+        if (enableOverride)
+        {
+            cameraPos = seeThroughObject.transform.TransformPoint(overridePosition);
+            
+            cameraForward = Vector3.Normalize(seeThroughObject.transform.TransformDirection(-overridePosition+overrideForward));
+
+            
+        }
 
         //Do one Raycast per frame and save position and normal
         //Debug.Log("Updating Focus Position");

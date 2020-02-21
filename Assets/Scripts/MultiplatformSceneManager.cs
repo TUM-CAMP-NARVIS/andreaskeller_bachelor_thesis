@@ -250,8 +250,6 @@ public class MultiplatformSceneManager : MonoBehaviour
         menuMan.NetworkServerYesNo(true);
         var cam = Camera.main.gameObject;
         cam.GetComponent<Camera>().enabled = false;
-        
-        
 
         if (phantomAnchor&&false)
         {
@@ -274,6 +272,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         //NetworkServer.Spawn(viveTracker);
 
         spawnedObject = viveTracker;
+        AttachPhantomToTracker();
 
     }
 
