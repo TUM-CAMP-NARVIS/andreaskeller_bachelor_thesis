@@ -17,7 +17,7 @@ MonoBehaviour:
   pointingRaycastLayerMasks:
   - serializedVersion: 2
     m_Bits: 4294967291
-  debugDrawPointingRays: 1
+  debugDrawPointingRays: 0
   debugDrawPointingRayColors:
   - {r: 0, g: 1, b: 0, a: 1}
   gazeCursorPrefab: {fileID: 1000012072213228, guid: 79f96834fcc44889b558cc13518979a0,

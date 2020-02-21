@@ -89,6 +89,8 @@ public class PhantomManager : MonoBehaviour
         if (useTriPl != useTriPlanar)
             ToggleTriPlanar();
 
+
+
 #endif
         if (insides_Chroma && insides_Chroma.activeSelf)
         {
@@ -267,14 +269,16 @@ public class PhantomManager : MonoBehaviour
 
         public BichlmeierState bichlmeierState;
         public HatchingState hatchingState;
+        public int window_mat;
 
-        public State(Status status, bool skinEnabled, bool windowEnabled, BichlmeierState bichlmeierState, HatchingState hatchingState)
+        public State(Status status, bool skinEnabled, bool windowEnabled, BichlmeierState bichlmeierState, HatchingState hatchingState, int window_mat)
         {
             this.status = status;
             this.skinEnabled = skinEnabled;
             this.windowEnabled = windowEnabled;
             this.bichlmeierState = bichlmeierState;
             this.hatchingState = hatchingState;
+            this.window_mat = window_mat;
         }
     }
 
@@ -317,7 +321,7 @@ public class PhantomManager : MonoBehaviour
         HatchingState hState = GetHatching();
 
 
-        State update = new State(status, skin.GetComponent<MeshRenderer>().enabled,surfAlign.isActive, bState, hState);
+        State update = new State(status, skin.GetComponent<MeshRenderer>().enabled,surfAlign.isActive, bState, hState, FindObjectOfType<WindowMaterialManager>().index);
         
         return new SceneStateMessage(update);
     }
@@ -366,9 +370,17 @@ public class PhantomManager : MonoBehaviour
             {
                 child.GetComponent<Renderer>().material.EnableKeyword("_TRIPLANAR");
             }
+            else
+            {
+                child.GetComponent<Renderer>().material.DisableKeyword("_TRIPLANAR");
+            }
             if (update.isInverted)
             {
                 child.GetComponent<Renderer>().material.EnableKeyword("_INVERTHATCHING");
+            }
+            else
+            {
+                child.GetComponent<Renderer>().material.DisableKeyword("_INVERTHATCHING");
             }
         }
     }
@@ -414,6 +426,8 @@ public class PhantomManager : MonoBehaviour
                     break;
             }
         }
+
+        FindObjectOfType<WindowMaterialManager>().index = update.window_mat;
 
         BichlmeierState bState = new BichlmeierState(update.a, update.b, update.g, update.wC, update.wA, update.wD, update.focusSize);
 

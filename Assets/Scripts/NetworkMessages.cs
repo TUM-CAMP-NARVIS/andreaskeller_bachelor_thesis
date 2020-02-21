@@ -62,6 +62,7 @@ public struct SceneStateMessage : IMessageBase
     public float a, b, g, wC, wA, wD, focusSize;
     public float i, u;
     public bool tri, inv;
+    public int window_mat;
 
 
     public SceneStateMessage(PhantomManager.State phantomState)
@@ -82,6 +83,7 @@ public struct SceneStateMessage : IMessageBase
         u = hatch.uvscale;
         tri = hatch.isTriPlanar;
         inv = hatch.isInverted;
+        window_mat = phantomState.window_mat;
     }
 
     public void Deserialize(NetworkReader reader)
@@ -100,6 +102,7 @@ public struct SceneStateMessage : IMessageBase
         u = reader.ReadSingle();
         tri = reader.ReadBoolean();
         inv = reader.ReadBoolean();
+        window_mat = reader.ReadInt32();
     }
 
     public void Serialize(NetworkWriter writer)
@@ -118,6 +121,7 @@ public struct SceneStateMessage : IMessageBase
         writer.WriteSingle(u);
         writer.WriteBoolean(windowEnabled);
         writer.WriteBoolean(windowEnabled);
+        writer.WriteInt32(window_mat);
 
     }
 }

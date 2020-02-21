@@ -7,7 +7,8 @@ public class WindowMaterialManager : MonoBehaviour
     public List<Material> materials;
     private FocusManager focusManager;
 
-    private int index = 0;
+    public int index = 0;
+    private int curIndex = 0;
     private Material material;
     // Start is called before the first frame update
     public void CycleMaterials()
@@ -28,7 +29,13 @@ public class WindowMaterialManager : MonoBehaviour
 
     public void Update()
     {
-        if (index == 2)
+        if (curIndex != index)
+        {
+            GetComponent<MeshRenderer>().material = materials[index];
+            material = GetComponent<MeshRenderer>().material;
+            curIndex = index;
+        }
+        if (index == 2 || index == 3)
         {
             material.SetVector("_FocusNormal", focusManager.focusNormal);
             material.SetVector("_FocusPosition", focusManager.focusPosition);
