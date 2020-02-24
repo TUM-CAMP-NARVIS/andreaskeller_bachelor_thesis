@@ -24,7 +24,7 @@ public class MenuManager : MonoBehaviour
         {
             return;
         }
-        hatching.SetActive(b);
+        hatching.SetActive(false);
     }
     public void BichlmeierSetActive(bool b)
     {
@@ -32,7 +32,7 @@ public class MenuManager : MonoBehaviour
         {
             return;
         }
-        bichlmeier.SetActive(b);
+        bichlmeier.SetActive(false);
     }
 
     public void NetworkServerYesNo(bool b)

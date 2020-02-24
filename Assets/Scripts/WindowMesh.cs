@@ -23,7 +23,7 @@ public class WindowMesh : MonoBehaviour
     private Quaternion rotation;
     void Start()
     {
-        position = transform.position;
+        position = transform.localPosition;
         rotation = transform.rotation;
         surfaceAlign = FindObjectOfType<SurfaceAlign>();
         setupWindow();
@@ -41,8 +41,9 @@ public class WindowMesh : MonoBehaviour
         {
             this.GetComponent<MeshRenderer>().enabled = true;
         }
-        transform.position = surfaceAlign.transform.position;// + position;
         transform.rotation = surfaceAlign.transform.rotation * rotation;
+        transform.position = surfaceAlign.transform.position + surfaceAlign.transform.rotation * position;
+        
 
         
 

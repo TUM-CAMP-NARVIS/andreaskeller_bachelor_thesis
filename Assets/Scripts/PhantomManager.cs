@@ -12,31 +12,46 @@ public class PhantomManager : MonoBehaviour
     public GameObject insides_Normal;
 
     public GameObject skin;
-    public GameObject skin_inv;
     public GameObject skin_stencil;
     public GameObject skin_stencilwindow;
 
-    private int materialUsed = 0;
-    public bool hatchingInverted = false;
-    private bool hatchingInv = false;
 
-    public bool useTriPlanar = false;
-    private bool useTriPl = false;
+    public Status status = Status.normal;
 
-    public Status status;
+    //Hatching Variables
+    public bool hatchInverted = false;
+    public bool hatchTriPlanar = false;
+    public float hatchUVScale = 5;
+    public float hatchIntensity = 1;
 
+    //Bichlmeier Variables
+    public float bichlFocusSize = 0.02f;
+    public float bichlWeightCurv = 1;
+    public float bichlWeightAngOfInc = 1;
+    public float bichlWeightDist = 1;
+    public float bichlAlpha = 1;
+    public float bichlBeta = 1;
+    public float bichlGamma = 1;
+
+    //ChromaDepth Variables
+    public Color chromaCloseColor;
+    public Color chromaFarColor;
+    public float chromaLerpDist = 0.1f;
+
+    //General Variables
+    public bool skinEnabled = true;
+    public bool windowEnabled = false;
+
+    //Managers
     private FocusManager focusManager;
     private MenuManager menuMan;
     private SurfaceAlign surfAlign;
 
 
+
+
     void Start()
     {
-        if (skin_inv == null)
-        {
-            skin_inv = transform.Find("skin_inv").gameObject;
-
-        }
         if (skin_stencil == null)
             skin_stencil = transform.Find("skin_stencil").gameObject;
 
@@ -69,29 +84,25 @@ public class PhantomManager : MonoBehaviour
             insides_Chroma.SetActive(false);
             insides_Hatching.SetActive(false);
             insides_Normal.SetActive(true);
-            skin_inv.SetActive(false);
             skin_stencil.SetActive(true);
             skin_stencilwindow.SetActive(false);
 
             menuMan.BichlmeierSetActive(skin.GetComponent<MeshRenderer>().enabled);
             menuMan.HatchingSetActive(false);
             status = Status.normal;
-        }        
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-#if UNITY_EDITOR
-        if (hatchingInv != hatchingInverted)
-            ToggleHatching();
 
-        if (useTriPl != useTriPlanar)
-            ToggleTriPlanar();
-
+        if (Input.GetKeyDown("r") && Utils.IsVR)
+        {
+            UpdateVariables();
+        }
 
 
-#endif
         if (insides_Chroma && insides_Chroma.activeSelf)
         {
             foreach (Transform child in insides_Chroma.transform)
@@ -119,14 +130,78 @@ public class PhantomManager : MonoBehaviour
 
     }
 
-    
+    public void UpdateVariables()
+    {
+        insides_Normal.SetActive(true);
+        insides_Chroma.SetActive(true);
+        insides_Hatching.SetActive(true);
+
+        var skinRenderer = skin.GetComponent<MeshRenderer>();
+        skinRenderer.enabled = true;
+
+        foreach(Transform child in insides_Chroma.transform)
+        {
+            var renderer = child.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.material.SetColor("_CloseColor", chromaCloseColor);
+                renderer.material.SetColor("_FarColor", chromaFarColor);
+                renderer.material.SetFloat("_DepthDistance", chromaLerpDist);
+            }
+        }
+        foreach(Transform child in insides_Hatching.transform)
+        {
+            var renderer = child.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                if (hatchInverted)
+                {
+                    renderer.material.EnableKeyword("_INVERTHATCHING");
+                }
+                else
+                {
+                    renderer.material.DisableKeyword("_INVERTHATCHING");
+                }
+
+                if (hatchTriPlanar)
+                {
+                    renderer.material.EnableKeyword("_TRIPLANAR");
+                }
+                else
+                {
+                    renderer.material.DisableKeyword("_TRIPLANAR");
+                }
+                renderer.material.SetFloat("_UVScale", hatchUVScale);
+                renderer.material.SetFloat("_Intensity", hatchIntensity);
+            }
+        }
+
+        //Bichlmeier Skin
+        var skinMaterial = skinRenderer.material;
+
+        skinMaterial.SetFloat("_FocusRadius", bichlFocusSize);
+
+        skinMaterial.SetFloat("_WeightCurvature", bichlWeightCurv);
+        skinMaterial.SetFloat("_WeightAngleofIncidence", bichlWeightAngOfInc);
+        skinMaterial.SetFloat("_WeightDistanceFalloff", bichlWeightDist);
+
+        skinMaterial.SetFloat("_Alpha", bichlAlpha);
+        skinMaterial.SetFloat("_Beta", bichlBeta);
+        skinMaterial.SetFloat("_Gamma", bichlGamma);
+
+        skinRenderer.enabled = skinEnabled;
+
+        if (surfAlign.isActive != windowEnabled)
+            ToggleWindow();
+
+        SetStatus(status);
+    }
 
     public void ToggleHatching()
     {
-        hatchingInv = !hatchingInv;
-        hatchingInverted = hatchingInv;
+        hatchInverted = !hatchInverted;
         
-        if (hatchingInv)
+        if (hatchInverted)
         {
             foreach (Transform child in insides_Hatching.transform)
             {
@@ -143,6 +218,29 @@ public class PhantomManager : MonoBehaviour
         
     }
 
+    public void SetStatus(Status s)
+    {
+        switch (s)
+        {
+            case Status.chroma:
+                insides_Hatching.SetActive(false);
+                insides_Normal.SetActive(false);
+                insides_Chroma.SetActive(true);
+                break;
+            case Status.hatching:
+                insides_Hatching.SetActive(true);
+                insides_Normal.SetActive(false);
+                insides_Chroma.SetActive(false);
+                break;
+            default:
+                insides_Hatching.SetActive(false);
+                insides_Normal.SetActive(true);
+                insides_Chroma.SetActive(false);
+                break;
+        }
+        status = s;
+    }
+
     public void CycleInsides()
     {
         switch (status)
@@ -156,14 +254,12 @@ public class PhantomManager : MonoBehaviour
             case Status.hatching:
                 insides_Hatching.SetActive(false);
                 insides_Chroma.SetActive(true);
-                skin_inv.SetActive(true);
                 menuMan.HatchingSetActive(false);
                 status = Status.chroma;
                 break;
             default:
                 insides_Chroma.SetActive(false);
                 insides_Normal.SetActive(true);
-                skin_inv.SetActive(false);
                 status = Status.normal;
                 break;
         }
@@ -171,10 +267,9 @@ public class PhantomManager : MonoBehaviour
 
     public void ToggleTriPlanar()
     {
-        useTriPl = !useTriPl;
-        useTriPlanar = useTriPl;
+        hatchTriPlanar = !hatchTriPlanar;
 
-        if (useTriPl)
+        if (hatchTriPlanar)
         {
             foreach (Transform child in insides_Hatching.transform)
             {
@@ -269,15 +364,24 @@ public class PhantomManager : MonoBehaviour
 
         public BichlmeierState bichlmeierState;
         public HatchingState hatchingState;
+
+        public Color chromaFarColor;
+        public Color chromaCloseColor;
+
+        public float chromaLerpDist;
+
         public int window_mat;
 
-        public State(Status status, bool skinEnabled, bool windowEnabled, BichlmeierState bichlmeierState, HatchingState hatchingState, int window_mat)
+        public State(Status status, bool skinEnabled, bool windowEnabled, BichlmeierState bichlmeierState, HatchingState hatchingState, Color chromaFarColor, Color chromaCloseColor, float chromaLerpDist, int window_mat)
         {
             this.status = status;
             this.skinEnabled = skinEnabled;
             this.windowEnabled = windowEnabled;
             this.bichlmeierState = bichlmeierState;
             this.hatchingState = hatchingState;
+            this.chromaFarColor = chromaFarColor;
+            this.chromaCloseColor = chromaCloseColor;
+            this.chromaLerpDist = chromaLerpDist;
             this.window_mat = window_mat;
         }
     }
@@ -317,124 +421,45 @@ public class PhantomManager : MonoBehaviour
 
     public SceneStateMessage GetFullUpdate()
     {
-        BichlmeierState bState = GetBichlmeier();
-        HatchingState hState = GetHatching();
+        BichlmeierState bState = new BichlmeierState(bichlAlpha, bichlBeta, bichlGamma, bichlWeightCurv, bichlWeightAngOfInc, bichlWeightDist, bichlFocusSize);
+        HatchingState hState = new HatchingState(hatchIntensity, hatchUVScale, hatchTriPlanar, hatchInverted);
 
 
-        State update = new State(status, skin.GetComponent<MeshRenderer>().enabled,surfAlign.isActive, bState, hState, FindObjectOfType<WindowMaterialManager>().index);
+        State update = new State(status, skin.GetComponent<MeshRenderer>().enabled,surfAlign.isActive, bState, hState,chromaFarColor, chromaCloseColor, chromaLerpDist, FindObjectOfType<WindowMaterialManager>().index);
         
         return new SceneStateMessage(update);
     }
 
-    public BichlmeierState GetBichlmeier()
-    {
-        var mat = skin.GetComponent<MeshRenderer>().material;
-        var a = mat.GetFloat("_Alpha");
-        var b = mat.GetFloat("_Beta");
-        var g = mat.GetFloat("_Gamma");
-        var wC = mat.GetFloat("_WeightCurvature");
-        var wA = mat.GetFloat("_WeightAngleofIncidence");
-        var wD = mat.GetFloat("_WeightDistanceFalloff");
-        var focusSize = mat.GetFloat("_FocusRadius");
-        BichlmeierState bState = new BichlmeierState(a, b, g, wC, wA, wD, focusSize);
-        return bState;
-    }
-
-    public void ApplyBichlmeierState(BichlmeierState update)
-    {
-        var mat = skin.GetComponent<MeshRenderer>().material;
-        mat.SetFloat("_Alpha", update.alpha);
-        mat.SetFloat("_Beta", update.beta);
-        mat.SetFloat("_Gamma", update.gamma);
-        mat.SetFloat("_WeightCurvature", update.weightCurv);
-        mat.SetFloat("_WeightAngleofIncidence", update.weightAngle);
-        mat.SetFloat("_WeightDistanceFalloff", update.weightDistance);
-        mat.SetFloat("_FocusRadius", update.focusSize);
-    }
-
-    public HatchingState GetHatching()
-    {
-        var mat = insides_Hatching.transform.GetChild(0).GetComponent<Renderer>().material;
-        HatchingState hState = new HatchingState(mat.GetFloat("_Intensity"), mat.GetFloat("_UVScale"), mat.IsKeywordEnabled("_TRIPLANAR"), mat.IsKeywordEnabled("_INVERTHATCHING"));
-        return hState;
-    }
-
-    public void ApplyHatchingState(HatchingState update)
-    {
-        foreach (Transform child in insides_Hatching.transform)
-        {
-            child.GetComponent<Renderer>().material.SetFloat("_UVScale", update.uvscale);
-            child.GetComponent<Renderer>().material.SetFloat("_Intensity", update.intensity);
-
-            if (update.isTriPlanar)
-            {
-                child.GetComponent<Renderer>().material.EnableKeyword("_TRIPLANAR");
-            }
-            else
-            {
-                child.GetComponent<Renderer>().material.DisableKeyword("_TRIPLANAR");
-            }
-            if (update.isInverted)
-            {
-                child.GetComponent<Renderer>().material.EnableKeyword("_INVERTHATCHING");
-            }
-            else
-            {
-                child.GetComponent<Renderer>().material.DisableKeyword("_INVERTHATCHING");
-            }
-        }
-    }
-
     public void applyUpdate(SceneStateMessage update)
     {
-        if (update.status != status)
-        {
-            switch (status)
-            {
-                case Status.chroma:
-                    if (update.status == Status.normal)
-                    {
-                        CycleInsides();
-                    }
-                    else
-                    {
-                        CycleInsides();
-                        CycleInsides();
-                    }
-                    break;
-                case Status.hatching:
-                    if (update.status == Status.chroma)
-                    {
-                        CycleInsides();
-                    }
-                    else
-                    {
-                        CycleInsides();
-                        CycleInsides();
-                    }
-                    break;
-                default:
-                    if (update.status == Status.hatching)
-                    {
-                        CycleInsides();
-                    }
-                    else
-                    {
-                        CycleInsides();
-                        CycleInsides();
-                    }
-                    break;
-            }
-        }
+        //Bichlmeier
+        bichlAlpha = update.a;
+        bichlBeta = update.b;
+        bichlGamma = update.g;
+        bichlFocusSize = update.focusSize;
+        bichlWeightAngOfInc = update.wA;
+        bichlWeightCurv = update.wC;
+        bichlWeightDist = update.wD;
+
+        //Hatching
+        hatchIntensity = update.hatchIntensity;
+        hatchUVScale = update.hatchUVScale;
+        hatchTriPlanar = update.hatchTriPlanar;
+        hatchInverted = update.hatchInverted;
+
+        //ChromaDepth
+        chromaLerpDist = update.chromaLerpDist;
+        chromaFarColor = update.chromaFarColor;
+        chromaCloseColor = update.chromaCloseColor;
+
+        status = update.status;
+
+        skin.GetComponent<MeshRenderer>().enabled = true;
+
+        UpdateVariables();
 
         FindObjectOfType<WindowMaterialManager>().index = update.window_mat;
 
-        BichlmeierState bState = new BichlmeierState(update.a, update.b, update.g, update.wC, update.wA, update.wD, update.focusSize);
-
-        ApplyBichlmeierState(bState);
-
-        HatchingState hState = new HatchingState(update.i, update.u, update.inv, update.tri);
-        ApplyHatchingState(hState);
 
         if (surfAlign.isActive != update.windowEnabled)
         {
@@ -445,7 +470,9 @@ public class PhantomManager : MonoBehaviour
         {
             ToggleSkin();
         }
-        
+
     }
+
+
     #endregion
 }

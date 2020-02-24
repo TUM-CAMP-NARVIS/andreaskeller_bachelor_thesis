@@ -11,6 +11,7 @@ public class FocusManager : MonoBehaviour
     [Tooltip("The camera you want to control the window with, if not set it is looking for the MainCamera tag")]
     public GameObject cam;
 
+    [Tooltip("Set a fixed position for the window - Relative to the position of the seeThroughObject")]
     public bool enableOverride = false;
 
     public Vector3 overridePosition = new Vector3(0,0,0);
@@ -62,8 +63,6 @@ public class FocusManager : MonoBehaviour
             cameraPos = seeThroughObject.transform.TransformPoint(overridePosition);
             
             cameraForward = Vector3.Normalize(seeThroughObject.transform.TransformDirection(-overridePosition+overrideForward));
-
-            
         }
 
         //Do one Raycast per frame and save position and normal

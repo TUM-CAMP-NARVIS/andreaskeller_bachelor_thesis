@@ -60,8 +60,12 @@ public struct SceneStateMessage : IMessageBase
     public PhantomManager.Status status;
     public bool skinEnabled, windowEnabled;
     public float a, b, g, wC, wA, wD, focusSize;
-    public float i, u;
-    public bool tri, inv;
+    public float hatchIntensity, hatchUVScale;
+    public bool hatchTriPlanar, hatchInverted;
+
+    public Color chromaFarColor, chromaCloseColor;
+    public float chromaLerpDist;
+
     public int window_mat;
 
 
@@ -79,10 +83,15 @@ public struct SceneStateMessage : IMessageBase
         wD = bichl.weightDistance;
         focusSize = bichl.focusSize;
         var hatch = phantomState.hatchingState;
-        i = hatch.intensity;
-        u = hatch.uvscale;
-        tri = hatch.isTriPlanar;
-        inv = hatch.isInverted;
+        hatchIntensity = hatch.intensity;
+        hatchUVScale = hatch.uvscale;
+        hatchTriPlanar = hatch.isTriPlanar;
+        hatchInverted = hatch.isInverted;
+
+        chromaFarColor = phantomState.chromaFarColor;
+        chromaCloseColor = phantomState.chromaCloseColor;
+        chromaLerpDist = phantomState.chromaLerpDist;
+
         window_mat = phantomState.window_mat;
     }
 
@@ -98,10 +107,13 @@ public struct SceneStateMessage : IMessageBase
         wA = reader.ReadSingle();
         wD = reader.ReadSingle();
         focusSize = reader.ReadSingle();
-        i = reader.ReadSingle();
-        u = reader.ReadSingle();
-        tri = reader.ReadBoolean();
-        inv = reader.ReadBoolean();
+        hatchIntensity = reader.ReadSingle();
+        hatchUVScale = reader.ReadSingle();
+        hatchTriPlanar = reader.ReadBoolean();
+        hatchInverted = reader.ReadBoolean();
+        chromaFarColor = reader.ReadColor();
+        chromaCloseColor = reader.ReadColor();
+        chromaLerpDist = reader.ReadSingle();
         window_mat = reader.ReadInt32();
     }
 
@@ -117,10 +129,13 @@ public struct SceneStateMessage : IMessageBase
         writer.WriteSingle(wA);
         writer.WriteSingle(wD);
         writer.WriteSingle(focusSize);
-        writer.WriteSingle(i);
-        writer.WriteSingle(u);
+        writer.WriteSingle(hatchIntensity);
+        writer.WriteSingle(hatchUVScale);
         writer.WriteBoolean(windowEnabled);
         writer.WriteBoolean(windowEnabled);
+        writer.WriteColor(chromaFarColor);
+        writer.WriteColor(chromaCloseColor);
+        writer.WriteSingle(chromaLerpDist);
         writer.WriteInt32(window_mat);
 
     }

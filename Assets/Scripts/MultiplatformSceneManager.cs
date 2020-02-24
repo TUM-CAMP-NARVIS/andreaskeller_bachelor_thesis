@@ -148,8 +148,8 @@ public class MultiplatformSceneManager : MonoBehaviour
     #region PhantomViveTracker
     public void AttachPhantomToTracker()
     {
-        phantomAnchor.transform.rotation = spawnedObject.transform.rotation;
-        phantomAnchor.transform.position = spawnedObject.transform.position + (spawnedObject.transform.rotation * new Vector3(0.1f, -0.0074f, 0.12297f));
+        phantomAnchor.transform.rotation = spawnedObject.transform.rotation * Quaternion.Euler(90,0,0);
+        phantomAnchor.transform.position = spawnedObject.transform.position + (spawnedObject.transform.rotation * new Vector3(0f, 0.1225f, -0.063969f));
         phantomAnchor.transform.parent = spawnedObject.transform;
         
         m_bPhantomAttached = true;
@@ -250,13 +250,6 @@ public class MultiplatformSceneManager : MonoBehaviour
         menuMan.NetworkServerYesNo(true);
         var cam = Camera.main.gameObject;
         cam.GetComponent<Camera>().enabled = false;
-
-        if (phantomAnchor&&false)
-        {
-            var posedriver = phantomAnchor.AddComponent<TrackedPoseDriver>();
-            posedriver.SetPoseSource(TrackedPoseDriver.DeviceType.GenericXRController, TrackedPoseDriver.TrackedPose.LeftPose);
-
-        }
 
         //Start Server
         NetworkManager.singleton.StartServer();

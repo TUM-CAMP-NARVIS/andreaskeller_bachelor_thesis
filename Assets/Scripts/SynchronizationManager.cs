@@ -77,12 +77,13 @@ public class SynchronizationManager : MonoBehaviour
         syncSpace.transform.localScale = new Vector3(1, 1, 1);
         //Debug.Log("received imagetracker position");
         rot = imageTarget.transform.rotation * Quaternion.Euler(-90, 0, 0) ;
-        pos = imageTarget.transform.position + (rot * new Vector3(0, -0.122f, 0.064f));
+        pos = imageTarget.transform.position + (rot * new Vector3(0f, -0.1225f, 0.063969f));
 
         viveTracker.transform.localPosition = new Vector3(0, 0, 0);
         viveTracker.transform.localRotation = Quaternion.identity;
-        syncSpace.transform.position = pos;
+
         syncSpace.transform.rotation = rot;
+        syncSpace.transform.position = pos;
     }
 
     public void updateTrackedObject(short id, TrackedObjectMessage.Type type, Vector3 posNetworked, Quaternion rotNetworked)
