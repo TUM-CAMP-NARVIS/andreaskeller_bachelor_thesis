@@ -30,7 +30,7 @@ public class MultiplatformSceneManager : MonoBehaviour
     private GameObject spawnedObject;
 
     private bool m_bPhantomAttached = false;
-    private bool m_bNetworkingEnabled = false;
+    private bool m_bNetworkingEnabled = true;
     private int counter = 0;
     public int framesBetweenUpdates = 60;
 
@@ -60,7 +60,8 @@ public class MultiplatformSceneManager : MonoBehaviour
 			setupZedMini();
 		}
 
-		
+        GazeProvider gazeProvider = FindObjectOfType<GazeProvider>();
+        gazeProvider.GazeCursor.SetVisibility(false);
 
     }
 
