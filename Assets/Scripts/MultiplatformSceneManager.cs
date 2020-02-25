@@ -124,23 +124,11 @@ public class MultiplatformSceneManager : MonoBehaviour
 
         if (Input.GetKeyDown("c"))
         {
-            var inputMessage = new InputVisualizationMessage();
-            inputMessage.enableHeadCursor = false;
-            NetworkServer.SendToAll<InputVisualizationMessage>(inputMessage);
-
-            GazeProvider gazeProvider = FindObjectOfType<GazeProvider>();
-            gazeProvider.GazeCursor.SetVisibility(false);
-
+            DisableCursor();
         }
         if (Input.GetKeyDown("v"))
         {
-            var inputMessage = new InputVisualizationMessage();
-            inputMessage.enableHeadCursor = true;
-            NetworkServer.SendToAll<InputVisualizationMessage>(inputMessage);
-
-            GazeProvider gazeProvider = FindObjectOfType<GazeProvider>();
-            gazeProvider.GazeCursor.SetVisibility(true);
-
+            EnableCursor();
         }
 
 
@@ -161,6 +149,38 @@ public class MultiplatformSceneManager : MonoBehaviour
     {
         phantomAnchor.transform.parent = phantomAnchor.transform.parent.parent;
         m_bPhantomAttached = false;
+    }
+
+    public void ToggleCursor()
+    {
+        if (FindObjectOfType<GazeProvider>().GazeCursor.IsVisible)
+        {
+            DisableCursor();
+        }
+        else
+        {
+            EnableCursor();
+        }
+    }
+
+    public void EnableCursor()
+    {
+        var inputMessage = new InputVisualizationMessage();
+        inputMessage.enableHeadCursor = true;
+        NetworkServer.SendToAll<InputVisualizationMessage>(inputMessage);
+
+        GazeProvider gazeProvider = FindObjectOfType<GazeProvider>();
+        gazeProvider.GazeCursor.SetVisibility(true);
+    }
+
+    public void DisableCursor()
+    {
+        var inputMessage = new InputVisualizationMessage();
+        inputMessage.enableHeadCursor = false;
+        NetworkServer.SendToAll<InputVisualizationMessage>(inputMessage);
+
+        GazeProvider gazeProvider = FindObjectOfType<GazeProvider>();
+        gazeProvider.GazeCursor.SetVisibility(false);
     }
 
     public void TogglePhantomAttached(GameObject cube = null)

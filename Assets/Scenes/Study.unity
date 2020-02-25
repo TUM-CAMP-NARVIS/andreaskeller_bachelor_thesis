@@ -1119,8 +1119,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 101957836}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.09, y: 0.17, z: -1.14}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 1.09, y: 0.17, z: -1.498}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 1190239120}
   - {fileID: 926984005}
@@ -18381,6 +18381,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1818956199}
   - component: {fileID: 1818956200}
+  - component: {fileID: 1818956201}
   m_Layer: 0
   m_Name: Phantom
   m_TagString: Untagged
@@ -18434,11 +18435,26 @@ MonoBehaviour:
   bichlAlpha: 1
   bichlBeta: 1
   bichlGamma: 1
-  chromaCloseColor: {r: 0, g: 0, b: 0, a: 0}
-  chromaFarColor: {r: 0, g: 0, b: 0, a: 0}
+  chromaCloseColor: {r: 1, g: 0, b: 0, a: 0}
+  chromaFarColor: {r: 0, g: 0, b: 1, a: 0}
   chromaLerpDist: 0.1
   skinEnabled: 1
   windowEnabled: 0
+--- !u!114 &1818956201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1818956198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c39373b1702aedb428dbb60612bc27f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offsetX: 0
+  offsetY: 0
+  showGUI: 1
 --- !u!1 &1859398323
 GameObject:
   m_ObjectHideFlags: 0
@@ -22270,7 +22286,7 @@ PrefabInstance:
     - target: {fileID: 5716353677818358307, guid: cd0923fea58af724e9982ccbb7d30535,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 5716353677818358307, guid: cd0923fea58af724e9982ccbb7d30535,
         type: 3}
@@ -22352,7 +22368,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!33 &6582587276612029248
 MeshFilter:
   m_ObjectHideFlags: 0

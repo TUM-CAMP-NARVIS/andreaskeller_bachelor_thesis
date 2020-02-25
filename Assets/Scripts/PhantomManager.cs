@@ -48,8 +48,6 @@ public class PhantomManager : MonoBehaviour
     private SurfaceAlign surfAlign;
 
 
-
-
     void Start()
     {
         if (skin_stencil == null)

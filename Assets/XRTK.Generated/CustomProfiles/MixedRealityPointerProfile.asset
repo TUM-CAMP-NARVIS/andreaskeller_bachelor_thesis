@@ -28,7 +28,7 @@ MonoBehaviour:
   - controllerType:
       reference: 
     handedness: 7
-    pointerPrefab: {fileID: 1247086986094436, guid: 54d78dc3333741c5b7f30fe3506096ba,
+    pointerPrefab: {fileID: 6828582807300113682, guid: 32bd2add133d7664db614a0df3579612,
       type: 3}
   - controllerType:
       reference: 
