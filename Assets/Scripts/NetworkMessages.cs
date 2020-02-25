@@ -131,8 +131,8 @@ public struct SceneStateMessage : IMessageBase
         writer.WriteSingle(focusSize);
         writer.WriteSingle(hatchIntensity);
         writer.WriteSingle(hatchUVScale);
-        writer.WriteBoolean(windowEnabled);
-        writer.WriteBoolean(windowEnabled);
+        writer.WriteBoolean(hatchTriPlanar);
+        writer.WriteBoolean(hatchInverted);
         writer.WriteColor(chromaFarColor);
         writer.WriteColor(chromaCloseColor);
         writer.WriteSingle(chromaLerpDist);

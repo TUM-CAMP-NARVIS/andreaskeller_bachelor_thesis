@@ -420,10 +420,10 @@ public class PhantomManager : MonoBehaviour
     public SceneStateMessage GetFullUpdate()
     {
         BichlmeierState bState = new BichlmeierState(bichlAlpha, bichlBeta, bichlGamma, bichlWeightCurv, bichlWeightAngOfInc, bichlWeightDist, bichlFocusSize);
-        HatchingState hState = new HatchingState(hatchIntensity, hatchUVScale, hatchTriPlanar, hatchInverted);
+        HatchingState hState = new HatchingState(hatchIntensity, hatchUVScale, hatchInverted, hatchTriPlanar);
 
 
-        State update = new State(status, skin.GetComponent<MeshRenderer>().enabled,surfAlign.isActive, bState, hState,chromaFarColor, chromaCloseColor, chromaLerpDist, FindObjectOfType<WindowMaterialManager>().index);
+        State update = new State(status, skinEnabled, windowEnabled, bState, hState,chromaFarColor, chromaCloseColor, chromaLerpDist, FindObjectOfType<WindowMaterialManager>().index);
         
         return new SceneStateMessage(update);
     }
