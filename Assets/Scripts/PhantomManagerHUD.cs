@@ -8,6 +8,7 @@ public class PhantomManagerHUD : MonoBehaviour
 {
     PhantomManager manager;
     MultiplatformSceneManager multiplatformSceneManager;
+    WindowMaterialManager windowMaterialManager;
 
     private string bichlFocusSize;
     public string bichlWeightCurv;
@@ -34,6 +35,7 @@ public class PhantomManagerHUD : MonoBehaviour
     {
         manager = GetComponent<PhantomManager>();
         multiplatformSceneManager = FindObjectOfType<MultiplatformSceneManager>();
+        windowMaterialManager = FindObjectOfType<WindowMaterialManager>();
 
         bichlFocusSize = manager.bichlFocusSize.ToString();
         bichlWeightAngOfInc = manager.bichlWeightAngOfInc.ToString();
@@ -81,37 +83,37 @@ public class PhantomManagerHUD : MonoBehaviour
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Weight Curvature");
-            bichlFocusSize = GUILayout.TextField(bichlWeightCurv);
+            bichlWeightCurv = GUILayout.TextField(bichlWeightCurv);
             float.TryParse(bichlWeightCurv, out manager.bichlWeightCurv);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Weight Angle of Incidence");
-            bichlFocusSize = GUILayout.TextField(bichlWeightAngOfInc);
+            bichlWeightAngOfInc = GUILayout.TextField(bichlWeightAngOfInc);
             float.TryParse(bichlWeightAngOfInc, out manager.bichlWeightAngOfInc);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Weight Distance Falloff");
-            bichlFocusSize = GUILayout.TextField(bichlWeightDist);
+            bichlWeightDist = GUILayout.TextField(bichlWeightDist);
             float.TryParse(bichlWeightDist, out manager.bichlWeightDist);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Alpha");
-            bichlFocusSize = GUILayout.TextField(bichlAlpha);
+            bichlAlpha = GUILayout.TextField(bichlAlpha);
             float.TryParse(bichlAlpha, out manager.bichlAlpha);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Beta");
-            bichlFocusSize = GUILayout.TextField(bichlBeta);
+            bichlBeta = GUILayout.TextField(bichlBeta);
             float.TryParse(bichlBeta, out manager.bichlBeta);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Gamma");
-            bichlFocusSize = GUILayout.TextField(bichlGamma);
+            bichlGamma = GUILayout.TextField(bichlGamma);
             float.TryParse(bichlGamma, out manager.bichlGamma);
             GUILayout.EndHorizontal();
 
@@ -149,12 +151,12 @@ public class PhantomManagerHUD : MonoBehaviour
             GUILayout.Label("Hatch Settings");
             GUILayout.BeginHorizontal();
             GUILayout.Label("UV Scale");
-            bichlFocusSize = GUILayout.TextField(hatchUVScale);
+            hatchUVScale = GUILayout.TextField(hatchUVScale);
             float.TryParse(hatchUVScale, out manager.hatchUVScale);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label("Intensity");
-            bichlFocusSize = GUILayout.TextField(hatchIntensity);
+            hatchIntensity = GUILayout.TextField(hatchIntensity);
             float.TryParse(hatchIntensity, out manager.hatchIntensity);
             GUILayout.EndHorizontal();
             if (manager.hatchInverted)
@@ -194,7 +196,7 @@ public class PhantomManagerHUD : MonoBehaviour
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Lerp Distance");
-            bichlFocusSize = GUILayout.TextField(chromaLerpDist);
+            chromaLerpDist = GUILayout.TextField(chromaLerpDist);
             float.TryParse(chromaLerpDist, out manager.chromaLerpDist);
             GUILayout.EndHorizontal();
             GUILayout.Space(10);
@@ -203,6 +205,14 @@ public class PhantomManagerHUD : MonoBehaviour
         if (GUILayout.Button("Window: "+manager.windowEnabled.ToString()))
         {
             manager.windowEnabled = !manager.windowEnabled;
+        }
+
+        if (manager.windowEnabled && windowMaterialManager != null)
+        {
+            if (GUILayout.Button("Cycle window materials"))
+            {
+                windowMaterialManager.CycleMaterials();
+            }
         }
 
 
