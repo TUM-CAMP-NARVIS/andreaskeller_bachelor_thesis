@@ -67,7 +67,7 @@
 
 				fixed4 col = _BaseColor;
 				col *= i.diff;
-				col.b = 1-saturate(col.r+col.g);
+				col.b = saturate(col.b + (1-saturate(col.r + col.g)));
 				return UNITY_ACCESS_INSTANCED_PROP(Props, col);
 			}
 			ENDCG
