@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MixedRealityDiagnosticsSystemProfile
   m_EditorClassIdentifier: 
   isCustomProfile: 1
-  diagnosticsWindowPrefab: {fileID: 2161880003638299081, guid: ce2bfde497ad19c40a94f01444fa340e,
+  diagnosticsWindowPrefab: {fileID: 5148394597256558782, guid: ce2bfde497ad19c40a94f01444fa340e,
     type: 3}
   showDiagnosticsWindowOnStart: 1
   registeredDiagnosticsDataProviders:

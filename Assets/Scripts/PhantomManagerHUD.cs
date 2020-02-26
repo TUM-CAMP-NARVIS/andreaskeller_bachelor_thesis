@@ -144,9 +144,25 @@ public class PhantomManagerHUD : MonoBehaviour
                 manager.status = PhantomManager.Status.chroma;
             }
         }
-        
 
-        if (manager.status == PhantomManager.Status.hatching)
+        if (manager.status != PhantomManager.Status.chromahatch)
+        {
+            if (GUILayout.Button("Switch to chromadepth hatching"))
+            {
+                manager.status = PhantomManager.Status.chromahatch;
+            }
+        }
+
+        if (manager.status != PhantomManager.Status.blueshadows)
+        {
+            if (GUILayout.Button("Switch to normal with blue shadows"))
+            {
+                manager.status = PhantomManager.Status.blueshadows;
+            }
+        }
+
+
+        if (manager.status == PhantomManager.Status.hatching || manager.status == PhantomManager.Status.chromahatch)
         {
             GUILayout.Label("Hatch Settings");
             GUILayout.BeginHorizontal();
@@ -190,7 +206,7 @@ public class PhantomManagerHUD : MonoBehaviour
             }
             GUILayout.Space(10);
         }
-        else if (manager.status == PhantomManager.Status.chroma)
+        else if (manager.status == PhantomManager.Status.chroma || manager.status == PhantomManager.Status.chromahatch)
         {
             GUILayout.Label("ChromaDepth Settings");
 

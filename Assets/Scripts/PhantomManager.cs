@@ -5,11 +5,13 @@ using UnityEngine;
 public class PhantomManager : MonoBehaviour
 {
     // Start is called before the first frame update
-    public enum Status { hatching, normal, chroma }
+    public enum Status { hatching, normal, chroma, chromahatch, blueshadows }
 
     public GameObject insides_Hatching;
     public GameObject insides_Chroma;
     public GameObject insides_Normal;
+    public GameObject insides_ChromaHatch;
+    public GameObject insides_BlueShadows;
 
     public GameObject skin;
     public GameObject skin_stencil;
@@ -81,6 +83,8 @@ public class PhantomManager : MonoBehaviour
         {
             insides_Chroma.SetActive(false);
             insides_Hatching.SetActive(false);
+            insides_ChromaHatch.SetActive(false);
+            insides_BlueShadows.SetActive(false);
             insides_Normal.SetActive(true);
             skin_stencil.SetActive(true);
             skin_stencilwindow.SetActive(false);
@@ -133,10 +137,13 @@ public class PhantomManager : MonoBehaviour
         insides_Normal.SetActive(true);
         insides_Chroma.SetActive(true);
         insides_Hatching.SetActive(true);
+        insides_ChromaHatch.SetActive(true);
+        insides_BlueShadows.SetActive(true);
 
         var skinRenderer = skin.GetComponent<MeshRenderer>();
         skinRenderer.enabled = true;
 
+        //ChromaDepth
         foreach(Transform child in insides_Chroma.transform)
         {
             var renderer = child.GetComponent<Renderer>();
@@ -147,7 +154,41 @@ public class PhantomManager : MonoBehaviour
                 renderer.material.SetFloat("_DepthDistance", chromaLerpDist);
             }
         }
-        foreach(Transform child in insides_Hatching.transform)
+        //ChromaDepth Hatching
+        foreach (Transform child in insides_ChromaHatch.transform)
+        {
+            var renderer = child.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.material.SetColor("_CloseColor", chromaCloseColor);
+                renderer.material.SetColor("_FarColor", chromaFarColor);
+                renderer.material.SetFloat("_DepthDistance", chromaLerpDist);
+
+                if (hatchInverted)
+                {
+                    renderer.material.EnableKeyword("_INVERTHATCHING");
+                }
+                else
+                {
+                    renderer.material.DisableKeyword("_INVERTHATCHING");
+                }
+
+                if (hatchTriPlanar)
+                {
+                    renderer.material.EnableKeyword("_TRIPLANAR");
+                }
+                else
+                {
+                    renderer.material.DisableKeyword("_TRIPLANAR");
+                }
+                renderer.material.SetFloat("_UVScale", hatchUVScale);
+                renderer.material.SetFloat("_Intensity", hatchIntensity);
+
+            }
+        }
+
+        //Hatching
+        foreach (Transform child in insides_Hatching.transform)
         {
             var renderer = child.GetComponent<Renderer>();
             if (renderer != null)
@@ -218,22 +259,28 @@ public class PhantomManager : MonoBehaviour
 
     public void SetStatus(Status s)
     {
+        insides_Hatching.SetActive(false);
+        insides_Normal.SetActive(false);
+        insides_ChromaHatch.SetActive(false);
+        insides_BlueShadows.SetActive(false);
+        insides_Chroma.SetActive(false);
         switch (s)
         {
             case Status.chroma:
-                insides_Hatching.SetActive(false);
-                insides_Normal.SetActive(false);
+                
                 insides_Chroma.SetActive(true);
                 break;
             case Status.hatching:
                 insides_Hatching.SetActive(true);
-                insides_Normal.SetActive(false);
-                insides_Chroma.SetActive(false);
+                break;
+            case Status.chromahatch:
+                insides_ChromaHatch.SetActive(true);
+                break;
+            case Status.blueshadows:
+                insides_BlueShadows.SetActive(true);
                 break;
             default:
-                insides_Hatching.SetActive(false);
                 insides_Normal.SetActive(true);
-                insides_Chroma.SetActive(false);
                 break;
         }
         status = s;
