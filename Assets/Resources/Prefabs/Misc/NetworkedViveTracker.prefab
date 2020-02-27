@@ -44,9 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneId: 0
   serverOnly: 0
   m_AssetId: 
-  m_SceneId: 0
 --- !u!1001 &4605727926675092255
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -124,6 +124,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: d5d640d9f9615584daf64ea5e7c4f158,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d7f7dca8b1b2c604a820a36b76b4da00, type: 2}
     - target: {fileID: -927199367670048503, guid: d5d640d9f9615584daf64ea5e7c4f158,
         type: 3}
       propertyPath: m_Name
