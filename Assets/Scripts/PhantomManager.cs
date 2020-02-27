@@ -117,6 +117,18 @@ public class PhantomManager : MonoBehaviour
                 }
             }
         }
+        if (insides_ChromaHatch && insides_ChromaHatch.activeSelf)
+        {
+            foreach (Transform child in insides_ChromaHatch.transform)
+            {
+                var renderer = child.GetComponent<Renderer>();
+                if (renderer)
+                {
+                    renderer.material.SetVector("_FocusPosition", focusManager.focusPosition);
+                    renderer.material.SetVector("_FocusNormal", focusManager.focusNormal);
+                }
+            }
+        }
         var skinRenderer = skin.GetComponent<MeshRenderer>();
         if (skinRenderer.enabled)
         {
