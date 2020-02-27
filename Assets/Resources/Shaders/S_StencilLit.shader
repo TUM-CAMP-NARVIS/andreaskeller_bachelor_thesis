@@ -3,7 +3,7 @@
 	Properties
 	{
 		[IntRange] _StencilRef("Stencil Reference Value", Range(0,255)) = 10
-		_BaseColor("Base Color", Color) = (0.5, 0.5, 0.5, 1)
+		_Color("Color", Color) = (0.5, 0.5, 0.5, 1)
 	}
 		SubShader
 	{
@@ -38,7 +38,7 @@
 			};
 
 			UNITY_INSTANCING_BUFFER_START(Props)
-				UNITY_DEFINE_INSTANCED_PROP(float4, _BaseColor)
+				UNITY_DEFINE_INSTANCED_PROP(float4, _Color)
 			UNITY_INSTANCING_BUFFER_END(Props)
 
 			v2f vert(appdata_base v)
@@ -65,7 +65,7 @@
 				UNITY_SETUP_INSTANCE_ID(i);
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
 
-				fixed4 col = _BaseColor;
+				fixed4 col = _Color;
 				col *= i.diff;
 				return UNITY_ACCESS_INSTANCED_PROP(Props, col);
 			}
