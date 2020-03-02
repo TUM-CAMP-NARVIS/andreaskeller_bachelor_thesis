@@ -55,6 +55,27 @@ public struct InputVisualizationMessage : IMessageBase
     }
 }
 
+public struct TumorPositionMessage : IMessageBase
+{
+    public Vector3 position;
+
+
+    public TumorPositionMessage(Vector3 position)
+    {
+        this.position = position;
+    }
+
+    public void Deserialize(NetworkReader reader)
+    {
+        position = reader.ReadVector3();
+    }
+
+    public void Serialize(NetworkWriter writer)
+    {
+        writer.WriteVector3(position);
+    }
+}
+
 public struct SceneStateMessage : IMessageBase
 {
     public PhantomManager.Status status;

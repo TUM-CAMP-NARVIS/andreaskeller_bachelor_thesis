@@ -28,10 +28,11 @@ public class MultiplatformSceneManager : MonoBehaviour
     private PhantomManager phantomManager;
     private NetworkDiscovery networkDiscovery;
 
+    private TumorManager tumorManager;
+
     private GameObject spawnedObject;
 
     private bool m_bPhantomAttached = false;
-    private bool m_bNetworkingEnabled = true;
     private int counter = 0;
     public int framesBetweenUpdates = 60;
 
@@ -44,6 +45,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         menuMan = FindObjectOfType<MenuManager>();
         networkManager = FindObjectOfType<NetworkManager>();
         phantomManager = FindObjectOfType<PhantomManager>();
+        tumorManager = FindObjectOfType<TumorManager>();
 
         networkDiscovery = FindObjectOfType<NetworkDiscovery>();
         networkDiscovery.secretHandshake = 1234567890;
@@ -76,44 +78,25 @@ public class MultiplatformSceneManager : MonoBehaviour
         }
         
 
-        if (spawnedObject!=null && m_bNetworkingEnabled)
+        if (spawnedObject!=null)
         {
-            var tracker = new TrackedObjectMessage();
-            tracker.id = 0;
-            tracker.type = TrackedObjectMessage.Type.ViveTracker;
-            tracker.position = spawnedObject.transform.position;
-            tracker.rotation = spawnedObject.transform.rotation;
-            NetworkServer.SendToAll<TrackedObjectMessage>(tracker);
+            var trackedObjectMessage = new TrackedObjectMessage();
+            trackedObjectMessage.id = 0;
+            trackedObjectMessage.type = TrackedObjectMessage.Type.ViveTracker;
+            trackedObjectMessage.position = spawnedObject.transform.position;
+            trackedObjectMessage.rotation = spawnedObject.transform.rotation;
+            NetworkServer.SendToAll<TrackedObjectMessage>(trackedObjectMessage);
         }
 
-        if (Input.GetKeyDown("n"))
+        if (tumorManager != null)
         {
-            m_bNetworkingEnabled = true;
-        }
-        if (Input.GetKeyDown("m"))
-        {
-            m_bNetworkingEnabled = false;
+            var tumorPositionMessage = new TumorPositionMessage(tumorManager.transform.localPosition);
+            NetworkServer.SendToAll<TumorPositionMessage>(tumorPositionMessage);
         }
 
-        if (m_bNetworkingEnabled)
+        if (syncIndicator != null)
         {
-            if (syncIndicator != null)
-            {
-                syncIndicator.GetComponent<Renderer>().material.color = new Color(0.5f, 1, 0.5f);
-            }
-        }
-        else
-        {
-            if (syncIndicator != null)
-            {
-                syncIndicator.GetComponent<Renderer>().material.color = new Color(1f, 0.5f, 0.5f);
-            }
-        }
-
-        if (Input.GetKeyDown("r"))
-        {
-            var update = phantomManager.GetFullUpdate();
-            NetworkServer.SendToAll<SceneStateMessage>(update);
+            syncIndicator.GetComponent<Renderer>().material.color = new Color(0.5f, 1, 0.5f);
         }
 
         if (counter >= framesBetweenUpdates)
@@ -201,11 +184,6 @@ public class MultiplatformSceneManager : MonoBehaviour
     }
 
     #endregion
-
-    public void ToggleNetworking()
-    {
-        m_bNetworkingEnabled = !m_bNetworkingEnabled;
-    }
 
     public void ResetConnections(GameObject button)
     {
@@ -299,6 +277,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         NetworkClient.RegisterHandler<TrackedObjectMessage>(OnTrackerMessage);
         NetworkClient.RegisterHandler<SceneStateMessage>(OnSceneStateMessage);
         NetworkClient.RegisterHandler<InputVisualizationMessage>(OnInputVisualizationMessage);
+        NetworkClient.RegisterHandler<TumorPositionMessage>(OnTumorPositionMessage);
     }
 
     public void connectToServer(System.Uri uri)
@@ -307,6 +286,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         NetworkClient.RegisterHandler<TrackedObjectMessage>(OnTrackerMessage);
         NetworkClient.RegisterHandler<SceneStateMessage>(OnSceneStateMessage);
         NetworkClient.RegisterHandler<InputVisualizationMessage>(OnInputVisualizationMessage);
+        NetworkClient.RegisterHandler<TumorPositionMessage>(OnTumorPositionMessage);
     }
 
     public void OnDiscoveredServer(ServerResponse info)
@@ -336,6 +316,15 @@ public class MultiplatformSceneManager : MonoBehaviour
     {
         GazeProvider gazeProvider = FindObjectOfType<GazeProvider>();
         gazeProvider.GazeCursor.SetVisibility(arg2.enableHeadCursor);
+    }
+
+    private void OnTumorPositionMessage(NetworkConnection arg1, TumorPositionMessage arg2)
+    {
+        if (tumorManager != null)
+        {
+            tumorManager.RepositionTumor(arg2.position);
+        }
+        //move tumor to position
     }
    
 }
