@@ -9,6 +9,7 @@ public class SynchronizationManager : MonoBehaviour
     public GameObject imageTarget;
     public GameObject syncSpace;
     public GameObject viveTracker;
+    public GameObject syncIndicator;
 
     public List<GameObject> trackedObjects = new List<GameObject>();
 
@@ -109,7 +110,7 @@ public class SynchronizationManager : MonoBehaviour
                 syncSpace.transform.rotation = rot * Quaternion.Inverse(rotNetworked);
                 syncSpace.transform.position = pos + (syncSpace.transform.TransformDirection(-posNetworked));//Quaternion.Inverse(syncSpace.transform.rotation)*(pos) - posNetworked;
                 offsetRot = Quaternion.Inverse(syncSpace.transform.rotation);
-                viveTracker.transform.GetChild(0).GetComponent<Renderer>().material.color = new Color(0, 1, 0);
+                syncIndicator.GetComponent<Renderer>().material.color = new Color(0, 1, 0);
                 syncState = State.Synchronized;
                 //pos1 = posNetworked;
                 //syncSpace.transform.position = pos - (rot * new Vector3(0.2f, 0, 0));
@@ -127,7 +128,7 @@ public class SynchronizationManager : MonoBehaviour
                 break;
             default:
                 syncState = State.Desynchronized;
-                viveTracker.transform.GetChild(0).GetComponent<Renderer>().material.color = new Color(1f, 0.0f, 0.0f);
+                syncIndicator.GetComponent<Renderer>().material.color = new Color(1f, 0.0f, 0.0f);
                 break;
         }
         //syncSpace.transform.rotation = rot*Quaternion.Inverse(rotNetworked);

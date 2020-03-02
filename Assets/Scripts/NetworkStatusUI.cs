@@ -23,20 +23,33 @@ public class NetworkStatusUI : MonoBehaviour
         if (Utils.IsVR)
             return;
 
-        if (connectionStatusLight != null)
+        if (NetworkClient.isConnected)
         {
-            if (NetworkClient.isConnected)
-                connectionStatusLight.GetComponent<MeshRenderer>().material.color = new Color(0, 1, 0);
-            else
-                connectionStatusLight.GetComponent<MeshRenderer>().material.color = new Color(1, 0, 0);
+            connectionStatusLight.SetActive(false);
+            ipAddressText.SetActive(false);
         }
-        if (ipAddressText != null)
+        else
         {
-            var tmpro = ipAddressText.GetComponent<TMPro.TextMeshPro>();
-            if (tmpro != null)
-                tmpro.text = netMan.networkAddress;
+            connectionStatusLight.SetActive(true);
+            ipAddressText.SetActive(true);
 
+            if (connectionStatusLight != null)
+            {
+                if (NetworkClient.isConnected)
+                    connectionStatusLight.GetComponent<MeshRenderer>().material.color = new Color(0, 1, 0);
+                else
+                    connectionStatusLight.GetComponent<MeshRenderer>().material.color = new Color(1, 0, 0);
+            }
+            if (ipAddressText != null)
+            {
+                var tmpro = ipAddressText.GetComponent<TMPro.TextMeshPro>();
+                if (tmpro != null)
+                    tmpro.text = netMan.networkAddress;
+
+            }
         }
+
+        
 
     }
 }

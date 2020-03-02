@@ -17,6 +17,7 @@ public class MultiplatformSceneManager : MonoBehaviour
 
     public GameObject zedStereoRig;
     public GameObject phantomAnchor;
+    public GameObject syncIndicator;
 
     public GameObject prefab;
 
@@ -96,16 +97,16 @@ public class MultiplatformSceneManager : MonoBehaviour
 
         if (m_bNetworkingEnabled)
         {
-            if (spawnedObject != null)
+            if (syncIndicator != null)
             {
-                spawnedObject.transform.GetChild(0).GetComponent<Renderer>().material.color = new Color(0.5f, 1, 0.5f);
+                syncIndicator.GetComponent<Renderer>().material.color = new Color(0.5f, 1, 0.5f);
             }
         }
         else
         {
-            if (spawnedObject != null)
+            if (syncIndicator != null)
             {
-                spawnedObject.transform.GetChild(0).GetComponent<Renderer>().material.color = new Color(1f, 0.5f, 0.5f);
+                syncIndicator.GetComponent<Renderer>().material.color = new Color(1f, 0.5f, 0.5f);
             }
         }
 
@@ -286,6 +287,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         //NetworkServer.Spawn(viveTracker);
 
         spawnedObject = viveTracker;
+        
         AttachPhantomToTracker();
 
     }
