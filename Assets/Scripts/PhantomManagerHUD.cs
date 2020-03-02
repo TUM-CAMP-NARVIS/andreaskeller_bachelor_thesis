@@ -9,6 +9,9 @@ public class PhantomManagerHUD : MonoBehaviour
     PhantomManager manager;
     MultiplatformSceneManager multiplatformSceneManager;
     WindowMaterialManager windowMaterialManager;
+    TumorManager tumorManager;
+
+    private string tumorPosition;
 
     private string bichlFocusSize;
     public string bichlWeightCurv;
@@ -36,6 +39,7 @@ public class PhantomManagerHUD : MonoBehaviour
         manager = GetComponent<PhantomManager>();
         multiplatformSceneManager = FindObjectOfType<MultiplatformSceneManager>();
         windowMaterialManager = FindObjectOfType<WindowMaterialManager>();
+        tumorManager = FindObjectOfType<TumorManager>();
 
         bichlFocusSize = manager.bichlFocusSize.ToString();
         bichlWeightAngOfInc = manager.bichlWeightAngOfInc.ToString();
@@ -49,6 +53,8 @@ public class PhantomManagerHUD : MonoBehaviour
 
         hatchUVScale = manager.hatchUVScale.ToString();
         hatchIntensity = manager.hatchIntensity.ToString();
+
+        tumorPosition = tumorManager.yPosition.ToString();
 
     }
 
@@ -71,6 +77,12 @@ public class PhantomManagerHUD : MonoBehaviour
         {
             manager.skinEnabled = !manager.skinEnabled;
         }
+
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Tumor Position:");
+        tumorPosition = GUILayout.TextField(tumorPosition);
+        float.TryParse(tumorPosition, out tumorManager.yPosition);
+        GUILayout.EndHorizontal();
 
         if (manager.skinEnabled)
         {
