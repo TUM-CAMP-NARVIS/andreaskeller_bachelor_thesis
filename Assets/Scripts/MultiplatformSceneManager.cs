@@ -268,6 +268,8 @@ public class MultiplatformSceneManager : MonoBehaviour
         
         AttachPhantomToTracker();
 
+        gameObject.AddComponent<StudyManager>();
+
     }
 
     public void connectToServer(string ip)

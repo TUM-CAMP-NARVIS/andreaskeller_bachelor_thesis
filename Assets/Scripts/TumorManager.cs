@@ -11,7 +11,7 @@ public class TumorManager : MonoBehaviour
         yPosition = transform.localPosition.y;
     }
 
-#if !UNITY_WSA
+#if  !UNITY_WSA
     // Update is called once per frame
     void Update()
     {
@@ -22,5 +22,6 @@ public class TumorManager : MonoBehaviour
     public void RepositionTumor(Vector3 position)
     {
         this.gameObject.transform.localPosition = position;
+        yPosition = position.y;
     }
 }
