@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: StudyConfirmationMat
+  m_Shader: {fileID: 4800000, guid: 86704eb2c4f1a00499d963573b698c0b, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _ColorScale: 0
+    - _Confirmation: 0.045
+    - _Glossiness: 0
+    - _Metallic: 0
+    m_Colors:
+    - _Color: {r: 0.8113208, g: 0.8113208, b: 0.76157, a: 1}
+    - _ConfirmationColor: {r: 0.082127124, g: 0.754717, b: 0.05339978, a: 1}
