@@ -33,12 +33,13 @@ public class StudyManager : MonoBehaviour
     void Start()
     {
         phantomManager = FindObjectOfType<PhantomManager>();
+        tumorManager = FindObjectOfType<TumorManager>();
         FillMethods();
 #if UNITY_WSA
         NetworkClient.RegisterHandler<VisualizationMethodMessage>(ApplyVisMethodMessage);
 #else        
         GenerateLatinSquare();
-        totalTrials = order.Count();
+        totalTrials = order.Count;
 #endif
 
 
@@ -94,7 +95,7 @@ public class StudyManager : MonoBehaviour
 
             for (int j = 0; j < n; j++)
             {
-                Debug.Log("Position: " + i + "-" + j);
+                //Debug.Log("Position: " + i + "-" + j);
                 HashSet<(VisualizationMethod, bool)> conflictsColumn = new HashSet<(VisualizationMethod, bool)>();
                 conflictsColumn.Clear();
 

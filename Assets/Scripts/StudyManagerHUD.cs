@@ -47,14 +47,18 @@ public class StudyManagerHUD : MonoBehaviour
         tumorPosition = GUILayout.TextField(tumorPosition);
         float.TryParse(tumorPosition, out tumorManager.realObjectPosition);
         GUILayout.EndHorizontal();
-
-        if (GUILayout.Button("Start trial"))
+        if (GUILayout.Button("Set ready"))
         {
             manager.state = StudyManager.State.Ready;
         }
 
-        GUILayout.Label("Trial #"+manager.currentTrial+" of "+manager.totalTrials);
+        if (GUILayout.Button("Start trial"))
+        {
+            manager.StartTrial();
+        }
 
+        GUILayout.Label("Trial #"+manager.currentTrial+" of "+manager.totalTrials);
+        GUILayout.Label("Status: " + manager.state);
 
         GUILayout.EndArea();
     }

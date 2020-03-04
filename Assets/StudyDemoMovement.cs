@@ -2,24 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SerialController))]
+[RequireComponent(typeof(StudyInputController))]
 public class StudyDemoMovement : MonoBehaviour
 {
     public float ConfirmationTimeSeconds = 3.0f;
     public float CurrentConfirmationProgress = 0.0f;
     public bool ConfirmationCooldown = false;
 
+    private StudyManager studyManager;
+
     StudyInputController studyInputCtrl;
 
     // Start is called before the first frame update
     void Start()
     {
-        var serialCmp = gameObject.AddComponent<SerialController>();
-        serialCmp.portName = "COM3";
+        studyManager = FindObjectOfType<StudyManager>();
+        studyInputCtrl = GetComponent<StudyInputController>();
+        var serialCmp = GetComponent<SerialController>();
+        serialCmp.portName = "COM5";
         serialCmp.baudRate = 9600;
         serialCmp.messageListener = gameObject;
         serialCmp.maxUnreadMessages = 3; // prevents "Queue is full" errors
-
-        studyInputCtrl = gameObject.AddComponent<StudyInputController>();
     }
 
     // Update is called once per frame
@@ -29,7 +33,8 @@ public class StudyDemoMovement : MonoBehaviour
         float posY = studyInputCtrl.Slider1 - 0.5f;
         float posZ = studyInputCtrl.Slider2 - 0.5f;
 
-        gameObject.transform.position = new Vector3(posX, posY, posZ + 2.0f);
+        //gameObject.transform.position = new Vector3(posX, posY, posZ + 2.0f);
+        studyManager.SliderMoved(studyInputCtrl.Slider0);
 
         if(studyInputCtrl.Button1) {
             if(!ConfirmationCooldown) {
@@ -45,10 +50,10 @@ public class StudyDemoMovement : MonoBehaviour
             CurrentConfirmationProgress = 0;
         }
 
-        gameObject.GetComponent<Renderer>().material.SetFloat("_Confirmation", CurrentConfirmationProgress);
+        //gameObject.GetComponent<Renderer>().material.SetFloat("_Confirmation", CurrentConfirmationProgress);
     }
 
     void OnPositionConfirmed() {
-        Debug.Log("Position was confirmed!");
+        studyManager.ButtonInput();
     }
 }

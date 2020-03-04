@@ -2254,6 +2254,90 @@ Transform:
   m_Father: {fileID: 1332835258}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &246050605
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 246050606}
+  - component: {fileID: 246050609}
+  - component: {fileID: 246050608}
+  - component: {fileID: 246050607}
+  m_Layer: 0
+  m_Name: StudyInput
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &246050606
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 246050605}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 941530673}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &246050607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 246050605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eddc6e13600715b40a66636f45138f00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ConfirmationTimeSeconds: 3
+  CurrentConfirmationProgress: 0
+  ConfirmationCooldown: 0
+--- !u!114 &246050608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 246050605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f39332a5ea60ff54fbc7d665a53554ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Slider0: 0
+  Slider1: 0
+  Slider2: 0
+  Button0: 0
+  Button1: 0
+  Switch0: 0
+  Switch1: 0
+--- !u!114 &246050609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 246050605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bc5f48af2cffd747a079fe8c632e2c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  portName: COM3
+  baudRate: 9600
+  messageListener: {fileID: 0}
+  reconnectionDelay: 1000
+  maxUnreadMessages: 1
 --- !u!1 &249649611
 GameObject:
   m_ObjectHideFlags: 0
@@ -9387,6 +9471,7 @@ Transform:
   - {fileID: 1070309334}
   - {fileID: 1473685966}
   - {fileID: 329583415}
+  - {fileID: 246050606}
   - {fileID: 1965803034}
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -22423,7 +22508,7 @@ PrefabInstance:
     - target: {fileID: 5716353677818358307, guid: cd0923fea58af724e9982ccbb7d30535,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 5716353677818358307, guid: cd0923fea58af724e9982ccbb7d30535,
         type: 3}
