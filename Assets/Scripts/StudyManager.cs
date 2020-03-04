@@ -26,6 +26,8 @@ public class StudyManager : MonoBehaviour
 
     public int currentTrial = 0;
 
+    public int totalTrials = 0;
+
     public enum State {Ready, NotReady, MoveSliderBack, MoveSliderFront, PositionTumor, Finished }
     // Start is called before the first frame update
     void Start()
@@ -36,6 +38,7 @@ public class StudyManager : MonoBehaviour
         NetworkClient.RegisterHandler<VisualizationMethodMessage>(ApplyVisMethodMessage);
 #else        
         GenerateLatinSquare();
+        totalTrials = order.Count();
 #endif
 
 

@@ -5,6 +5,7 @@ using UnityEngine;
 public class TumorManager : MonoBehaviour
 {
     public float yPosition;
+    public float realObjectPosition = 0.0f;
     // Start is called before the first frame update
     void Start()
     {

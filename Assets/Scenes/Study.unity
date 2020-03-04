@@ -4593,8 +4593,24 @@ MonoBehaviour:
   hatchingBox: {fileID: 2100000, guid: d581462160b8c8549afbb363f546ef66, type: 2}
   blueShadows: {fileID: 2100000, guid: 6165db55991fc9f419ed88f521f670b9, type: 2}
   blueShadowsBox: {fileID: 2100000, guid: 58c09e2087c33c04da29c743f46862e5, type: 2}
-  state: 0
+  state: 1
   currentTrial: 0
+  totalTrials: 0
+--- !u!114 &500976241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500976237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 234a8dbf788ae2e49b5aeafd7332f372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offsetX: 0
+  offsetY: 0
+  showGUI: 1
 --- !u!1 &507801052
 GameObject:
   m_ObjectHideFlags: 0
@@ -8579,6 +8595,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   yPosition: 0
+  realObjectPosition: 0
 --- !u!1 &872543305
 GameObject:
   m_ObjectHideFlags: 0
@@ -10302,7 +10319,7 @@ PrefabInstance:
     - target: {fileID: 7018112481179279382, guid: 7f96271b6e6a5f84491b30df4ed12674,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7018112481179279382, guid: 7f96271b6e6a5f84491b30df4ed12674,
         type: 3}
@@ -11434,7 +11451,7 @@ PrefabInstance:
     - target: {fileID: 8234030519063386662, guid: 430ddd4027ddaca458d5f212d39c0e2a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8234030519063386662, guid: 430ddd4027ddaca458d5f212d39c0e2a,
         type: 3}
@@ -12832,7 +12849,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4309805032874704, guid: e13ee7e0790c7d243b7aa67fe604acac, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4309805032874704, guid: e13ee7e0790c7d243b7aa67fe604acac, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -18722,7 +18739,7 @@ MonoBehaviour:
   hatchIntensity: 
   offsetX: 0
   offsetY: 0
-  showGUI: 1
+  showGUI: 0
 --- !u!1 &1859398323
 GameObject:
   m_ObjectHideFlags: 0
@@ -21868,7 +21885,7 @@ PrefabInstance:
     - target: {fileID: 629260871087273365, guid: 03db77d8215007342a498bf23b23df8b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 629260871087273365, guid: 03db77d8215007342a498bf23b23df8b,
         type: 3}
@@ -22151,7 +22168,7 @@ PrefabInstance:
     - target: {fileID: 2499400468173168705, guid: 11c69eb317e223941a62a04fa2a43c48,
         type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2499400468173168705, guid: 11c69eb317e223941a62a04fa2a43c48,
         type: 3}
@@ -22406,7 +22423,7 @@ PrefabInstance:
     - target: {fileID: 5716353677818358307, guid: cd0923fea58af724e9982ccbb7d30535,
         type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5716353677818358307, guid: cd0923fea58af724e9982ccbb7d30535,
         type: 3}
