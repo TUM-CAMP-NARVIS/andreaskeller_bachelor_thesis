@@ -4574,6 +4574,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e68895f2e10969e4284497543b5237c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &500976240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500976237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d61194bca4c2ae4580d7e0e2752569d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bichlmeier: {fileID: 2100000, guid: 3068d5f48e3ac7944b5a8ae321ffd894, type: 2}
+  normal: {fileID: 2100000, guid: 3d5fa6c230936a1488a28914f7f9e38b, type: 2}
+  normalBox: {fileID: 2100000, guid: 49c6d46f5b9ffb44f9df1913b9ff7975, type: 2}
+  hatching: {fileID: 2100000, guid: b9ee0a2af68052348bce8e894bc38782, type: 2}
+  hatchingBox: {fileID: 2100000, guid: d581462160b8c8549afbb363f546ef66, type: 2}
+  blueShadows: {fileID: 2100000, guid: 6165db55991fc9f419ed88f521f670b9, type: 2}
+  blueShadowsBox: {fileID: 2100000, guid: 58c09e2087c33c04da29c743f46862e5, type: 2}
+  state: 0
 --- !u!1 &507801052
 GameObject:
   m_ObjectHideFlags: 0
