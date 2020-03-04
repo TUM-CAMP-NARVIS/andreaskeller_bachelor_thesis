@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 public class StudyManager : MonoBehaviour
 {
@@ -30,10 +31,12 @@ public class StudyManager : MonoBehaviour
     void Start()
     {
         phantomManager = FindObjectOfType<PhantomManager>();
-
         FillMethods();
+#if UNITY_WSA
+        NetworkClient.RegisterHandler<VisualizationMethodMessage>(ApplyVisMethodMessage);
+#else        
         GenerateLatinSquare();
-        //PrintLatinSquare();
+#endif
 
 
     }
@@ -48,7 +51,7 @@ public class StudyManager : MonoBehaviour
 
     }
 
-    #region LatinSquare
+#region LatinSquare
     private void PrintLatinSquare()
     {
         
@@ -139,7 +142,7 @@ public class StudyManager : MonoBehaviour
             order.AddRange(currentRow);
         }
     }
-    #endregion
+#endregion
 
     public void ButtonInput()
     {
@@ -200,10 +203,17 @@ public class StudyManager : MonoBehaviour
     {
         if (state != State.Ready)
             return;
-        
-        
-        phantomManager.SetVisualization(order[0].Item1);
-        if (order[0].Item2)
+
+
+#if !UNITY_WSA
+        var message = CreateVisMethodMessage(order[currentTrial].Item1, order[currentTrial].Item2);
+        if (NetworkServer.active)
+        {
+            NetworkServer.SendToAll<VisualizationMethodMessage>(message);
+        }
+#endif
+        phantomManager.SetVisualization(order[currentTrial].Item1);
+        if (order[currentTrial].Item2)
         {
             tumorManager.SetTumorFront();
             state = State.MoveSliderFront;
@@ -215,7 +225,74 @@ public class StudyManager : MonoBehaviour
         }
     }
 
+    public VisualizationMethodMessage CreateVisMethodMessage(VisualizationMethod method, bool front)
+    {
+        int inside = 0;
+        int window = 0;
 
+        if (method.materialInside == hatching)
+        {
+            inside = 1;
+        }
+        else if (method.materialInside == blueShadows)
+        {
+            inside = 2;
+        }
+        if (method.materialSkinWindow == hatchingBox)
+        {
+            window = 1;
+        }
+        else if (method.materialSkinWindow == blueShadowsBox)
+        {
+            window = 2;
+        }
+
+        VisualizationMethodMessage v = new VisualizationMethodMessage(inside, window, method.hasWindow, front);
+        return v;
+    }
+
+    public void ApplyVisMethodMessage(NetworkConnection conn,VisualizationMethodMessage msg)
+    {
+        Material inside;
+        Material skinWindow;
+        if (!msg.hasWindow)
+        {
+            skinWindow = bichlmeier;
+        }
+        else
+        {
+            switch (msg.matSkinWindow)
+            {
+                case 0:
+                    skinWindow = normalBox;
+                    break;
+                case 1:
+                    skinWindow = hatchingBox;
+                    break;
+                case 2:
+                    skinWindow = blueShadowsBox;
+                    break;
+                default:
+                    skinWindow = normalBox;
+                    break;
+            }
+        }
+        switch (msg.matInside)
+        {
+            case 1:
+                inside = hatching;
+                break;
+            case 2:
+                inside = blueShadows;
+                break;
+            default:
+                inside = normal;
+                break;
+        }
+
+        VisualizationMethod v = new VisualizationMethod(inside, skinWindow, msg.hasWindow);
+        phantomManager.SetVisualization(v);
+    }
 }
 
 public class VisualizationMethod

@@ -78,6 +78,7 @@ public class MultiplatformSceneManager : MonoBehaviour
         }
         
 
+        //Networked Vive Tracker Position
         if (spawnedObject!=null)
         {
             var trackedObjectMessage = new TrackedObjectMessage();
@@ -88,6 +89,7 @@ public class MultiplatformSceneManager : MonoBehaviour
             NetworkServer.SendToAll<TrackedObjectMessage>(trackedObjectMessage);
         }
 
+        //Tumor position
         if (tumorManager != null)
         {
             var tumorPositionMessage = new TumorPositionMessage(tumorManager.transform.localPosition);
@@ -99,12 +101,15 @@ public class MultiplatformSceneManager : MonoBehaviour
             syncIndicator.GetComponent<Renderer>().material.color = new Color(0.5f, 1, 0.5f);
         }
 
+        //Scene State update - deactived for study
+        /*
         if (counter >= framesBetweenUpdates)
         {
             var update = phantomManager.GetFullUpdate();
             NetworkServer.SendToAll<SceneStateMessage>(update);
             counter = 0;
         }
+        */
 
         if (Input.GetKeyDown("c"))
         {

@@ -136,7 +136,7 @@ public class PhantomManager : MonoBehaviour
         if (skinRenderer.enabled)
         {
             skinRenderer.material.SetVector("_FocusPosition", focusManager.focusPosition);
-            if (true || Utils.IsVR)
+            if (Utils.IsVR)
             {
               
                 skinRenderer.material.EnableKeyword("_ZEDMINI_BLENDING");

@@ -16,7 +16,6 @@ public class TumorManager : MonoBehaviour
     public void RepositionTumor(Vector3 position)
     {
         this.gameObject.transform.localPosition = position;
-        yPosition = position.y;
     }
 
     public void SetTumorFront()

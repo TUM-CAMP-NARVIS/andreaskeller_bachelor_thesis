@@ -76,6 +76,41 @@ public struct TumorPositionMessage : IMessageBase
     }
 }
 
+public struct VisualizationMethodMessage: IMessageBase
+{
+    public int matInside;
+    public int matSkinWindow;
+    public bool hasWindow;
+    public bool front;
+
+
+    public VisualizationMethodMessage(int matInside, int matSkinWindow, bool hasWindow, bool front)
+    {
+        this.matInside = matInside;
+        this.matSkinWindow = matSkinWindow;
+        this.hasWindow = hasWindow;
+        this.front = front;
+    }
+
+    public void Deserialize(NetworkReader reader)
+    {
+        matInside = reader.ReadInt32();
+        matSkinWindow = reader.ReadInt32();
+        hasWindow = reader.ReadBoolean();
+        front = reader.ReadBoolean();
+        
+        
+    }
+
+    public void Serialize(NetworkWriter writer)
+    {
+        writer.WriteInt32(matInside);
+        writer.WriteInt32(matSkinWindow);
+        writer.WriteBoolean(hasWindow);
+        writer.WriteBoolean(front);
+    }
+}
+
 public struct SceneStateMessage : IMessageBase
 {
     public PhantomManager.Status status;
