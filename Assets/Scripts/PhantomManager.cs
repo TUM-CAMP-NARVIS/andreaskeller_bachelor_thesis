@@ -5,13 +5,14 @@ using UnityEngine;
 public class PhantomManager : MonoBehaviour
 {
     // Start is called before the first frame update
-    public enum Status { hatching, normal, chroma, chromahatch, blueshadows }
+    public enum Status { hatching, normal, chroma, chromahatch, blueshadows, study}
 
     public GameObject insides_Hatching;
     public GameObject insides_Chroma;
     public GameObject insides_Normal;
     public GameObject insides_ChromaHatch;
     public GameObject insides_BlueShadows;
+    public GameObject insides_Study;
 
     public GameObject skin;
     public GameObject skin_stencil;
@@ -48,6 +49,7 @@ public class PhantomManager : MonoBehaviour
     private FocusManager focusManager;
     private MenuManager menuMan;
     private SurfaceAlign surfAlign;
+    private WindowMaterialManager windowMaterialManager;
 
 
     void Start()
@@ -63,6 +65,7 @@ public class PhantomManager : MonoBehaviour
         focusManager = FindObjectOfType<FocusManager>();
         menuMan = FindObjectOfType<MenuManager>();
         surfAlign = FindObjectOfType<SurfaceAlign>();
+        windowMaterialManager = FindObjectOfType<WindowMaterialManager>();
 
         if (skin == null)
         {
@@ -140,6 +143,32 @@ public class PhantomManager : MonoBehaviour
                 
             }
         }
+    }
+
+    public void SetVisualization(VisualizationMethod method)
+    {
+        if (status != Status.study)
+            SetStatus(Status.study);
+
+
+        var skinRenderer = skin.GetComponent<MeshRenderer>();
+
+        windowEnabled = method.hasWindow;
+        if (surfAlign.isActive != windowEnabled)
+            ToggleWindow();
+
+        if (method.hasWindow)
+        {
+            skinRenderer.enabled = false;
+            windowMaterialManager.SetMaterial(method.materialSkinWindow);
+        }
+        else
+        {
+            skinRenderer.enabled = true;
+            skinRenderer.material = method.materialSkinWindow;
+        }
+
+        insides_Study.transform.GetChild(0).GetComponent<Renderer>().material = method.materialInside;
     }
 
     public void UpdateVariables()
@@ -274,6 +303,7 @@ public class PhantomManager : MonoBehaviour
         insides_ChromaHatch.SetActive(false);
         insides_BlueShadows.SetActive(false);
         insides_Chroma.SetActive(false);
+        insides_Study.SetActive(false);
         switch (s)
         {
             case Status.chroma:
@@ -288,6 +318,9 @@ public class PhantomManager : MonoBehaviour
                 break;
             case Status.blueshadows:
                 insides_BlueShadows.SetActive(true);
+                break;
+            case Status.study:
+                insides_Study.SetActive(true);
                 break;
             default:
                 insides_Normal.SetActive(true);

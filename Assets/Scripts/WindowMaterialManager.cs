@@ -42,4 +42,11 @@ public class WindowMaterialManager : MonoBehaviour
         }
         
     }
+
+    public void SetMaterial(Material m)
+    {
+        index = 0;
+        curIndex = 0;
+        GetComponent<MeshRenderer>().material = m;
+    }
 }

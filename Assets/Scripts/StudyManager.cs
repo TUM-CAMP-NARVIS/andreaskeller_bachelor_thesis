@@ -15,18 +15,27 @@ public class StudyManager : MonoBehaviour
     public Material blueShadowsBox;
     
 
-    public State state = State.Initial;
+    public State state = State.NotReady;
+
+    private PhantomManager phantomManager;
+    private TumorManager tumorManager;
 
     private List<(VisualizationMethod, bool)> order;
     private List<(VisualizationMethod, bool)> elements;
 
-    public enum State {Initial, ResetSlider, PositionTumor, Finished }
+    public int currentTrial = 0;
+
+    public enum State {Ready, NotReady, MoveSliderBack, MoveSliderFront, PositionTumor, Finished }
     // Start is called before the first frame update
     void Start()
     {
+        phantomManager = FindObjectOfType<PhantomManager>();
+
         FillMethods();
-        GenerateLatinSquares();
-        PrintLatinSquare();
+        GenerateLatinSquare();
+        //PrintLatinSquare();
+
+
     }
 
     private void FillMethods()
@@ -39,6 +48,7 @@ public class StudyManager : MonoBehaviour
 
     }
 
+    #region LatinSquare
     private void PrintLatinSquare()
     {
         
@@ -56,7 +66,7 @@ public class StudyManager : MonoBehaviour
     }
 
 
-    private void GenerateLatinSquares()
+    private void GenerateLatinSquare()
     {
         var n = methods.Length * 2;
         elements = new List<(VisualizationMethod, bool)>();
@@ -67,13 +77,14 @@ public class StudyManager : MonoBehaviour
         }
         order = new List<(VisualizationMethod, bool)>();
 
+        int counter = 0;
+
         //Generate Latin Square
         for (int i = 0; i < n; i++)
         {
-            List<(VisualizationMethod, bool)> conflictsRow = new List<(VisualizationMethod, bool)>();
             List<(VisualizationMethod, bool)> currentRow = new List<(VisualizationMethod, bool)>();
 
-            List<List<(VisualizationMethod, bool)>> failedRows = new List<List<(VisualizationMethod, bool)>>();
+            HashSet<List<(VisualizationMethod, bool)>> failedRows = new HashSet<List<(VisualizationMethod, bool)>>();
 
             for (int j = 0; j < n; j++)
             {
@@ -91,58 +102,120 @@ public class StudyManager : MonoBehaviour
                 }
 
                 HashSet<(VisualizationMethod, bool)> conflicts = new HashSet<(VisualizationMethod, bool)>(conflictsColumn);
-                conflicts.UnionWith(conflictsRow);
+                conflicts.UnionWith(currentRow);
                // Debug.Log("Possible Collisions: " + conflicts.Count);
 
                 HashSet<(VisualizationMethod, bool)> possibilities = new HashSet<(VisualizationMethod, bool)>(elements);
                 possibilities.ExceptWith(conflicts);
-                Debug.Log("Collision Free elements: " + possibilities.Count);
-                foreach((VisualizationMethod, bool) item in possibilities)
-                {
-                    Debug.Log(item);
-                }
-                
-                foreach(List<(VisualizationMethod, bool)> failedOne in failedRows)
+
+                foreach (List<(VisualizationMethod, bool)> failedOne in failedRows)
                 {
                     if (failedOne.Count == (j + 1))
                     {
                         possibilities.Remove(failedOne[j]);
-
                     }
                 }
+                
+                
 
                 List<(VisualizationMethod, bool)> possibilityList = new List<(VisualizationMethod, bool)>(possibilities);
 
                 if (possibilityList.Count == 0)
                 {
-                    
-
-                    failedRows.Add(currentRow);
+                    failedRows.Add(new List<(VisualizationMethod, bool)>(currentRow));
                     currentRow.RemoveAt(j - 1);
-                    conflictsRow.RemoveAt(j - 1);
-                    j -= 2;
 
+                    //Go back one item
+                    j -= 2;
                 }
                 else
                 {
                     var rng = Random.Range(0, possibilityList.Count);
                     var element = possibilityList[rng];
-                    Debug.Log("Randomly selected element: " + element.ToString());
                     currentRow.Add(element);
-                    conflictsRow.Add(element);
+                    failedRows.RemoveWhere(item => item.Count == currentRow.Count+1);
                 }
-                failedRows.RemoveAll(item => item.Count != currentRow.Count);
-
-
             }
             order.AddRange(currentRow);
         }
     }
+    #endregion
+
+    public void ButtonInput()
+    {
+        switch (state)
+        {
+            case State.PositionTumor:
+                ConfirmTumorPosition();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void ConfirmTumorPosition()
+    {
+        //TODO: save tumor delta position to file
+
+        currentTrial++;
+        if (currentTrial >= order.Count)
+            state = State.Finished;
+        else
+        {
+            state = State.Ready;
+            NextTrial();
+        }
+
+    }
+
+    public void SliderMoved(float position)
+    {
+        if (state == State.MoveSliderFront)
+        {
+            if (position < 0.05f)
+                state = State.PositionTumor;
+        }
+        else if (state == State.MoveSliderBack)
+        {
+            if (position > 0.95f)
+                state = State.PositionTumor;
+        }
+        else if (state == State.PositionTumor)
+        {
+            tumorManager.MoveTumor(position);
+        }
+    }
+
+    public void StartTrial()
+    {
+        //TODO: grab user name
+        if (state != State.Ready)
+            return;
+        currentTrial = 0;
+        phantomManager.SetStatus(PhantomManager.Status.study);
+        NextTrial();
+    }
 
     public void NextTrial()
     {
-
+        if (state != State.Ready)
+            return;
+        
+        
+        phantomManager.SetVisualization(order[0].Item1);
+        if (order[0].Item2)
+        {
+            tumorManager.SetTumorFront();
+            state = State.MoveSliderFront;
+        }
+        else
+        {
+            tumorManager.SetTumorBack();
+            state = State.MoveSliderBack;
+        }
     }
+
+
 }
 
 public class VisualizationMethod
