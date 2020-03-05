@@ -136,7 +136,11 @@ public class MultiplatformSceneManager : MonoBehaviour
 
     public void DetachPhantomFromTracker()
     {
-        phantomAnchor.transform.parent = networkManager.gameObject.transform.parent;
+        var pos = phantomAnchor.transform.position;
+        var rot = phantomAnchor.transform.rotation;
+        phantomAnchor.transform.parent = null;
+        phantomAnchor.transform.position = pos;
+        phantomAnchor.transform.rotation = rot;
         m_bPhantomAttached = false;
     }
 
