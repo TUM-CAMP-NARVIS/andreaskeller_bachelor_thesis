@@ -136,7 +136,7 @@ public class MultiplatformSceneManager : MonoBehaviour
 
     public void DetachPhantomFromTracker()
     {
-        phantomAnchor.transform.parent = tumorManager.gameObject.transform.parent;
+        phantomAnchor.transform.parent = networkManager.gameObject.transform.parent;
         m_bPhantomAttached = false;
     }
 
