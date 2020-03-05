@@ -250,7 +250,20 @@ public class StudyManager : MonoBehaviour
 
     public void SliderMoved(float position)
     {
-        if (state == State.MoveSliderFront)
+        if (state == State.PositionTumor)
+        {
+
+#if UNITY_WSA
+            var msg = new HoloLensPositionMessage(experiment.transform.InverseTransformPoint(cam.transform.position), (Quaternion.Inverse(experiment.transform.rotation) * cam.transform.rotation));
+            NetworkClient.Send<HoloLensPositionMessage>(msg);
+#else
+
+            tumorManager.MoveTumor(position);
+#endif
+        }
+
+#if !UNITY_WSA
+        else if (state == State.MoveSliderFront)
         {
             if (position < 0.05f)
             {
@@ -267,16 +280,8 @@ public class StudyManager : MonoBehaviour
             }
                 
         }
-        else if (state == State.PositionTumor)
-        {
-            
-#if UNITY_WSA
-            var msg = new HoloLensPositionMessage(experiment.transform.InverseTransformPoint( cam.transform.position), (Quaternion.Inverse(experiment.transform.rotation) * cam.transform.rotation));
-            NetworkClient.Send<HoloLensPositionMessage>(msg);
 #endif
 
-            tumorManager.MoveTumor(position);
-        }
     }
 
     public void StartTrial()
@@ -335,7 +340,7 @@ public class StudyManager : MonoBehaviour
         sctrl.enabled = true;
     }
 
-    #region Networking
+#region Networking
     public StudyManagerMessage CreateStudyManagerMessage()
     {
         float buttonAmount = FindObjectOfType<StudyDemoMovement>().CurrentConfirmationProgress;
@@ -426,7 +431,7 @@ public class StudyManager : MonoBehaviour
         if (state == State.PositionTumor)
             data += Time.time.ToString() + ": HoloLens position: " + msg.position.ToString() + " rotation: " + msg.rotation.ToString()+ "\n";
     }
-    #endregion
+#endregion
 }
 
 public class VisualizationMethod
