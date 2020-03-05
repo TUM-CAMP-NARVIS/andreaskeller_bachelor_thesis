@@ -22,13 +22,17 @@ public class StudyDemoMovement : MonoBehaviour
         studyInputCtrl = GetComponent<StudyInputController>();
         
         var serialCmp = GetComponent<SerialController>();
+#if !UNITY_WSA
         serialCmp.portName = "COM5";
         serialCmp.baudRate = 9600;
         serialCmp.messageListener = gameObject;
         serialCmp.maxUnreadMessages = 3; // prevents "Queue is full" errors
         serialCmp.enabled = false;
         serialCmp.enabled = true;
+#else
         
+#endif
+
     }
 
     // Update is called once per frame

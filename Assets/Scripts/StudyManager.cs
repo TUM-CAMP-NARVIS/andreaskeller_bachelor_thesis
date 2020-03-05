@@ -35,6 +35,8 @@ public class StudyManager : MonoBehaviour
     private List<(VisualizationMethod, bool)> order;
     private List<(VisualizationMethod, bool)> elements;
 
+    private bool registeredHandlers = false;
+
     public int currentTrial = 0;
 
     public int totalTrials = 0;
@@ -50,22 +52,40 @@ public class StudyManager : MonoBehaviour
         FillMethods();
 #if UNITY_WSA
 
-        NetworkClient.RegisterHandler<VisualizationMethodMessage>(ApplyVisMethodMessage);
-        NetworkClient.RegisterHandler<StudyManagerMessage>(ApplyStudyManagerMessage);
-#else        
+#else
         GenerateLatinSquare();
         totalTrials = order.Count;
-        NetworkServer.RegisterHandler<HoloLensPositionMessage>(OnHoloLensPositionMessage);
-        SendStudyManagerMessage();
 #endif
 
-        
+
     }
 
     public void Update()
     {
         elementCounter.text = (currentTrial + 1).ToString() + " of " + totalTrials.ToString();
         status.text = state.ToString();
+
+        if (!registeredHandlers)
+        {
+#if UNITY_WSA
+            if (NetworkClient.isConnected)
+            {
+                NetworkClient.RegisterHandler<VisualizationMethodMessage>(ApplyVisMethodMessage);
+                NetworkClient.RegisterHandler<StudyManagerMessage>(ApplyStudyManagerMessage);
+                registeredHandlers = true;
+            }
+#else
+
+            if (NetworkServer.active)
+            {
+                NetworkServer.RegisterHandler<HoloLensPositionMessage>(OnHoloLensPositionMessage);
+                registeredHandlers = true;
+            }
+        
+        SendStudyManagerMessage();
+#endif
+        }
+
     }
 
     public void SendStudyManagerMessage()
