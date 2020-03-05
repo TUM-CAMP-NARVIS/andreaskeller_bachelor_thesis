@@ -18,12 +18,17 @@ public class StudyDemoMovement : MonoBehaviour
     void Start()
     {
         studyManager = FindObjectOfType<StudyManager>();
+
         studyInputCtrl = GetComponent<StudyInputController>();
+        
         var serialCmp = GetComponent<SerialController>();
         serialCmp.portName = "COM5";
         serialCmp.baudRate = 9600;
         serialCmp.messageListener = gameObject;
         serialCmp.maxUnreadMessages = 3; // prevents "Queue is full" errors
+        serialCmp.enabled = false;
+        serialCmp.enabled = true;
+        
     }
 
     // Update is called once per frame
@@ -50,7 +55,15 @@ public class StudyDemoMovement : MonoBehaviour
             CurrentConfirmationProgress = 0;
         }
 
-        //gameObject.GetComponent<Renderer>().material.SetFloat("_Confirmation", CurrentConfirmationProgress);
+        if (CurrentConfirmationProgress <= 0.05)
+        {
+            studyManager.buttonIndicator.GetComponent<Renderer>().material.color = new Color(1, 1, 1);
+        }
+        else
+        {
+            studyManager.buttonIndicator.GetComponent<Renderer>().material.color = new Color(1-CurrentConfirmationProgress, 1, 1-CurrentConfirmationProgress);
+        }
+        
     }
 
     void OnPositionConfirmed() {

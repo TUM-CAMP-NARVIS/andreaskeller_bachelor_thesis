@@ -119,11 +119,11 @@ public class SerialController : MonoBehaviour
 
         // Check if the message is plain data or a connect/disconnect event.
         if (ReferenceEquals(message, SERIAL_DEVICE_CONNECTED))
-            messageListener.SendMessage("OnConnectionEvent", true);
+            messageListener.GetComponent<StudyInputController>().SendMessage("OnConnectionEvent", true);
         else if (ReferenceEquals(message, SERIAL_DEVICE_DISCONNECTED))
-            messageListener.SendMessage("OnConnectionEvent", false);
+            messageListener.GetComponent<StudyInputController>().SendMessage("OnConnectionEvent", false);
         else
-            messageListener.SendMessage("OnMessageArrived", message);
+            messageListener.GetComponent<StudyInputController>().SendMessage("OnMessageArrived", message);
     }
 
     // ------------------------------------------------------------------------

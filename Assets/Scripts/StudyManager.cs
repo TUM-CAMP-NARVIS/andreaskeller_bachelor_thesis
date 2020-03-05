@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using System.IO;
 
 public class StudyManager : MonoBehaviour
 {
@@ -14,6 +15,16 @@ public class StudyManager : MonoBehaviour
     public Material hatchingBox;
     public Material blueShadows;
     public Material blueShadowsBox;
+
+    public GameObject buttonIndicator;
+    public TMPro.TextMeshPro status;
+    public TMPro.TextMeshPro elementCounter;
+
+    public GameObject experiment;
+    private Camera cam;
+
+    public string subjectID = "testSubject";
+    private string data = "";
     
 
     public State state = State.NotReady;
@@ -32,17 +43,38 @@ public class StudyManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        cam = Camera.main;
         phantomManager = FindObjectOfType<PhantomManager>();
         tumorManager = FindObjectOfType<TumorManager>();
+        state = State.NotReady;
         FillMethods();
 #if UNITY_WSA
         NetworkClient.RegisterHandler<VisualizationMethodMessage>(ApplyVisMethodMessage);
+        NetworkClient.RegisterHandler<StudyManagerMessage>(ApplyStudyManagerMessage);
 #else        
         GenerateLatinSquare();
         totalTrials = order.Count;
+        NetworkServer.RegisterHandler<HoloLensPositionMessage>(OnHoloLensPositionMessage);
+        SendStudyManagerMessage();
 #endif
 
+        
+    }
 
+    public void Update()
+    {
+        elementCounter.text = (currentTrial + 1).ToString() + " of " + totalTrials.ToString();
+        status.text = state.ToString();
+    }
+
+    public void SendStudyManagerMessage()
+    {
+#if !UNITY_WSA
+        if (NetworkServer.active)
+        {
+            NetworkServer.SendToAll<StudyManagerMessage>(CreateStudyManagerMessage());
+        }
+#endif
     }
 
     private void FillMethods()
@@ -162,17 +194,37 @@ public class StudyManager : MonoBehaviour
 
     public void ConfirmTumorPosition()
     {
-        //TODO: save tumor delta position to file
 
         currentTrial++;
-        if (currentTrial >= order.Count)
+
+        var pos = tumorManager.transform.localPosition.y;
+        data += Time.time.ToString() + ": position: " + pos.ToString() + " delta: " + tumorManager.GetDeltaPosition()+"\n";
+        if (currentTrial >= totalTrials)
+        {
             state = State.Finished;
+            WriteDataToFile();
+            NetworkServer.SendToAll<StudyManagerMessage>(CreateStudyManagerMessage());
+        }
         else
         {
             state = State.Ready;
+            NetworkServer.SendToAll<StudyManagerMessage>(CreateStudyManagerMessage());
             NextTrial();
         }
 
+
+    }
+
+    public void WriteDataToFile()
+    {
+        var dateTime = System.DateTime.Now;
+        string filename = dateTime.Year + "_" + dateTime.Month + "_" + dateTime.Day + "_" + dateTime.Hour + "-" + dateTime.Hour + "-" + dateTime.Minute+"-"+dateTime.Second+"_" +subjectID+".txt";
+
+        //Write some text to the test.txt file
+        StreamWriter writer = new StreamWriter(filename, true);
+        writer.WriteLine(data);
+        writer.Close();
+        data = "";
     }
 
     public void SliderMoved(float position)
@@ -180,15 +232,28 @@ public class StudyManager : MonoBehaviour
         if (state == State.MoveSliderFront)
         {
             if (position < 0.05f)
+            {
                 state = State.PositionTumor;
+                NetworkServer.SendToAll<StudyManagerMessage>(CreateStudyManagerMessage());
+            }
         }
         else if (state == State.MoveSliderBack)
         {
             if (position > 0.95f)
+            {
                 state = State.PositionTumor;
+                NetworkServer.SendToAll<StudyManagerMessage>(CreateStudyManagerMessage());
+            }
+                
         }
         else if (state == State.PositionTumor)
         {
+            
+#if UNITY_WSA
+            var msg = new HoloLensPositionMessage(experiment.transform.InverseTransformPoint( cam.transform.position), (Quaternion.Inverse(experiment.transform.rotation) * cam.transform.rotation));
+            NetworkClient.Send<HoloLensPositionMessage>(msg);
+#endif
+
             tumorManager.MoveTumor(position);
         }
     }
@@ -207,7 +272,7 @@ public class StudyManager : MonoBehaviour
     {
         if (state != State.Ready)
             return;
-
+        
 
 #if !UNITY_WSA
         var message = CreateVisMethodMessage(order[currentTrial].Item1, order[currentTrial].Item2);
@@ -221,12 +286,45 @@ public class StudyManager : MonoBehaviour
         {
             tumorManager.SetTumorFront();
             state = State.MoveSliderFront;
+            NetworkServer.SendToAll<StudyManagerMessage>(CreateStudyManagerMessage());
         }
         else
         {
             tumorManager.SetTumorBack();
             state = State.MoveSliderBack;
+            NetworkServer.SendToAll<StudyManagerMessage>(CreateStudyManagerMessage());
         }
+
+        data += Time.time.ToString() + ": Trial " + currentTrial + " of " + totalTrials + " - " + order[currentTrial].Item1.ToString()+" ";
+        if (order[currentTrial].Item2)
+        {
+            data += "front\n";
+        }
+        else
+            data += "back\n";
+    }
+
+    public void SetComPort(string name)
+    {
+        SerialController sctrl = FindObjectOfType<SerialController>();
+        if (sctrl.portName.Equals(name))
+            return;
+        sctrl.portName = name;
+        sctrl.enabled = false;
+        sctrl.enabled = true;
+    }
+
+    #region Networking
+    public StudyManagerMessage CreateStudyManagerMessage()
+    {
+        return new StudyManagerMessage(state, currentTrial, totalTrials);
+    }
+
+    public void ApplyStudyManagerMessage(NetworkConnection conn, StudyManagerMessage msg)
+    {
+        state = msg.state;
+        currentTrial = msg.currentTrial;
+        totalTrials = msg.totalTrials;
     }
 
     public VisualizationMethodMessage CreateVisMethodMessage(VisualizationMethod method, bool front)
@@ -257,6 +355,7 @@ public class StudyManager : MonoBehaviour
 
     public void ApplyVisMethodMessage(NetworkConnection conn,VisualizationMethodMessage msg)
     {
+
         Material inside;
         Material skinWindow;
         if (!msg.hasWindow)
@@ -297,6 +396,13 @@ public class StudyManager : MonoBehaviour
         VisualizationMethod v = new VisualizationMethod(inside, skinWindow, msg.hasWindow);
         phantomManager.SetVisualization(v);
     }
+
+    public void OnHoloLensPositionMessage(NetworkConnection conn, HoloLensPositionMessage msg)
+    {
+        if (state == State.PositionTumor)
+            data += Time.time.ToString() + ": HoloLens position: " + msg.position.ToString() + " rotation: " + msg.rotation.ToString()+ "\n";
+    }
+    #endregion
 }
 
 public class VisualizationMethod
@@ -316,6 +422,7 @@ public class VisualizationMethod
     {
         string ret = "";
         ret += materialSkinWindow.shader.name;
+        
 
         return ret;
     }

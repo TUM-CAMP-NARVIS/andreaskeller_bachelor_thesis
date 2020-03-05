@@ -76,16 +76,47 @@ public struct TumorPositionMessage : IMessageBase
     }
 }
 
+public struct StudyManagerMessage: IMessageBase
+{
+    public StudyManager.State state;
+    public int currentTrial;
+    public int totalTrials;
+
+    public StudyManagerMessage(StudyManager.State state, int currentTrial, int totalTrials)
+    {
+        this.state = state;
+        this.currentTrial = currentTrial;
+        this.totalTrials = totalTrials;
+    }
+
+    public void Deserialize(NetworkReader reader)
+    {
+        state = (StudyManager.State)reader.ReadInt16();
+        currentTrial = reader.ReadInt32();
+        totalTrials = reader.ReadInt32();
+    }
+
+    public void Serialize(NetworkWriter writer)
+    {
+        writer.WriteInt16((short)state);
+        writer.WriteInt32(currentTrial);
+        writer.WriteInt32(totalTrials);
+    }
+}
+
 public struct VisualizationMethodMessage: IMessageBase
 {
+    
     public int matInside;
     public int matSkinWindow;
     public bool hasWindow;
     public bool front;
 
 
+
     public VisualizationMethodMessage(int matInside, int matSkinWindow, bool hasWindow, bool front)
     {
+        
         this.matInside = matInside;
         this.matSkinWindow = matSkinWindow;
         this.hasWindow = hasWindow;
@@ -194,5 +225,30 @@ public struct SceneStateMessage : IMessageBase
         writer.WriteSingle(chromaLerpDist);
         writer.WriteInt32(window_mat);
 
+    }
+}
+
+public struct HoloLensPositionMessage : IMessageBase
+{
+    public Vector3 position;
+    public Quaternion rotation;
+
+    public HoloLensPositionMessage(Vector3 position, Quaternion rotation)
+    {
+        this.position = position;
+        this.rotation = rotation;
+    }
+
+    public void Deserialize(NetworkReader reader)
+    {
+        position = reader.ReadVector3();
+        rotation = reader.ReadQuaternion();
+
+    }
+
+    public void Serialize(NetworkWriter writer)
+    {
+        writer.WriteVector3(position);
+        writer.WriteQuaternion(rotation);
     }
 }
