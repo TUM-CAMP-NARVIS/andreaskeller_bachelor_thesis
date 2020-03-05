@@ -111,6 +111,8 @@ public class SynchronizationManager : MonoBehaviour
                 syncSpace.transform.position = pos + (syncSpace.transform.TransformDirection(-posNetworked));//Quaternion.Inverse(syncSpace.transform.rotation)*(pos) - posNetworked;
                 offsetRot = Quaternion.Inverse(syncSpace.transform.rotation);
 
+                viveTracker.transform.localPosition = posNetworked;
+                viveTracker.transform.localRotation = rotNetworked;
 
                 syncIndicator.GetComponent<Renderer>().material.color = new Color(0, 1, 0);
                 syncState = State.Synchronized;
