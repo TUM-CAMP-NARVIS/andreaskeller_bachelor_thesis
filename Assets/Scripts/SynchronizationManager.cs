@@ -110,8 +110,15 @@ public class SynchronizationManager : MonoBehaviour
                 syncSpace.transform.rotation = rot * Quaternion.Inverse(rotNetworked);
                 syncSpace.transform.position = pos + (syncSpace.transform.TransformDirection(-posNetworked));//Quaternion.Inverse(syncSpace.transform.rotation)*(pos) - posNetworked;
                 offsetRot = Quaternion.Inverse(syncSpace.transform.rotation);
+
+
                 syncIndicator.GetComponent<Renderer>().material.color = new Color(0, 1, 0);
                 syncState = State.Synchronized;
+
+                //For purpose of study: decouple from tracker and use just hololens position
+                FindObjectOfType<MultiplatformSceneManager>().DetachPhantomFromTracker();
+
+
                 //pos1 = posNetworked;
                 //syncSpace.transform.position = pos - (rot * new Vector3(0.2f, 0, 0));
                 //pos = syncSpace.transform.position;
@@ -127,6 +134,9 @@ public class SynchronizationManager : MonoBehaviour
                 syncState = State.Synchronized;
                 break;
             default:
+                //For purpose of study: couple to tracker again
+                FindObjectOfType<MultiplatformSceneManager>().AttachPhantomToTracker();
+
                 syncState = State.Desynchronized;
                 syncIndicator.GetComponent<Renderer>().material.color = new Color(1f, 0.0f, 0.0f);
                 break;
