@@ -65,26 +65,26 @@ public class StudyManager : MonoBehaviour
         elementCounter.text = (currentTrial + 1).ToString() + " of " + totalTrials.ToString();
         status.text = state.ToString();
 
-        if (!registeredHandlers)
-        {
 #if UNITY_WSA
-            if (NetworkClient.isConnected)
-            {
-                NetworkClient.RegisterHandler<VisualizationMethodMessage>(ApplyVisMethodMessage);
-                NetworkClient.RegisterHandler<StudyManagerMessage>(ApplyStudyManagerMessage);
-                registeredHandlers = true;
-            }
-#else
+        if (state == State.PositionTumor)
+        {
+            var msg = new HoloLensPositionMessage(experiment.transform.InverseTransformPoint(cam.transform.position), (Quaternion.Inverse(experiment.transform.rotation) * cam.transform.rotation));
+            NetworkClient.Send<HoloLensPositionMessage>(msg);
+        }
+#endif
 
-            if (NetworkServer.active)
-            {
-                NetworkServer.RegisterHandler<HoloLensPositionMessage>(OnHoloLensPositionMessage);
-                registeredHandlers = true;
-            }
+
+
+#if !UNITY_WSA
+
+        if (NetworkServer.active)
+        {
+            
+            registeredHandlers = true;
+        }
         
         SendStudyManagerMessage();
 #endif
-        }
 
     }
 
@@ -251,18 +251,10 @@ public class StudyManager : MonoBehaviour
     public void SliderMoved(float position)
     {
         if (state == State.PositionTumor)
-        {
-
-#if UNITY_WSA
-            var msg = new HoloLensPositionMessage(experiment.transform.InverseTransformPoint(cam.transform.position), (Quaternion.Inverse(experiment.transform.rotation) * cam.transform.rotation));
-            NetworkClient.Send<HoloLensPositionMessage>(msg);
-#else
+        {           
 
             tumorManager.MoveTumor(position);
-#endif
         }
-
-#if !UNITY_WSA
         else if (state == State.MoveSliderFront)
         {
             if (position < 0.05f)
@@ -280,7 +272,6 @@ public class StudyManager : MonoBehaviour
             }
                 
         }
-#endif
 
     }
 

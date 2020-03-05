@@ -42,8 +42,9 @@ public class StudyDemoMovement : MonoBehaviour
         float posY = studyInputCtrl.Slider1 - 0.5f;
         float posZ = studyInputCtrl.Slider2 - 0.5f;
 
-#if !UNITY_WSA
+
         //gameObject.transform.position = new Vector3(posX, posY, posZ + 2.0f);
+#if !UNITY_WSA
         studyManager.SliderMoved(studyInputCtrl.Slider0);
 
 

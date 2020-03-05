@@ -260,6 +260,8 @@ public class MultiplatformSceneManager : MonoBehaviour
         NetworkManager.singleton.StartServer();
         
         networkDiscovery.AdvertiseServer();
+        var studyMan = FindObjectOfType<StudyManager>();
+        NetworkServer.RegisterHandler<HoloLensPositionMessage>(studyMan.OnHoloLensPositionMessage);
 
         //networkManager.StartServer();
 
@@ -283,6 +285,9 @@ public class MultiplatformSceneManager : MonoBehaviour
         NetworkClient.RegisterHandler<SceneStateMessage>(OnSceneStateMessage);
         NetworkClient.RegisterHandler<InputVisualizationMessage>(OnInputVisualizationMessage);
         NetworkClient.RegisterHandler<TumorPositionMessage>(OnTumorPositionMessage);
+        var studyMan = FindObjectOfType<StudyManager>();
+        NetworkClient.RegisterHandler<VisualizationMethodMessage>(studyMan.ApplyVisMethodMessage);
+        NetworkClient.RegisterHandler<StudyManagerMessage>(studyMan.ApplyStudyManagerMessage);
     }
 
     public void connectToServer(System.Uri uri)
@@ -292,6 +297,9 @@ public class MultiplatformSceneManager : MonoBehaviour
         NetworkClient.RegisterHandler<SceneStateMessage>(OnSceneStateMessage);
         NetworkClient.RegisterHandler<InputVisualizationMessage>(OnInputVisualizationMessage);
         NetworkClient.RegisterHandler<TumorPositionMessage>(OnTumorPositionMessage);
+        var studyMan = FindObjectOfType<StudyManager>();
+        NetworkClient.RegisterHandler<VisualizationMethodMessage>(studyMan.ApplyVisMethodMessage);
+        NetworkClient.RegisterHandler<StudyManagerMessage>(studyMan.ApplyStudyManagerMessage);
     }
 
     public void OnDiscoveredServer(ServerResponse info)
