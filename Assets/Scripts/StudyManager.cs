@@ -49,6 +49,7 @@ public class StudyManager : MonoBehaviour
         state = State.NotReady;
         FillMethods();
 #if UNITY_WSA
+
         NetworkClient.RegisterHandler<VisualizationMethodMessage>(ApplyVisMethodMessage);
         NetworkClient.RegisterHandler<StudyManagerMessage>(ApplyStudyManagerMessage);
 #else        
@@ -317,7 +318,7 @@ public class StudyManager : MonoBehaviour
     #region Networking
     public StudyManagerMessage CreateStudyManagerMessage()
     {
-        return new StudyManagerMessage(state, currentTrial, totalTrials);
+        return new StudyManagerMessage(state, currentTrial, totalTrials, buttonIndicator.GetComponent<Renderer>().material.color);
     }
 
     public void ApplyStudyManagerMessage(NetworkConnection conn, StudyManagerMessage msg)
@@ -325,6 +326,7 @@ public class StudyManager : MonoBehaviour
         state = msg.state;
         currentTrial = msg.currentTrial;
         totalTrials = msg.totalTrials;
+        buttonIndicator.GetComponent<Renderer>().material.color = msg.indicatorButtonColor;
     }
 
     public VisualizationMethodMessage CreateVisMethodMessage(VisualizationMethod method, bool front)

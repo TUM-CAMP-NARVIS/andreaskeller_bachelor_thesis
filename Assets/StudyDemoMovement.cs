@@ -38,10 +38,13 @@ public class StudyDemoMovement : MonoBehaviour
         float posY = studyInputCtrl.Slider1 - 0.5f;
         float posZ = studyInputCtrl.Slider2 - 0.5f;
 
+#if !UNITY_WSA
         //gameObject.transform.position = new Vector3(posX, posY, posZ + 2.0f);
         studyManager.SliderMoved(studyInputCtrl.Slider0);
 
+
         if(studyInputCtrl.Button1) {
+            studyManager.SendStudyManagerMessage();
             if(!ConfirmationCooldown) {
             CurrentConfirmationProgress += Time.deltaTime / ConfirmationTimeSeconds;
             if(CurrentConfirmationProgress >= 1.0f) {
@@ -63,7 +66,7 @@ public class StudyDemoMovement : MonoBehaviour
         {
             studyManager.buttonIndicator.GetComponent<Renderer>().material.color = new Color(1-CurrentConfirmationProgress, 1, 1-CurrentConfirmationProgress);
         }
-        
+#endif
     }
 
     void OnPositionConfirmed() {
