@@ -92,7 +92,7 @@ public class SynchronizationManager : MonoBehaviour
         //Debug.Log("Updating vive tracker position");
         this.rotNetworked = rotNetworked;
         this.posNetworked = posNetworked;
-        if (syncState == State.Synchronized)
+        if (false && syncState == State.Synchronized)
         {
             if (id != 0)
                 return;
@@ -115,9 +115,6 @@ public class SynchronizationManager : MonoBehaviour
                 syncIndicator.GetComponent<Renderer>().material.color = new Color(0, 1, 0);
                 syncState = State.Synchronized;
 
-                //For purpose of study: decouple from tracker and use just hololens position
-                FindObjectOfType<MultiplatformSceneManager>().DetachPhantomFromTracker();
-
 
                 //pos1 = posNetworked;
                 //syncSpace.transform.position = pos - (rot * new Vector3(0.2f, 0, 0));
@@ -134,8 +131,6 @@ public class SynchronizationManager : MonoBehaviour
                 syncState = State.Synchronized;
                 break;
             default:
-                //For purpose of study: couple to tracker again
-                FindObjectOfType<MultiplatformSceneManager>().AttachPhantomToTracker();
 
                 syncState = State.Desynchronized;
                 syncIndicator.GetComponent<Renderer>().material.color = new Color(1f, 0.0f, 0.0f);
