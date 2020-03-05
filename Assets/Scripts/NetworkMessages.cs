@@ -81,14 +81,14 @@ public struct StudyManagerMessage: IMessageBase
     public StudyManager.State state;
     public int currentTrial;
     public int totalTrials;
-    public Color indicatorButtonColor;
+    public float buttonPressAmount;
 
-    public StudyManagerMessage(StudyManager.State state, int currentTrial, int totalTrials, Color indicatorButtonColor)
+    public StudyManagerMessage(StudyManager.State state, int currentTrial, int totalTrials, float buttonPressAmount)
     {
         this.state = state;
         this.currentTrial = currentTrial;
         this.totalTrials = totalTrials;
-        this.indicatorButtonColor = indicatorButtonColor;
+        this.buttonPressAmount = buttonPressAmount;
     }
 
     public void Deserialize(NetworkReader reader)
@@ -96,7 +96,7 @@ public struct StudyManagerMessage: IMessageBase
         state = (StudyManager.State)reader.ReadInt16();
         currentTrial = reader.ReadInt32();
         totalTrials = reader.ReadInt32();
-        indicatorButtonColor = reader.ReadColor();
+        buttonPressAmount = reader.ReadSingle();
     }
 
     public void Serialize(NetworkWriter writer)
@@ -104,7 +104,7 @@ public struct StudyManagerMessage: IMessageBase
         writer.WriteInt16((short)state);
         writer.WriteInt32(currentTrial);
         writer.WriteInt32(totalTrials);
-        writer.WriteColor(indicatorButtonColor);
+        writer.WriteSingle(buttonPressAmount);
     }
 }
 

@@ -318,7 +318,9 @@ public class StudyManager : MonoBehaviour
     #region Networking
     public StudyManagerMessage CreateStudyManagerMessage()
     {
-        return new StudyManagerMessage(state, currentTrial, totalTrials, buttonIndicator.GetComponent<Renderer>().material.color);
+        float buttonAmount = FindObjectOfType<StudyDemoMovement>().CurrentConfirmationProgress;
+        
+        return new StudyManagerMessage(state, currentTrial, totalTrials, buttonAmount);
     }
 
     public void ApplyStudyManagerMessage(NetworkConnection conn, StudyManagerMessage msg)
@@ -326,7 +328,7 @@ public class StudyManager : MonoBehaviour
         state = msg.state;
         currentTrial = msg.currentTrial;
         totalTrials = msg.totalTrials;
-        buttonIndicator.GetComponent<Renderer>().material.color = msg.indicatorButtonColor;
+        buttonIndicator.GetComponent<Renderer>().material.color = new Color(1-msg.buttonPressAmount, 1, 1-msg.buttonPressAmount);
     }
 
     public VisualizationMethodMessage CreateVisMethodMessage(VisualizationMethod method, bool front)
