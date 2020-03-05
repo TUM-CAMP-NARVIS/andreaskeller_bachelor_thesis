@@ -136,7 +136,7 @@ public class MultiplatformSceneManager : MonoBehaviour
 
     public void DetachPhantomFromTracker()
     {
-        phantomAnchor.transform.parent = phantomAnchor.transform.parent.parent;
+        phantomAnchor.transform.parent = null;
         m_bPhantomAttached = false;
     }
 
