@@ -47,6 +47,9 @@ public class NetworkStatusUI : MonoBehaviour
                     tmpro.text = netMan.networkAddress;
 
             }
+
+
+
         }
 
         

@@ -92,7 +92,7 @@ public class SynchronizationManager : MonoBehaviour
         //Debug.Log("Updating vive tracker position");
         this.rotNetworked = rotNetworked;
         this.posNetworked = posNetworked;
-        if (false && syncState == State.Synchronized)
+        if (syncState == State.Synchronized)
         {
             if (id != 0)
                 return;
@@ -106,7 +106,8 @@ public class SynchronizationManager : MonoBehaviour
         switch (syncState)
         {
             case State.Desynchronized:
-                
+                FindObjectOfType<MultiplatformSceneManager>().DetachPhantomFromTracker();
+
                 syncSpace.transform.rotation = rot * Quaternion.Inverse(rotNetworked);
                 syncSpace.transform.position = pos + (syncSpace.transform.TransformDirection(-posNetworked));//Quaternion.Inverse(syncSpace.transform.rotation)*(pos) - posNetworked;
                 offsetRot = Quaternion.Inverse(syncSpace.transform.rotation);
@@ -133,7 +134,7 @@ public class SynchronizationManager : MonoBehaviour
                 syncState = State.Synchronized;
                 break;
             default:
-
+                FindObjectOfType<MultiplatformSceneManager>().AttachPhantomToTracker();
                 syncState = State.Desynchronized;
                 syncIndicator.GetComponent<Renderer>().material.color = new Color(1f, 0.0f, 0.0f);
                 break;

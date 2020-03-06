@@ -19,6 +19,8 @@ public class StudyManager : MonoBehaviour
     public GameObject buttonIndicator;
     public TMPro.TextMeshPro status;
     public TMPro.TextMeshPro elementCounter;
+    public GameObject arrowForwards;
+    public GameObject arrowBackwards;
 
     public GameObject experiment;
     private Camera cam;
@@ -62,8 +64,21 @@ public class StudyManager : MonoBehaviour
 
     public void Update()
     {
+        arrowForwards.SetActive(false);
+        arrowBackwards.SetActive(false);
         elementCounter.text = (currentTrial + 1).ToString() + " of " + totalTrials.ToString();
         status.text = state.ToString();
+
+        if (state == State.MoveSliderFront)
+        {
+            status.text = "Move Slider towards you";
+            arrowForwards.SetActive(true);
+        }
+        if (state == State.MoveSliderBack)
+        {
+            status.text = "Move Slider away from you";
+            arrowBackwards.SetActive(true);
+        }
 
 #if UNITY_WSA
         if (state == State.PositionTumor)
@@ -239,7 +254,7 @@ public class StudyManager : MonoBehaviour
     public void WriteDataToFile()
     {
         var dateTime = System.DateTime.Now;
-        string filename = dateTime.Year + "_" + dateTime.Month + "_" + dateTime.Day + "_" + dateTime.Hour + "-" + dateTime.Hour + "-" + dateTime.Minute+"-"+dateTime.Second+"_" +subjectID+".txt";
+        string filename = dateTime.Year + "_" + dateTime.Month + "_" + dateTime.Day + "_" + dateTime.Hour + "-" + dateTime.Minute+"-"+dateTime.Second+"_" +subjectID+".txt";
 
         //Write some text to the test.txt file
         StreamWriter writer = new StreamWriter(filename, true);
@@ -420,7 +435,13 @@ public class StudyManager : MonoBehaviour
     public void OnHoloLensPositionMessage(NetworkConnection conn, HoloLensPositionMessage msg)
     {
         if (state == State.PositionTumor)
-            data += Time.time.ToString() + ": HoloLens position: " + msg.position.ToString() + " rotation: " + msg.rotation.ToString()+ "\n";
+        {
+            float angle = 0f;
+            Vector3 axis = new Vector3();
+            msg.rotation.ToAngleAxis(out angle, out axis);
+            data += Time.time.ToString() + ": HoloLens position: " + msg.position.ToString("F8") + " rotation: " + msg.rotation.ToString() + " Axis: " + axis.ToString("F8") + " Angle: " + angle.ToString() + "\n";
+        }
+            
     }
 #endregion
 }
