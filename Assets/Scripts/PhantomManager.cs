@@ -5,7 +5,7 @@ using UnityEngine;
 public class PhantomManager : MonoBehaviour
 {
     // Start is called before the first frame update
-    public enum Status { hatching, normal, chroma, chromahatch, blueshadows, study}
+    public enum Status { hatching, normal, chroma, chromahatch, blueshadows, study, demo}
 
     public GameObject insides_Hatching;
     public GameObject insides_Chroma;
@@ -20,6 +20,8 @@ public class PhantomManager : MonoBehaviour
 
 
     public Status status = Status.normal;
+
+    public int demoVis = 0;
 
     //Hatching Variables
     public bool hatchInverted = false;
@@ -351,6 +353,67 @@ public class PhantomManager : MonoBehaviour
                 status = Status.normal;
                 break;
         }
+    }
+    public void CycleDemoVis()
+    {
+        demoVis++;
+        if (demoVis > 7)
+        {
+            demoVis = 0;
+        }
+        ApplyDemoVis();
+    }
+
+    public void ApplyDemoVis()
+    {
+        switch (demoVis)
+        {
+            case 0:
+                skinEnabled = true;
+                windowEnabled = false;
+                status = Status.normal;
+                break;
+            case 1:
+                skinEnabled = true;
+                windowEnabled = false;
+                status = Status.blueshadows;
+                break;
+            case 2:
+                skinEnabled = true;
+                windowEnabled = false;
+                status = Status.hatching;
+                break;
+            case 3:
+                skinEnabled = true;
+                windowEnabled = false;
+                status = Status.chromahatch;
+                break;
+            case 4:
+                skinEnabled = false;
+                windowEnabled = true;
+                status = Status.normal;
+                windowMaterialManager.SetMaterial(0);
+                break;
+            case 5:
+                skinEnabled = false;
+                windowEnabled = true;
+                status = Status.blueshadows;
+                windowMaterialManager.SetMaterial(2);
+                break;
+            case 6:
+                skinEnabled = false;
+                windowEnabled = true;
+                status = Status.hatching;
+                windowMaterialManager.SetMaterial(1);
+                break;
+            default:
+                skinEnabled = false;
+                windowEnabled = true;
+                status = Status.chromahatch;
+                windowMaterialManager.SetMaterial(3);
+                break;
+        }
+        UpdateVariables();
     }
 
     public void ToggleTriPlanar()

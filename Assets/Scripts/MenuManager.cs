@@ -77,4 +77,28 @@ public class MenuManager : MonoBehaviour
         pMan.ToggleTriPlanar();
     }
 
+    public void HideAll()
+    {
+        if (networkingClient != null)
+        {
+            networkingClient.SetActive(false);
+        }
+        if (hatching != null)
+        {
+            hatching.SetActive(false);
+        }
+        if (bichlmeier != null)
+        {
+            bichlmeier.SetActive(false);
+        }
+        if (networkingServer != null)
+        {
+            networkingServer.SetActive(false);
+        }
+        if (general != null)
+        {
+            general.SetActive(false);
+        }
+    }
+
 }

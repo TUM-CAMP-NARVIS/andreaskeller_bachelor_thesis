@@ -49,4 +49,12 @@ public class WindowMaterialManager : MonoBehaviour
         curIndex = 0;
         GetComponent<MeshRenderer>().material = m;
     }
+
+    public void SetMaterial(int i)
+    {
+        if (index >= materials.Count || index < 0)
+            return;
+
+        index = i;
+    }
 }
