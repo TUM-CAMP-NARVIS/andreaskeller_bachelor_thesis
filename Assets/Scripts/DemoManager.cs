@@ -54,9 +54,6 @@ public class DemoManager : MonoBehaviour
         {
             gazeProvider.GazeCursor.SetVisibility(true);
         }
-
-        if (Input.GetKeyDown("n"))
-            phantomManager.CycleDemoVis();
     }
 
 
