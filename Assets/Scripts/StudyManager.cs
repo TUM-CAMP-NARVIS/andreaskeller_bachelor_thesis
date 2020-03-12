@@ -330,10 +330,10 @@ public class StudyManager : MonoBehaviour
         data += Time.time.ToString() + ": Trial " + currentTrial + " of " + totalTrials + " - " + order[currentTrial].Item1.ToString()+" ";
         if (order[currentTrial].Item2)
         {
-            data += "front\n";
+            data += "front at position "+tumorManager.transform.localPosition.y + "\n";
         }
         else
-            data += "back\n";
+            data += "back at position " + tumorManager.transform.localPosition.y + "\n";
     }
 
     public void SetComPort(string name)

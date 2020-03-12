@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Study.unity
     guid: ed3882b6ef87eff4a9593912d5432f44
   - enabled: 0
+    path: Assets/Scenes/XRTK.unity
+    guid: 4f03ef8b3a11092449768314a356cd24
+  - enabled: 0
     path: Assets/Scenes/test.unity
     guid: b554eb3171ac7604d81c9b1d49dc4a33
   - enabled: 0
@@ -26,4 +29,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/hololens.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 0
+    path: Assets/Scenes/Demo.unity
+    guid: 6bc663e9b11f7f148b7f135a793af0ef
   m_configObjects: {}
